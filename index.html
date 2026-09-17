@@ -167,7 +167,11 @@ mark.hg{background:var(--hl-green)} mark.hy{background:var(--mark)}
 .dots{color:var(--ink-soft);font-size:.8rem;line-height:1}
 
 /* Zaczernione */
-.redact{font-family:var(--display);font-size:1.02rem;line-height:1.75;margin:0 0 12px;max-height:46vh;overflow:auto;padding-right:4px}
+.redact{font-family:var(--display);font-size:1.02rem;line-height:1.8;margin:0 0 8px;max-height:52vh;overflow:auto;padding-right:4px;overscroll-behavior:contain}
+.redact .h{cursor:pointer}
+.revealbar{height:6px;border-radius:3px;background:var(--muted-tile);overflow:hidden;margin:0 0 12px}
+.revealbar i{display:block;height:100%;width:0;background:var(--ok);transition:width .4s cubic-bezier(.22,1,.36,1)}
+.sticky-form{position:sticky;bottom:0;z-index:3;background:var(--paper);padding:10px 0 calc(8px + env(safe-area-inset-bottom,0px));box-shadow:0 -10px 12px -12px rgba(27,40,72,.45)}
 .hright{display:flex;align-items:center;gap:10px}
 .clock{font:800 1rem var(--ui);font-variant-numeric:tabular-nums;padding:5px 9px;border:2px solid var(--tile-edge);border-radius:8px;background:var(--tile)}
 .clock.run{background:var(--mark)}
@@ -181,12 +185,22 @@ mark.hg{background:var(--hl-green)} mark.hy{background:var(--mark)}
 .redact .title .h{background:var(--margin)}
 
 /* Rdzeń */
-.frag{font:800 2.6rem var(--ui);text-align:center;letter-spacing:.08em;margin:2px 0 10px}
+.frag{font:800 2.6rem var(--ui);text-align:center;letter-spacing:.08em;margin:2px 0 14px}
 .frag span{background:var(--mark);padding:0 .25em;border-radius:8px;border:2px solid var(--tile-edge)}
-.tries{display:flex;flex-direction:column;gap:6px;margin-top:12px}
-.try{display:flex;justify-content:space-between;align-items:center;padding:6px 10px;border-radius:8px;background:var(--tile);border:2px solid var(--tile-edge);font-weight:700;letter-spacing:.03em;gap:8px}
-.try mark{background:var(--mark);color:inherit;border-radius:3px}
-.try small{font-weight:600;color:var(--ink-soft);white-space:nowrap}
+.ruler{position:relative;height:60px;margin:4px 0 26px;border:2px solid var(--tile-edge);border-radius:6px;background:repeating-linear-gradient(90deg,var(--ink) 0 1px,transparent 1px var(--cell,20px)) 0 0/100% 12px no-repeat,var(--tile)}
+.ruler .num{position:absolute;top:14px;font:600 .62rem var(--ui);color:var(--ink-soft);transform:translateX(-50%)}
+.ruler .mk{position:absolute;left:0;bottom:6px;height:20px;border-radius:0 4px 4px 0;transition:width .5s cubic-bezier(.22,1,.36,1)}
+.ruler .mk.you{background:var(--mark);border:2px solid var(--tile-edge);border-left:0}
+.ruler .mk.goal{bottom:2px;height:28px;border:2px dashed var(--margin);border-left:0;background:transparent}
+.ruler .lbl{position:absolute;bottom:-24px;font:700 1.1rem/1 "Caveat",cursive;white-space:nowrap;transform:translateX(-100%)}
+.ruler .lbl.you{color:var(--ink)} .ruler .lbl.goal{color:var(--margin);bottom:auto;top:-22px}
+.live{min-height:1.4em;margin:6px 2px 0;font-size:.85rem;color:var(--ink-soft)}
+.live b{color:var(--ink)} .live .warn{color:var(--bad)}
+.tries{display:flex;flex-direction:column;margin-top:12px;border-top:1px solid var(--rule)}
+.try{display:flex;justify-content:space-between;align-items:center;padding:9px 2px;border-bottom:1px solid var(--rule);font-weight:700;letter-spacing:.04em;gap:8px;word-break:break-all}
+.try mark{background:var(--mark);color:inherit;border-radius:3px;padding:0 1px}
+.try small{font:700 1.3rem/1 "Caveat",cursive;color:var(--margin);white-space:nowrap;letter-spacing:0}
+.try.best small::after{content:" ★"}
 
 /* Pudełko */
 .box{display:grid;grid-template-columns:repeat(5,1fr);grid-template-rows:repeat(5,1fr);gap:4px;max-width:320px;aspect-ratio:1;margin:0 auto 10px}
@@ -207,19 +221,38 @@ mark.hg{background:var(--hl-green)} mark.hy{background:var(--mark)}
 .bl:disabled{opacity:.35;cursor:default}
 
 /* Dyktando */
-.dword{font:800 2rem var(--ui);text-align:center;letter-spacing:.04em;margin:8px 0 16px;word-break:break-all}
-.dword .gap{display:inline-block;min-width:1.4em;border-bottom:4px solid var(--margin);color:var(--margin)}
-.opts{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.opts .btn{font-size:1.6rem;padding:14px}
+.dword{font:800 2.2rem var(--ui);text-align:center;letter-spacing:.05em;margin:14px 0 18px;word-break:break-all}
+.dword .gap{display:inline-block;min-width:1.3em;border-bottom:4px solid var(--margin);color:var(--margin)}
+.opts{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.opts .btn{font-size:1.8rem;padding:16px 10px}
 .timer{font-variant-numeric:tabular-nums}
+.copybook{margin-top:18px;border-top:1px solid var(--rule)}
+.copybook .ln{display:flex;justify-content:space-between;align-items:baseline;gap:10px;padding:7px 2px;border-bottom:1px solid var(--rule);font-weight:700;letter-spacing:.04em;word-break:break-all}
+.copybook .ln b{padding:0 2px;border-radius:3px}
+.copybook .ln.ok b{background:var(--hl-green)}
+.copybook .ln.no b{background:var(--bad-bg);color:var(--bad)}
+.copybook .ln s{font:700 1.2rem/1 "Caveat",cursive;color:var(--bad);text-decoration-thickness:2px;letter-spacing:0;white-space:nowrap}
+.copybook .ln em{font:700 1.2rem/1 "Caveat",cursive;color:var(--ok);font-style:normal;letter-spacing:0;white-space:nowrap}
+.copybook .empty{padding:10px 2px;color:var(--ink-soft);font:700 1.25rem/1.2 "Caveat",cursive}
 
 /* Częściej */
-.vs{display:grid;grid-template-columns:1fr;gap:10px;margin-bottom:6px}
-.vsbtn{font:800 1.45rem var(--ui);letter-spacing:.03em;padding:22px 10px 18px;border:2px solid var(--tile-edge);border-radius:12px;background:var(--tile);color:var(--ink);cursor:pointer;box-shadow:0 4px 0 var(--tile-edge);display:flex;flex-direction:column;align-items:center;gap:4px;word-break:break-word}
-.vsbtn small{font:600 .8rem var(--ui);color:var(--ink-soft);letter-spacing:0;min-height:1.2em}
-.vsbtn.ok{background:var(--ok-bg);border-color:var(--ok)}
-.vsbtn.no{background:var(--bad-bg);border-color:var(--bad)}
-.or{text-align:center;font-family:var(--display);color:var(--ink-soft);margin:-4px 0}
+.vs{display:grid;grid-template-columns:1fr;gap:12px;margin:4px 0 6px}
+@media (min-width:520px){.vs{grid-template-columns:1fr auto 1fr;align-items:center}}
+.vsbtn{position:relative;font:800 1.45rem var(--ui);letter-spacing:.03em;padding:34px 12px 24px;border:2px solid var(--tile-edge);border-radius:6px;color:var(--ink);cursor:pointer;box-shadow:0 4px 0 var(--tile-edge);display:flex;flex-direction:column;align-items:center;gap:6px;word-break:break-word;background:linear-gradient(var(--margin),var(--margin)) 0 22px/100% 2px no-repeat,var(--tile);transition:transform .2s cubic-bezier(.22,1,.36,1),box-shadow .2s,border-color .2s}
+.vs .vsbtn:first-child{transform:rotate(-1.2deg)}
+.vs .vsbtn:last-child{transform:rotate(1deg)}
+.vsbtn:active{transform:translateY(3px)!important;box-shadow:none}
+.vsbtn .cnt{font:700 1.7rem/1 "Caveat",cursive;color:var(--ink-soft);min-height:1.1em;letter-spacing:0}
+.vsbtn .bar{position:absolute;left:12px;right:12px;bottom:9px;height:6px;border-radius:3px;background:var(--muted-tile);overflow:hidden}
+.vsbtn .bar i{display:block;height:100%;width:0;background:var(--ink-soft);transition:width .8s cubic-bezier(.22,1,.36,1)}
+.vsbtn.ok{border-color:var(--ok)} .vsbtn.ok .cnt{color:var(--ok)} .vsbtn.ok .bar i{background:var(--ok)}
+.vsbtn.no .cnt{color:var(--bad)} .vsbtn.no .bar i{background:var(--bad)}
+.vsbtn.picked.no{border-color:var(--bad)}
+.or{text-align:center;font:700 1.6rem/1 "Caveat",cursive;color:var(--margin)}
+.tally{display:inline-flex;gap:7px;align-items:center;vertical-align:middle}
+.tally span{position:relative;display:inline-flex;gap:3px}
+.tally i{width:2px;height:16px;background:var(--ink);border-radius:1px}
+.tally span.five::after{content:"";position:absolute;left:-3px;right:-3px;top:7px;height:2px;background:var(--margin);transform:rotate(-28deg)}
 
 /* Przysłowie */
 .emoji{font-size:2.3rem;text-align:center;letter-spacing:.08em;margin:4px 0 14px;line-height:1.3}
@@ -566,12 +599,14 @@ function zaczernione(g){
   const p = pick(WIKI), ans = up(p.answer);
   const st = store.get(key(g.id)) || {g:[], gave:false};
   const root = shell(g, "Tekst z Wikipedii, <b>wszystkie słowa zaczernione</b>. Wpisuj słowa, które mogą tam być. Każde trafienie odsłania je w całym tekście. Wygrywasz, gdy zgadniesz <b>temat</b> (czerwone pola).");
-  const status = el("div","status"), text = el("div","redact");
+  const status = el("div","status"), text = el("div","redact"), rbar = html("div","revealbar","<i></i>");
   const form = el("form","row"), inp = el("input"); inp.type = "text"; inp.id = "in-zaczernione"; inp.autocomplete = "off"; inp.placeholder = "Słowo albo temat"; inp.setAttribute("aria-label","Słowo albo temat");
   const btn = el("button","btn","Odkryj"); btn.type = "submit"; form.append(inp, btn);
-  const tools = el("div","center"); tools.style.marginTop = "10px"; const give = el("button","btn ghost small","Poddaję się"); tools.append(give);
-  const chips = el("div","chips"), res = el("div");
-  root.append(status, text, form, tools, chips, res);
+  const tools = el("div","center"); tools.style.marginTop = "8px"; const give = el("button","btn ghost small","Poddaję się"); tools.append(give);
+  const chips = el("div","chips"), res = el("div"), dock = el("div","sticky-form");
+  dock.append(form, tools);
+  root.append(status, rbar, text, dock, chips, res);
+  text.addEventListener("click", e => { const h = e.target.closest(".h"); if (h) toast(`Zakryte słowo: ${pl(+h.dataset.n, "litera", "litery", "liter")}`); });
   const tokens = (p.answer + "\n" + p.text).split(/(\s+|[.,;:()–\-„”"!?]+)/).filter(t => t !== "");
   const isWord = t => /[A-Za-zĄĆĘŁŃÓŚŹŻąćęłńóśźż0-9]/.test(t);
   const match = (t, gs) => { const T = strip(up(t)); return gs.some(x => { const G = strip(x); if (T === G) return true; if (G.length >= 4) { const stem = G.slice(0, Math.max(3, G.length - 2)); return T.startsWith(stem) && Math.abs(T.length - G.length) <= 3; } return false; }); };
@@ -581,7 +616,11 @@ function zaczernione(g){
   function draw(){
     const over = won() || st.gave;
     const hits = st.g.filter(x => tokens.some(t => isWord(t) && match(t, [x]))).length;
-    status.replaceChildren(el("span",null,`Próby: ${st.g.length}`), el("span",null,`Trafione: ${hits}`));
+    const wordsAll = tokens.filter(t => t !== "\n" && isWord(t));
+    const openN = wordsAll.filter(t => over || /^[0-9]+$/.test(t) || STOP.has(up(t)) || match(t, st.g)).length;
+    const pct = Math.round(openN / wordsAll.length * 100);
+    status.replaceChildren(el("span",null,`Próby: ${st.g.length} · trafione: ${hits}`), el("span",null,`Odkryto ${pct}%`));
+    rbar.firstChild.style.width = `${pct}%`;
     text.replaceChildren();
     let inTitle = true;
     const title = el("div","title"), body = el("p"); body.style.margin = "8px 0 0";
@@ -595,7 +634,7 @@ function zaczernione(g){
     }
     title.style.fontSize = "1.4rem"; text.append(title, body);
     chips.replaceChildren(...[...st.g].reverse().map(x => el("span","chip " + (tokens.some(t => isWord(t) && match(t,[x])) ? "ok" : "x"), x)));
-    form.hidden = over; tools.hidden = over; res.replaceChildren();
+    dock.hidden = over; res.replaceChildren();
     if (over) {
       if (!st.summary) { st.summary = won() && !st.gave ? pl(st.g.length, "próba", "próby", "prób") : "poddane"; saveState(g.id, st); }
       res.append(resultBox(st.gave ? `To było: ${p.answer}` : `Tak! ${p.answer}`, st.gave ? "Jutro nowy tekst." : `Liczba prób: ${st.g.length}, trafione słowa: ${hits}.`, "", `Kujonki · Zaczernione #${num()} ${st.gave ? "🏳️" : `🔎 ${pl(st.g.length,"próba","próby","prób")}`}`));
@@ -606,8 +645,9 @@ function zaczernione(g){
     else { if (st.g.includes(v)) return toast("To już było"); st.g.push(v); }
     lastGuess = v.split(/\s+/)[0];
     const n = tokens.filter(t => isWord(t) && match(t,[lastGuess])).length;
-    if (!n) toast(`${v}: brak w tekście`);
-    inp.value = ""; saveState(g.id, st); draw(); };
+    toast(n ? `${v}: ${pl(n, "trafienie", "trafienia", "trafień")}` : `${v}: brak w tekście`);
+    inp.value = ""; saveState(g.id, st); draw();
+    const fresh = text.querySelector(".new"); if (fresh) fresh.scrollIntoView({block: "nearest", behavior: "smooth"}); };
   give.onclick = () => { st.gave = true; saveState(g.id, st); draw(); };
   draw();
 }
@@ -616,18 +656,36 @@ function zaczernione(g){
 function rdzen(g){
   const p = pick(DATA.rdzen), WORDS = new Set(unpack(p.words)), MAX = 5;
   const st = store.get(key(g.id)) || {t:[], end:false};
-  const root = shell(g, `Wpisz <b>jak najdłuższe słowo</b> zawierające cząstkę. Liczą się formy odmiany. Masz ${MAX} prób, liczy się najlepsza.`);
-  const status = el("div","status"), frag = html("div","frag",`<span>${p.frag}</span>`);
+  const root = shell(g, `Wpisz <b>jak najdłuższe słowo</b> zawierające cząstkę. Liczą się formy odmiany. Masz ${MAX} prób, liczy się najdłuższe. Linijka pokazuje twój wynik, a na końcu wzorzec.`);
+  const status = el("div","status"), frag = html("div","frag",`<span>${p.frag}</span>`), ruler = el("div","ruler");
   const form = el("form","row"), inp = el("input"); inp.type = "text"; inp.id = "in-rdzen"; inp.autocomplete = "off"; inp.placeholder = "Długie słowo…"; inp.setAttribute("aria-label","Długie słowo");
   const btn = el("button","btn","Wpisz"); btn.type = "submit"; form.append(inp, btn);
-  const tries = el("div","tries"), res = el("div");
-  root.append(status, frag, form, tries, res);
+  const live = el("div","live"), tries = el("div","tries"), res = el("div");
+  root.append(status, frag, ruler, form, live, tries, res);
   const best = () => st.t.reduce((a,b) => b.length > a.length ? b : a, "");
+  const scale = Math.max(p.goal.length + 3, 14);
+  inp.addEventListener("input", () => {
+    const v = up(inp.value); if (!v) return live.replaceChildren();
+    const n = pl(v.length, "litera", "litery", "liter");
+    live.innerHTML = v.includes(p.frag) ? `<b>${n}</b>${best() && v.length > best().length ? " · dłuższe niż twój rekord" : ""}` : `${n} · <span class="warn">brak cząstki ${p.frag}</span>`;
+  });
+  function drawRuler(over){
+    const cell = (ruler.clientWidth || 300) / scale;
+    ruler.style.setProperty("--cell", `${cell}px`);
+    const kids = [];
+    for (let n = 5; n < scale; n += 5) { const s = el("span","num", n); s.style.left = `${n * cell}px`; kids.push(s); }
+    const b = Math.min(best().length, scale);
+    if (over) { const gl = Math.min(p.goal.length, scale); const m = el("div","mk goal"); m.style.width = `${gl * cell}px`; const l = el("span","lbl goal", `wzór: ${p.goal.length}`); l.style.left = `${gl * cell}px`; kids.push(m, l); }
+    if (b) { const m = el("div","mk you"); m.style.width = `${b * cell}px`; const l = el("span","lbl you", `ty: ${best().length}`); l.style.left = `${b * cell}px`; kids.push(m, l); }
+    ruler.replaceChildren(...kids);
+  }
   function draw(){
     const over = st.t.length >= MAX || st.end;
-    status.replaceChildren(el("span",null,`Próby: ${st.t.length} z ${MAX}`), el("span",null, best() ? `Najlepsze: ${best().length} liter` : ""));
-    tries.replaceChildren(...st.t.map(w => { const r = el("div","try"); const i = w.indexOf(p.frag); r.append(html("span",null, `${w.slice(0,i)}<mark>${p.frag}</mark>${w.slice(i + p.frag.length)}`), el("small",null,`${w.length} liter`)); return r; }));
-    form.hidden = over; res.replaceChildren();
+    status.replaceChildren(el("span",null,`Próby: ${st.t.length} z ${MAX}`), el("span",null, best() ? `Najdłuższe: ${pl(best().length, "litera", "litery", "liter")}` : ""));
+    const bw = best();
+    tries.replaceChildren(...st.t.map(w => { const r = el("div","try" + (w === bw ? " best" : "")); const i = w.indexOf(p.frag); r.append(html("span",null, `${w.slice(0,i)}<mark>${p.frag}</mark>${w.slice(i + p.frag.length)}`), el("small",null,`${w.length}`)); return r; }));
+    form.hidden = over; live.hidden = over; res.replaceChildren();
+    requestAnimationFrame(() => drawRuler(over));
     if (over) {
       const b = best().length, goal = p.goal.length, ratio = b / goal;
       const emo = ratio >= 1 ? "🌳" : ratio >= .8 ? "🌿" : ratio >= .6 ? "🌱" : "🫘";
@@ -639,7 +697,7 @@ function rdzen(g){
     if (!v.includes(p.frag)) return toast(`Słowo musi zawierać ${p.frag}`);
     if (st.t.includes(v)) return toast("To już było");
     if (!WORDS.has(v)) { inp.classList.add("shake"); setTimeout(()=>inp.classList.remove("shake"),400); return toast(`Nie znam słowa ${v}`); }
-    st.t.push(v); inp.value = ""; saveState(g.id, st); draw(); };
+    st.t.push(v); inp.value = ""; live.replaceChildren(); saveState(g.id, st); draw(); };
   draw();
 }
 
@@ -704,13 +762,17 @@ function dyktando(g){
   const set = pick(DATA.dyktando);
   const st = store.get(key(g.id)) || {r:[], t0:null, t1:null};
   const root = shell(g, "Dziesięć słów, w każdym brakuje kawałka. <b>Wybierz poprawną pisownię.</b> Stoper rusza po pierwszym kliknięciu.");
-  const status = el("div","status"), prog = el("div","progress"), body = el("div"); root.append(status, prog, body);
+  const status = el("div","status"), prog = el("div","progress"), body = el("div"), book = el("div","copybook"); root.append(status, prog, body, book);
+  if (!st.ch) st.ch = [];
   let timer = null, lock = false;
   const secs = () => st.t0 ? Math.round(((st.t1 || Date.now()) - st.t0) / 1000) : 0;
   function tick(){ status.replaceChildren(el("span",null,`${Math.min(st.r.length + 1, set.length)} z ${set.length}`), el("span","timer",`⏱ ${secs()} s`)); }
   function draw(){
     prog.replaceChildren(...set.map((_,k)=> el("i", k < st.r.length ? (st.r[k] ? "ok" : "no") : k === st.r.length ? "now" : "")));
     tick(); body.replaceChildren();
+    const lines = st.r.map((ok, k) => { const x = set[k], ln = el("div","ln " + (ok ? "ok" : "no")); ln.append(html("span",null,`${x.pre}<b>${x.ok}</b>${x.post}`), ok ? el("em",null,"dobrze") : html("span",null,`<s>${st.ch[k] || "błąd"}</s>`)); return ln; }).reverse();
+    book.replaceChildren(...(lines.length ? lines : [el("div","empty","Tu zapiszą się twoje słowa, jak w zeszycie.")]));
+    book.hidden = st.r.length >= set.length;
     if (st.r.length >= set.length) {
       clearInterval(timer);
       const pts = st.r.filter(Boolean).length, emo = st.r.map(x => x ? "🟩" : "🟥").join("");
@@ -732,7 +794,7 @@ function dyktando(g){
     const item = set[st.r.length], ok = o === item.ok;
     b.style.background = ok ? "var(--ok-bg)" : "var(--bad-bg)";
     const gap = body.querySelector(".gap"); gap.textContent = item.ok; gap.style.color = ok ? "var(--ok)" : "var(--bad)";
-    st.r.push(ok); if (st.r.length === set.length) st.t1 = Date.now();
+    st.r.push(ok); st.ch.push(o); if (st.r.length === set.length) st.t1 = Date.now();
     saveState(g.id, st);
     setTimeout(() => { lock = false; draw(); }, ok ? 450 : 1100);
   }
@@ -744,11 +806,14 @@ function dyktando(g){
 function czesciej(g){
   const pairs = pick(DATA.czesciej);
   const st = store.get(key(g.id)) || {i:0, lost:false};
-  const root = shell(g, "Które słowo pada <b>częściej</b> w polskich napisach do filmów i seriali? Grasz do pierwszej pomyłki.");
+  const root = shell(g, "Które słowo pada <b>częściej</b> w polskich napisach do filmów i seriali? Stuknij kartkę. Grasz do pierwszej pomyłki, każda trafiona para to kreska w serii.");
   const status = el("div","status"), body = el("div"); root.append(status, body);
   let lock = false;
   function draw(){
-    status.replaceChildren(el("span",null,`Seria: ${st.i}`), el("span",null,`${Math.min(st.i + 1, pairs.length)} z ${pairs.length}`));
+    const lab = el("span"); lab.append(document.createTextNode("Seria: "));
+    if (st.i) { const tally = el("span","tally"); for (let k = 0; k < st.i; k += 5) { const grp = el("span", st.i - k >= 5 ? "five" : ""); for (let j = 0; j < Math.min(5, st.i - k); j++) grp.append(el("i")); tally.append(grp); } lab.append(tally); }
+    else lab.append(document.createTextNode("0"));
+    status.replaceChildren(lab, el("span",null,`${Math.min(st.i + 1, pairs.length)} z ${pairs.length}`));
     body.replaceChildren();
     if (st.lost || st.i >= pairs.length) {
       const emo = "🟩".repeat(st.i) + (st.lost ? "🟥" : "🏆");
@@ -758,18 +823,19 @@ function czesciej(g){
     }
     const [a, ca, b, cb] = pairs[st.i];
     const vs = el("div","vs");
-    const mk = (w, c, other) => { const btn = el("button","vsbtn"); btn.append(el("span",null,w), el("small",null,"")); btn.onclick = () => choose(btn, c >= other, vs, [ca, cb]); return btn; };
+    const mk = (w, c, other) => { const btn = el("button","vsbtn"); btn.append(el("span",null,w), el("span","cnt",""), html("span","bar","<i></i>")); btn.onclick = () => choose(btn, c >= other, vs, [ca, cb]); return btn; };
     const b1 = mk(a, ca, cb), b2 = mk(b, cb, ca);
     vs.append(b1, el("div","or","czy"), b2); body.append(vs);
   }
   function choose(btn, ok, vs, counts){
     if (lock) return; lock = true;
     const btns = vs.querySelectorAll(".vsbtn");
-    btns.forEach((x,k) => { x.querySelector("small").textContent = `${counts[k].toLocaleString("pl-PL")} razy`; });
-    btn.classList.add(ok ? "ok" : "no");
+    const mx = Math.max(...counts);
+    btn.classList.add("picked");
+    btns.forEach((x,k) => { x.querySelector(".cnt").textContent = `${counts[k].toLocaleString("pl-PL")}×`; if (counts[k] === mx) x.classList.add("ok"); else if (x === btn) x.classList.add("no"); requestAnimationFrame(() => { x.querySelector(".bar i").style.width = `${counts[k] / mx * 100}%`; }); });
     const ratio = Math.max(...counts) / Math.min(...counts);
     toast(ok ? `Tak, ${ratio.toFixed(1).replace(".",",")}× częściej` : "Pudło!");
-    setTimeout(() => { if (ok) st.i++; else st.lost = true; saveState(g.id, st); lock = false; draw(); }, 1100);
+    setTimeout(() => { if (ok) st.i++; else st.lost = true; saveState(g.id, st); lock = false; draw(); }, ok ? 1400 : 2000);
   }
   draw();
 }
