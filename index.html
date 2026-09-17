@@ -275,7 +275,7 @@ mark.hg{background:var(--hl-green)} mark.hy{background:var(--mark)}
   <div id="view"></div>
   <footer>
     <span>Nowy zestaw codziennie o północy. Słownik: SJP.PL (CC BY 4.0). Częstość słów: FrequencyWords, napisy OpenSubtitles (CC BY-SA 4.0). Teksty: Wikipedia (CC BY-SA 4.0).</span>
-    <span>Test: <button id="prev">poprzedni dzień</button> · <button id="next">następny dzień</button></span>
+    <span id="testnav" hidden>Test: <button id="prev">poprzedni dzień</button> · <button id="next">następny dzień</button></span>
   </footer>
 </div>
 <div class="toast" id="toast"></div>
@@ -351,6 +351,7 @@ const store = {
 };
 const key = g => `kujonki2:${g}:${day}`;
 const $ = s => document.querySelector(s);
+const focusScroll = inp => inp.addEventListener("focus", () => setTimeout(() => inp.scrollIntoView({block: "center", behavior: "smooth"}), 250));
 const el = (tag, cls, txt) => { const e = document.createElement(tag); if (cls) e.className = cls; if (txt != null) e.textContent = txt; return e; };
 const html = (tag, cls, h) => { const e = el(tag, cls); e.innerHTML = h; return e; };
 const strip = s => s.normalize("NFD").replace(/[̀-ͯ]/g,"").replace(/Ł/g,"L").replace(/ł/g,"l");
@@ -443,7 +444,7 @@ function lacznik(g){
   const status = el("div","status"), pips = el("div","pips"); status.append(el("span",null,`${MAX} prób`), pips);
   const clues = el("div","clues"), slots = el("div","slots");
   const form = el("form","row"), inp = el("input"); inp.type = "text"; inp.id = "in-lacznik"; inp.autocomplete = "off"; inp.placeholder = "Twoje słowo"; inp.setAttribute("aria-label","Twoje słowo");
-  const btn = el("button","btn","Sprawdź"); btn.type = "submit"; form.append(inp, btn);
+  const btn = el("button","btn","Sprawdź"); btn.type = "submit"; form.append(inp, btn); focusScroll(inp);
   const chips = el("div","chips"), res = el("div");
   root.append(status, clues, slots, form, chips, res);
   function draw(){
@@ -555,7 +556,7 @@ function drabinka(g){
   const root = shell(g, `Przejdź od <b>${p.start}</b> do <b>${p.end}</b>. Na każdym kroku zmieniasz <b>jedną literę</b> i musi wyjść prawdziwe słowo. Liczą się też formy: RĘKA, RĘKĘ.`);
   const status = el("div","status"), lad = el("div","ladder");
   const form = el("form","row"), inp = el("input"); inp.type = "text"; inp.id = "in-drabinka"; inp.maxLength = 4; inp.autocomplete = "off"; inp.placeholder = "Następne słowo"; inp.setAttribute("aria-label","Następne słowo");
-  const btn = el("button","btn","Dalej"); btn.type = "submit"; form.append(inp, btn);
+  const btn = el("button","btn","Dalej"); btn.type = "submit"; form.append(inp, btn); focusScroll(inp);
   const tools = el("div","center"); tools.style.marginTop = "10px";
   const undo = el("button","btn ghost small","Cofnij krok"), give = el("button","btn ghost small","Pokaż rozwiązanie");
   tools.append(undo, give);
@@ -601,7 +602,7 @@ function zaczernione(g){
   const root = shell(g, "Tekst z Wikipedii, <b>wszystkie słowa zaczernione</b>. Wpisuj słowa, które mogą tam być. Każde trafienie odsłania je w całym tekście. Wygrywasz, gdy zgadniesz <b>temat</b> (czerwone pola).");
   const status = el("div","status"), text = el("div","redact"), rbar = html("div","revealbar","<i></i>");
   const form = el("form","row"), inp = el("input"); inp.type = "text"; inp.id = "in-zaczernione"; inp.autocomplete = "off"; inp.placeholder = "Słowo albo temat"; inp.setAttribute("aria-label","Słowo albo temat");
-  const btn = el("button","btn","Odkryj"); btn.type = "submit"; form.append(inp, btn);
+  const btn = el("button","btn","Odkryj"); btn.type = "submit"; form.append(inp, btn); focusScroll(inp);
   const tools = el("div","center"); tools.style.marginTop = "8px"; const give = el("button","btn ghost small","Poddaję się"); tools.append(give);
   const chips = el("div","chips"), res = el("div"), dock = el("div","sticky-form");
   dock.append(form, tools);
@@ -659,9 +660,13 @@ function rdzen(g){
   const root = shell(g, `Wpisz <b>jak najdłuższe słowo</b> zawierające cząstkę. Liczą się formy odmiany. Masz ${MAX} prób, liczy się najdłuższe. Linijka pokazuje twój wynik, a na końcu wzorzec.`);
   const status = el("div","status"), frag = html("div","frag",`<span>${p.frag}</span>`), ruler = el("div","ruler");
   const form = el("form","row"), inp = el("input"); inp.type = "text"; inp.id = "in-rdzen"; inp.autocomplete = "off"; inp.placeholder = "Długie słowo…"; inp.setAttribute("aria-label","Długie słowo");
-  const btn = el("button","btn","Wpisz"); btn.type = "submit"; form.append(inp, btn);
+  const btn = el("button","btn","Wpisz"); btn.type = "submit"; form.append(inp, btn); focusScroll(inp);
   const live = el("div","live"), tries = el("div","tries"), res = el("div");
-  root.append(status, frag, ruler, form, live, tries, res);
+  const tools = el("div","center"); tools.style.marginTop = "10px";
+  const stop = el("button","btn ghost small","Kończę, to moje najdłuższe");
+  stop.onclick = () => { if (!st.t.length) return toast("Wpisz najpierw jedno słowo"); st.end = true; saveState(g.id, st); draw(); };
+  tools.append(stop);
+  root.append(status, frag, ruler, form, live, tries, tools, res);
   const best = () => st.t.reduce((a,b) => b.length > a.length ? b : a, "");
   const scale = Math.max(p.goal.length + 3, 14);
   inp.addEventListener("input", () => {
@@ -684,7 +689,7 @@ function rdzen(g){
     status.replaceChildren(el("span",null,`Próby: ${st.t.length} z ${MAX}`), el("span",null, best() ? `Najdłuższe: ${pl(best().length, "litera", "litery", "liter")}` : ""));
     const bw = best();
     tries.replaceChildren(...st.t.map(w => { const r = el("div","try" + (w === bw ? " best" : "")); const i = w.indexOf(p.frag); r.append(html("span",null, `${w.slice(0,i)}<mark>${p.frag}</mark>${w.slice(i + p.frag.length)}`), el("small",null,`${w.length}`)); return r; }));
-    form.hidden = over; live.hidden = over; res.replaceChildren();
+    form.hidden = over; live.hidden = over; tools.hidden = over || !st.t.length; res.replaceChildren();
     requestAnimationFrame(() => drawRuler(over));
     if (over) {
       const b = best().length, goal = p.goal.length, ratio = b / goal;
@@ -847,7 +852,7 @@ function przyslowie(g){
   const root = shell(g, "Rozszyfruj przysłowie z emoji. <b>Wpisuj słowa</b>, a trafione pojawią się na swoich miejscach. Jak znasz całe, wpisz je od razu.");
   const status = el("div","status"), e = el("div","emoji", emo), prov = el("div","proverb");
   const form = el("form","row"), inp = el("input"); inp.type = "text"; inp.id = "in-przyslowie"; inp.autocomplete = "off"; inp.placeholder = "Słowo albo całe przysłowie"; inp.setAttribute("aria-label","Słowo albo całe przysłowie");
-  const btn = el("button","btn","Sprawdź"); btn.type = "submit"; form.append(inp, btn);
+  const btn = el("button","btn","Sprawdź"); btn.type = "submit"; form.append(inp, btn); focusScroll(inp);
   const tools = el("div","center"); tools.style.marginTop = "10px"; const hint = el("button","btn ghost small","Podpowiedź: pierwsze litery"), give = el("button","btn ghost small","Poddaję się"); tools.append(hint, give);
   const chips = el("div","chips"), res = el("div");
   root.append(status, e, prov, form, tools, chips, res);
@@ -950,6 +955,7 @@ function route(){ const id = location.hash.slice(1); const g = GAMES.find(x => x
 window.addEventListener("hashchange", route);
 $("#home").onclick = () => go("");
 function setDay(d){ const u = new URL(location.href); u.searchParams.set("d", Math.max(0,d)); location.href = u; }
+if (params.has("test") || params.has("d")) $("#testnav").hidden = false;
 $("#prev").onclick = () => setDay(day - 1);
 $("#next").onclick = () => setDay(day + 1);
 const shown = new Date(START); shown.setDate(START.getDate() + day);
