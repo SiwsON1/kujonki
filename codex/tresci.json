@@ -1,0 +1,3038 @@
+{
+ "lacznik": [
+  {
+   "a": [
+    "SREBRNY",
+    "SREBRNA",
+    "SREBRNE"
+   ],
+   "c": [
+    [
+     "_",
+     "EKRAN"
+    ],
+    [
+     "_",
+     "KULA"
+    ],
+    [
+     "_",
+     "WESELE"
+    ]
+   ]
+  },
+  {
+   "a": [
+    "MARTWA",
+    "MARTWY",
+    "MARTWE"
+   ],
+   "c": [
+    [
+     "_",
+     "NATURA"
+    ],
+    [
+     "_",
+     "PUNKT"
+    ],
+    [
+     "_",
+     "SEZON"
+    ]
+   ]
+  },
+  {
+   "a": [
+    "GŁUCHY",
+    "GŁUCHA",
+    "GŁUCHA"
+   ],
+   "c": [
+    [
+     "_",
+     "TELEFON"
+    ],
+    [
+     "_",
+     "NOC"
+    ],
+    [
+     "_",
+     "CISZA"
+    ]
+   ]
+  },
+  {
+   "a": [
+    "KRZYWA",
+    "KRZYWE",
+    "KRZYWY"
+   ],
+   "c": [
+    [
+     "_",
+     "WIEŻA"
+    ],
+    [
+     "_",
+     "ZWIERCIADŁO"
+    ],
+    [
+     "_",
+     "ZGRYZ"
+    ]
+   ]
+  },
+  {
+   "a": [
+    "CIĘŻKI",
+    "CIĘŻKA",
+    "CIĘŻKIE"
+   ],
+   "c": [
+    [
+     "_",
+     "GRZECH"
+    ],
+    [
+     "_",
+     "PRACA"
+    ],
+    [
+     "_",
+     "SPRZĘT"
+    ]
+   ]
+  },
+  {
+   "a": [
+    "GORĄCY",
+    "GORĄCA",
+    "GORĄCY"
+   ],
+   "c": [
+    [
+     "_",
+     "TOWAR"
+    ],
+    [
+     "_",
+     "LINIA"
+    ],
+    [
+     "_",
+     "ZIEMNIAK"
+    ]
+   ]
+  },
+  {
+   "a": [
+    "WOLNY",
+    "WOLNY",
+    "WOLNE"
+   ],
+   "c": [
+    [
+     "_",
+     "STRZELEC"
+    ],
+    [
+     "_",
+     "RYNEK"
+    ],
+    [
+     "_",
+     "MIEJSCE"
+    ]
+   ]
+  },
+  {
+   "a": [
+    "SZYBKI",
+    "SZYBKA",
+    "SZYBKA"
+   ],
+   "c": [
+    [
+     "_",
+     "NUMEREK"
+    ],
+    [
+     "_",
+     "KOLEJ"
+    ],
+    [
+     "_",
+     "PIŁKA"
+    ]
+   ]
+  },
+  {
+   "a": [
+    "LEWE",
+    "LEWY",
+    "LEWY"
+   ],
+   "c": [
+    [
+     "_",
+     "RĘCE"
+    ],
+    [
+     "_",
+     "PROFIL"
+    ],
+    [
+     "_",
+     "SIERPOWY"
+    ]
+   ]
+  },
+  {
+   "a": [
+    "PRAWA",
+    "PRAWY",
+    "PRAWY"
+   ],
+   "c": [
+    [
+     "_",
+     "RĘKA"
+    ],
+    [
+     "_",
+     "BRZEG"
+    ],
+    [
+     "_",
+     "PROSTY"
+    ]
+   ]
+  },
+  {
+   "a": [
+    "PROSTA",
+    "PROSTY",
+    "PROSTA"
+   ],
+   "c": [
+    [
+     "_",
+     "SPRAWA"
+    ],
+    [
+     "_",
+     "KĄT"
+    ],
+    [
+     "_",
+     "DROGA"
+    ]
+   ]
+  },
+  {
+   "a": [
+    "TRUDNY",
+    "TRUDNA",
+    "TRUDNE"
+   ],
+   "c": [
+    [
+     "_",
+     "WIEK"
+    ],
+    [
+     "_",
+     "SPRAWA"
+    ],
+    [
+     "_",
+     "DZIECIŃSTWO"
+    ]
+   ]
+  },
+  {
+   "a": [
+    "DRUGA",
+    "DRUGIE",
+    "DRUGA"
+   ],
+   "c": [
+    [
+     "_",
+     "POŁOWA"
+    ],
+    [
+     "_",
+     "DNO"
+    ],
+    [
+     "_",
+     "MŁODOŚĆ"
+    ]
+   ]
+  },
+  {
+   "a": [
+    "PIERWSZA",
+    "PIERWSZY",
+    "PIERWSZA"
+   ],
+   "c": [
+    [
+     "_",
+     "MIŁOŚĆ"
+    ],
+    [
+     "_",
+     "KROK"
+    ],
+    [
+     "_",
+     "POMOC"
+    ]
+   ]
+  },
+  {
+   "a": [
+    "TRZECI",
+    "TRZECIA",
+    "TRZECIA"
+   ],
+   "c": [
+    [
+     "_",
+     "WIEK"
+    ],
+    [
+     "_",
+     "PŁEĆ"
+    ],
+    [
+     "_",
+     "RZESZA"
+    ]
+   ]
+  },
+  {
+   "a": [
+    "ŚRODKOWY",
+    "ŚRODKOWA",
+    "ŚRODKOWY"
+   ],
+   "c": [
+    [
+     "_",
+     "PALEC"
+    ],
+    [
+     "_",
+     "EUROPA"
+    ],
+    [
+     "_",
+     "PAS"
+    ]
+   ]
+  },
+  {
+   "a": [
+    "OSTATNIA",
+    "OSTATNIA",
+    "OSTATNI"
+   ],
+   "c": [
+    [
+     "_",
+     "WIECZERZA"
+    ],
+    [
+     "_",
+     "DESKA"
+    ],
+    [
+     "_",
+     "DZWONEK"
+    ]
+   ]
+  },
+  {
+   "a": [
+    "DŁUGI",
+    "DŁUGI",
+    "DŁUGA"
+   ],
+   "c": [
+    [
+     "_",
+     "JĘZYK"
+    ],
+    [
+     "_",
+     "WEEKEND"
+    ],
+    [
+     "_",
+     "DROGA"
+    ]
+   ]
+  },
+  {
+   "a": [
+    "KRÓTKIE",
+    "KRÓTKI",
+    "KRÓTKA"
+   ],
+   "c": [
+    [
+     "_",
+     "SPIĘCIE"
+    ],
+    [
+     "_",
+     "WZROK"
+    ],
+    [
+     "_",
+     "PIŁKA"
+    ]
+   ]
+  },
+  {
+   "a": [
+    "GŁĘBOKI",
+    "GŁĘBOKA",
+    "GŁĘBOKI"
+   ],
+   "c": [
+    [
+     "_",
+     "SEN"
+    ],
+    [
+     "_",
+     "WODA"
+    ],
+    [
+     "_",
+     "ODDECH"
+    ]
+   ]
+  },
+  {
+   "a": [
+    "PŁYTKI",
+    "PŁYTKI",
+    "PŁYTKA"
+   ],
+   "c": [
+    [
+     "_",
+     "ODDECH"
+    ],
+    [
+     "_",
+     "SEN"
+    ],
+    [
+     "_",
+     "WYOBRAŹNIA"
+    ]
+   ]
+  },
+  {
+   "a": [
+    "WYSOKI",
+    "WYSOKIE",
+    "WYSOKI"
+   ],
+   "c": [
+    [
+     "_",
+     "SĄD"
+    ],
+    [
+     "_",
+     "NAPIĘCIE"
+    ],
+    [
+     "_",
+     "POZIOM"
+    ]
+   ]
+  },
+  {
+   "a": [
+    "NISKI",
+    "NISKIE",
+    "NISKI"
+   ],
+   "c": [
+    [
+     "_",
+     "WZROST"
+    ],
+    [
+     "_",
+     "CIŚNIENIE"
+    ],
+    [
+     "_",
+     "UKŁON"
+    ]
+   ]
+  },
+  {
+   "a": [
+    "CIEMNA",
+    "CIEMNY",
+    "CIEMNA"
+   ],
+   "c": [
+    [
+     "_",
+     "MASA"
+    ],
+    [
+     "_",
+     "TYP"
+    ],
+    [
+     "_",
+     "STRONA"
+    ]
+   ]
+  },
+  {
+   "a": [
+    "JASNY",
+    "JASNA",
+    "JASNY"
+   ],
+   "c": [
+    [
+     "_",
+     "GWINT"
+    ],
+    [
+     "_",
+     "SPRAWA"
+    ],
+    [
+     "_",
+     "PUNKT"
+    ]
+   ]
+  },
+  {
+   "a": [
+    "SŁODKI",
+    "SŁODKA",
+    "SŁODKI"
+   ],
+   "c": [
+    [
+     "_",
+     "DRAŃ"
+    ],
+    [
+     "_",
+     "TAJEMNICA"
+    ],
+    [
+     "_",
+     "SEN"
+    ]
+   ]
+  },
+  {
+   "a": [
+    "GORZKA",
+    "GORZKIE",
+    "GORZKI"
+   ],
+   "c": [
+    [
+     "_",
+     "PRAWDA"
+    ],
+    [
+     "_",
+     "ŻALE"
+    ],
+    [
+     "_",
+     "SMAK"
+    ]
+   ]
+  },
+  {
+   "a": [
+    "KWAŚNA",
+    "KWAŚNY",
+    "KWAŚNE"
+   ],
+   "c": [
+    [
+     "_",
+     "MINA"
+    ],
+    [
+     "_",
+     "DESZCZ"
+    ],
+    [
+     "_",
+     "MLEKO"
+    ]
+   ]
+  },
+  {
+   "a": [
+    "SŁONY",
+    "SŁONE",
+    "SŁONA"
+   ],
+   "c": [
+    [
+     "_",
+     "RACHUNEK"
+    ],
+    [
+     "_",
+     "PALUSZKI"
+    ],
+    [
+     "_",
+     "WODA"
+    ]
+   ]
+  },
+  {
+   "a": [
+    "ŚWIEŻE",
+    "ŚWIEŻA",
+    "ŚWIEŻY"
+   ],
+   "c": [
+    [
+     "_",
+     "POWIETRZE"
+    ],
+    [
+     "_",
+     "KREW"
+    ],
+    [
+     "_",
+     "UMYSŁ"
+    ]
+   ]
+  },
+  {
+   "a": [
+    "STARY",
+    "STARA",
+    "STARY"
+   ],
+   "c": [
+    [
+     "_",
+     "KAWALER"
+    ],
+    [
+     "_",
+     "PANNA"
+    ],
+    [
+     "_",
+     "ZNAJOMY"
+    ]
+   ]
+  },
+  {
+   "a": [
+    "NOWY",
+    "NOWA",
+    "NOWY"
+   ],
+   "c": [
+    [
+     "_",
+     "ROK"
+    ],
+    [
+     "_",
+     "ERA"
+    ],
+    [
+     "_",
+     "JORK"
+    ]
+   ]
+  },
+  {
+   "a": [
+    "ZŁY",
+    "ZŁY",
+    "ZŁA"
+   ],
+   "c": [
+    [
+     "_",
+     "PIES"
+    ],
+    [
+     "_",
+     "ZNAK"
+    ],
+    [
+     "_",
+     "KOBIETA"
+    ]
+   ]
+  },
+  {
+   "a": [
+    "DOBRY",
+    "DOBRA",
+    "DOBRA"
+   ],
+   "c": [
+    [
+     "_",
+     "WIECZÓR"
+    ],
+    [
+     "_",
+     "NOWINA"
+    ],
+    [
+     "_",
+     "ZMIANA"
+    ]
+   ]
+  },
+  {
+   "a": [
+    "PEŁNA",
+    "PEŁNY",
+    "PEŁNE"
+   ],
+   "c": [
+    [
+     "_",
+     "PULA"
+    ],
+    [
+     "_",
+     "ETAT"
+    ],
+    [
+     "_",
+     "ZANURZENIE"
+    ]
+   ]
+  },
+  {
+   "a": [
+    "PUSTY",
+    "PUSTA",
+    "PUSTY"
+   ],
+   "c": [
+    [
+     "_",
+     "PRZEBIEG"
+    ],
+    [
+     "_",
+     "OBIETNICA"
+    ],
+    [
+     "_",
+     "ŚMIECH"
+    ]
+   ]
+  },
+  {
+   "a": [
+    "SUCHY",
+    "SUCHA",
+    "SUCHY"
+   ],
+   "c": [
+    [
+     "_",
+     "KASZEL"
+    ],
+    [
+     "_",
+     "KRAKOWSKA"
+    ],
+    [
+     "_",
+     "PROWIANT"
+    ]
+   ]
+  },
+  {
+   "a": [
+    "MOKRA",
+    "MOKRA",
+    "MOKRY"
+   ],
+   "c": [
+    [
+     "_",
+     "ROBOTA"
+    ],
+    [
+     "_",
+     "WŁOSZKA"
+    ],
+    [
+     "_",
+     "KASZEL"
+    ]
+   ]
+  },
+  {
+   "a": [
+    "TWARDY",
+    "TWARDY",
+    "TWARDE"
+   ],
+   "c": [
+    [
+     "_",
+     "DOWÓD"
+    ],
+    [
+     "_",
+     "DYSK"
+    ],
+    [
+     "_",
+     "LĄDOWANIE"
+    ]
+   ]
+  },
+  {
+   "a": [
+    "MIĘKKIE",
+    "MIĘKKIE",
+    "MIĘKKI"
+   ],
+   "c": [
+    [
+     "_",
+     "SERCE"
+    ],
+    [
+     "_",
+     "LĄDOWANIE"
+    ],
+    [
+     "_",
+     "NARKOTYK"
+    ]
+   ]
+  },
+  {
+   "a": [
+    "ŁYSA",
+    "ŁYSE",
+    "ŁYSA"
+   ],
+   "c": [
+    [
+     "_",
+     "POLANA"
+    ],
+    [
+     "_",
+     "OPONY"
+    ],
+    [
+     "_",
+     "GÓRA"
+    ]
+   ]
+  },
+  {
+   "a": [
+    "GOŁY",
+    "GOŁE",
+    "GOŁA"
+   ],
+   "c": [
+    [
+     "_",
+     "FAKT"
+    ],
+    [
+     "_",
+     "ŚCIANY"
+    ],
+    [
+     "_",
+     "PRAWDA"
+    ]
+   ]
+  },
+  {
+   "a": [
+    "CHUDE",
+    "CHUDE",
+    "CHUDY"
+   ],
+   "c": [
+    [
+     "_",
+     "LATA"
+    ],
+    [
+     "_",
+     "MLEKO"
+    ],
+    [
+     "_",
+     "TWARÓG"
+    ]
+   ]
+  },
+  {
+   "a": [
+    "GRUBA",
+    "GRUBY",
+    "GRUBY"
+   ],
+   "c": [
+    [
+     "_",
+     "RYBA"
+    ],
+    [
+     "_",
+     "HAJS"
+    ],
+    [
+     "_",
+     "PORTFEL"
+    ]
+   ]
+  },
+  {
+   "a": [
+    "SŁABA",
+    "SŁABY",
+    "SŁABE"
+   ],
+   "c": [
+    [
+     "_",
+     "PŁEĆ"
+    ],
+    [
+     "_",
+     "PUNKT"
+    ],
+    [
+     "_",
+     "OGNIWO"
+    ]
+   ]
+  },
+  {
+   "a": [
+    "SILNA",
+    "SILNE",
+    "SILNY"
+   ],
+   "c": [
+    [
+     "_",
+     "WOLA"
+    ],
+    [
+     "_",
+     "RAMIONA"
+    ],
+    [
+     "_",
+     "WIATR"
+    ]
+   ]
+  },
+  {
+   "a": [
+    "GŁUPI",
+    "GŁUPI",
+    "GŁUPIA"
+   ],
+   "c": [
+    [
+     "_",
+     "JAŚ"
+    ],
+    [
+     "_",
+     "ŻART"
+    ],
+    [
+     "_",
+     "GĘŚ"
+    ]
+   ]
+  },
+  {
+   "a": [
+    "MĄDRA",
+    "MĄDRY",
+    "MĄDRE"
+   ],
+   "c": [
+    [
+     "_",
+     "SOWA"
+    ],
+    [
+     "_",
+     "WYBÓR"
+    ],
+    [
+     "_",
+     "SŁOWA"
+    ]
+   ]
+  },
+  {
+   "a": [
+    "DZIKI",
+    "DZIKA",
+    "DZIKIE"
+   ],
+   "c": [
+    [
+     "_",
+     "ZACHÓD"
+    ],
+    [
+     "_",
+     "KACZKA"
+    ],
+    [
+     "_",
+     "ZWIERZĘ"
+    ]
+   ]
+  },
+  {
+   "a": [
+    "WŚCIEKŁY",
+    "WŚCIEKŁE",
+    "WŚCIEKŁY"
+   ],
+   "c": [
+    [
+     "_",
+     "PIES"
+    ],
+    [
+     "_",
+     "KROWY"
+    ],
+    [
+     "_",
+     "BYK"
+    ]
+   ]
+  },
+  {
+   "a": [
+    "PIĘKNY",
+    "PIĘKNA",
+    "PIĘKNE"
+   ],
+   "c": [
+    [
+     "_",
+     "UMYSŁ"
+    ],
+    [
+     "_",
+     "HELENA"
+    ],
+    [
+     "_",
+     "SŁOWA"
+    ]
+   ]
+  },
+  {
+   "a": [
+    "BRZYDKIE",
+    "BRZYDKI",
+    "BRZYDKA"
+   ],
+   "c": [
+    [
+     "_",
+     "KACZĄTKO"
+    ],
+    [
+     "_",
+     "ZAPACH"
+    ],
+    [
+     "_",
+     "POGODA"
+    ]
+   ]
+  },
+  {
+   "a": [
+    "OSTRY",
+    "OSTRA",
+    "OSTRE"
+   ],
+   "c": [
+    [
+     "_",
+     "DYŻUR"
+    ],
+    [
+     "_",
+     "AMUNICJA"
+    ],
+    [
+     "_",
+     "KOŁO"
+    ]
+   ]
+  },
+  {
+   "a": [
+    "TĘPY",
+    "TĘPA",
+    "TĘPY"
+   ],
+   "c": [
+    [
+     "_",
+     "NÓŻ"
+    ],
+    [
+     "_",
+     "STRZAŁA"
+    ],
+    [
+     "_",
+     "BÓL"
+    ]
+   ]
+  },
+  {
+   "a": [
+    "CZERWONY",
+    "CZERWONA",
+    "CZERWONE"
+   ],
+   "c": [
+    [
+     "_",
+     "KAPTUREK"
+    ],
+    [
+     "_",
+     "KARTKA"
+    ],
+    [
+     "_",
+     "WINO"
+    ]
+   ]
+  },
+  {
+   "a": [
+    "NIEBIESKI",
+    "NIEBIESKA",
+    "NIEBIESKIE"
+   ],
+   "c": [
+    [
+     "_",
+     "PTAK"
+    ],
+    [
+     "_",
+     "LINIA"
+    ],
+    [
+     "_",
+     "MIGDAŁY"
+    ]
+   ]
+  },
+  {
+   "a": [
+    "SZARY",
+    "SZARA",
+    "SZARE"
+   ],
+   "c": [
+    [
+     "_",
+     "KOWALSKI"
+    ],
+    [
+     "_",
+     "STREFA"
+    ],
+    [
+     "_",
+     "KOMÓRKI"
+    ]
+   ]
+  },
+  {
+   "a": [
+    "ŻÓŁTY",
+    "ŻÓŁTA",
+    "ŻÓŁTY"
+   ],
+   "c": [
+    [
+     "_",
+     "SER"
+    ],
+    [
+     "_",
+     "KARTKA"
+    ],
+    [
+     "_",
+     "DZIÓB"
+    ]
+   ]
+  },
+  {
+   "a": [
+    "RÓŻOWA",
+    "RÓŻOWA",
+    "RÓŻOWY"
+   ],
+   "c": [
+    [
+     "_",
+     "PANTERA"
+    ],
+    [
+     "_",
+     "LANDRYNKA"
+    ],
+    [
+     "_",
+     "FLAMING"
+    ]
+   ]
+  },
+  {
+   "a": [
+    "BRĄZOWY",
+    "BRĄZOWY",
+    "BRĄZOWY"
+   ],
+   "c": [
+    [
+     "_",
+     "MEDAL"
+    ],
+    [
+     "_",
+     "PAS"
+    ],
+    [
+     "_",
+     "CUKIER"
+    ]
+   ]
+  },
+  {
+   "a": [
+    "ŚMIERTELNY",
+    "ŚMIERTELNA",
+    "ŚMIERTELNE"
+   ],
+   "c": [
+    [
+     "_",
+     "WRÓG"
+    ],
+    [
+     "_",
+     "DAWKA"
+    ],
+    [
+     "_",
+     "POBICIE"
+    ]
+   ]
+  },
+  {
+   "a": [
+    "GŁADKA",
+    "GŁADKIE",
+    "GŁADKI"
+   ],
+   "c": [
+    [
+     "_",
+     "SKÓRA"
+    ],
+    [
+     "_",
+     "SŁÓWKA"
+    ],
+    [
+     "_",
+     "PRZEBIEG"
+    ]
+   ]
+  },
+  {
+   "a": [
+    "SZTUCZNA",
+    "SZTUCZNE",
+    "SZTUCZNY"
+   ],
+   "c": [
+    [
+     "_",
+     "INTELIGENCJA"
+    ],
+    [
+     "_",
+     "ODDYCHANIE"
+    ],
+    [
+     "_",
+     "UŚMIECH"
+    ]
+   ]
+  },
+  {
+   "a": [
+    "PRAWDZIWA",
+    "PRAWDZIWY",
+    "PRAWDZIWE"
+   ],
+   "c": [
+    [
+     "_",
+     "MIŁOŚĆ"
+    ],
+    [
+     "_",
+     "MĘŻCZYZNA"
+    ],
+    [
+     "_",
+     "OBLICZE"
+    ]
+   ]
+  },
+  {
+   "a": [
+    "WIELKI",
+    "WIELKA",
+    "WIELKIE"
+   ],
+   "c": [
+    [
+     "_",
+     "MUR"
+    ],
+    [
+     "_",
+     "BRYTANIA"
+    ],
+    [
+     "_",
+     "ODKRYCIE"
+    ]
+   ]
+  },
+  {
+   "a": [
+    "MAŁY",
+    "MAŁA",
+    "MAŁE"
+   ],
+   "c": [
+    [
+     "_",
+     "KSIĄŻĘ"
+    ],
+    [
+     "_",
+     "MI"
+    ],
+    [
+     "_",
+     "PIWO"
+    ]
+   ]
+  },
+  {
+   "a": [
+    "TAJNY",
+    "TAJNA",
+    "TAJNE"
+   ],
+   "c": [
+    [
+     "_",
+     "AGENT"
+    ],
+    [
+     "_",
+     "BROŃ"
+    ],
+    [
+     "_",
+     "AKTA"
+    ]
+   ]
+  },
+  {
+   "a": [
+    "BOGATE",
+    "BOGATY",
+    "BOGATA"
+   ],
+   "c": [
+    [
+     "_",
+     "WNĘTRZE"
+    ],
+    [
+     "_",
+     "SŁOWNIK"
+    ],
+    [
+     "_",
+     "WYOBRAŹNIA"
+    ]
+   ]
+  },
+  {
+   "a": [
+    "CZYSTA",
+    "CZYSTE",
+    "CZYSTY"
+   ],
+   "c": [
+    [
+     "_",
+     "PRAWDA"
+    ],
+    [
+     "_",
+     "KONTO"
+    ],
+    [
+     "_",
+     "ZYSK"
+    ]
+   ]
+  },
+  {
+   "a": [
+    "BRUDNA",
+    "BRUDNE",
+    "BRUDNY"
+   ],
+   "c": [
+    [
+     "_",
+     "ROBOTA"
+    ],
+    [
+     "_",
+     "PIENIĄDZE"
+    ],
+    [
+     "_",
+     "HARRY"
+    ]
+   ]
+  }
+ ],
+ "ogonki": [
+  [
+   [
+    "teren z drzewami owocowymi",
+    "SAD"
+   ],
+   [
+    "miejsce orzekania o winie",
+    "SĄD"
+   ],
+   [
+    "najwyższa część ciała",
+    "GŁOWA"
+   ],
+   [
+    "rosną gęsto na głowie",
+    "WŁOSY"
+   ],
+   [
+    "narząd myślenia w czaszce",
+    "MÓZG"
+   ]
+  ],
+  [
+   [
+    "wykonuje wyroki śmierci",
+    "KAT"
+   ],
+   [
+    "miejsce styku dwóch ścian",
+    "KĄT"
+   ],
+   [
+    "górna część twarzy",
+    "CZOŁO"
+   ],
+   [
+    "włosek na powiece",
+    "RZĘSA"
+   ],
+   [
+    "służy do gryzienia",
+    "ZĄB"
+   ]
+  ],
+  [
+   [
+    "środek z apteki",
+    "LEK"
+   ],
+   [
+    "silne uczucie obawy",
+    "LĘK"
+   ],
+   [
+    "narząd smaku w ustach",
+    "JĘZYK"
+   ],
+   [
+    "część kończyny górnej",
+    "RAMIĘ"
+   ],
+   [
+    "chwyta małe przedmioty",
+    "RĘKA"
+   ]
+  ],
+  [
+   [
+    "otwór w kadłubie statku",
+    "LUK"
+   ],
+   [
+    "dawna broń ze strzałami",
+    "ŁUK"
+   ],
+   [
+    "część ręki z palcami",
+    "DŁOŃ"
+   ],
+   [
+    "twarda płytka na palcu",
+    "PAZNOKIEĆ"
+   ],
+   [
+    "przednia część tułowia",
+    "PIERŚ"
+   ]
+  ],
+  [
+   [
+    "zbiornik na paliwo",
+    "BAK"
+   ],
+   [
+    "duży owad latający",
+    "BĄK"
+   ],
+   [
+    "ślad na środku brzucha",
+    "PĘPEK"
+   ],
+   [
+    "oś szkieletu człowieka",
+    "KRĘGOSŁUP"
+   ],
+   [
+    "tylna część nogi",
+    "ŁYDKA"
+   ]
+  ],
+  [
+   [
+    "zbiorowość ludzi społeczeństwo",
+    "LUD"
+   ],
+   [
+    "zamarznięta zimna woda",
+    "LÓD"
+   ],
+   [
+    "tylna część stopy",
+    "PIĘTA"
+   ],
+   [
+    "twardy element szkieletu",
+    "KOŚĆ"
+   ],
+   [
+    "tkanka powodująca ruch",
+    "MIĘSIEŃ"
+   ]
+  ],
+  [
+   [
+    "zanieczyszczenie na ciele",
+    "BRUD"
+   ],
+   [
+    "płytkie miejsce w rzece",
+    "BRÓD"
+   ],
+   [
+    "naczynie pompujące krew",
+    "ŻYŁA"
+   ],
+   [
+    "biały ptak wodny",
+    "ŁABĘDŹ"
+   ],
+   [
+    "kolczasty ssak owadożerny",
+    "JEŻ"
+   ]
+  ],
+  [
+   [
+    "polska rzeka wschodnia",
+    "BUG"
+   ],
+   [
+    "istota najwyższa w religii",
+    "BÓG"
+   ],
+   [
+    "gad bez nóg i rąk",
+    "WĄŻ"
+   ],
+   [
+    "mięczak z okrągłą muszlą",
+    "ŚLIMAK"
+   ],
+   [
+    "zwierzę z długą szyją",
+    "ŻYRAFA"
+   ]
+  ],
+  [
+   [
+    "przeznaczenie rzucane kośćmi",
+    "LOS"
+   ],
+   [
+    "wielki ssak z porożem",
+    "ŁOŚ"
+   ],
+   [
+    "ssak z długą trąbą",
+    "SŁOŃ"
+   ],
+   [
+    "wierzchowiec z grzywą",
+    "KOŃ"
+   ],
+   [
+    "ptak stukający w korę",
+    "DZIĘCIOŁ"
+   ]
+  ],
+  [
+   [
+    "obszar o specyficznych cechach",
+    "ZONA"
+   ],
+   [
+    "kobieta w związku małżeńskim",
+    "ŻONA"
+   ],
+   [
+    "barwny ptak łowny",
+    "BAŻANT"
+   ],
+   [
+    "mały ptaszek w mieście",
+    "WRÓBEL"
+   ],
+   [
+    "ptak zwiastujący wiosnę",
+    "JASKÓŁKA"
+   ]
+  ],
+  [
+   [
+    "piąty dźwięk gamy",
+    "SOL"
+   ],
+   [
+    "biała przyprawa kulinarna",
+    "SÓL"
+   ],
+   [
+    "ptak pokoju gruchający",
+    "GOŁĄB"
+   ],
+   [
+    "stawonóg tkający sieci",
+    "PAJĄK"
+   ],
+   [
+    "owad w twardym pancerzu",
+    "CHRZĄSZCZ"
+   ]
+  ],
+  [
+   [
+    "ilość materii w chemii",
+    "MOL"
+   ],
+   [
+    "owad niszczący ubrania",
+    "MÓL"
+   ],
+   [
+    "pracowity owad w lesie",
+    "MRÓWKA"
+   ],
+   [
+    "drapieżnik jedzący miód",
+    "NIEDŹWIEDŹ"
+   ],
+   [
+    "dziki kot z pędzelkami",
+    "RYŚ"
+   ]
+  ],
+  [
+   [
+    "uroczysta akademia i święto",
+    "GALA"
+   ],
+   [
+    "potocznie o piłce",
+    "GAŁA"
+   ],
+   [
+    "ruda mieszkanka drzew",
+    "WIEWIÓRKA"
+   ],
+   [
+    "mały zwinny drapieżnik",
+    "ŁASICA"
+   ],
+   [
+    "płaz skaczący, zielony",
+    "ŻABA"
+   ]
+  ],
+  [
+   [
+    "płynna skała wulkanu",
+    "LAWA"
+   ],
+   [
+    "twarde drewniane siedzisko",
+    "ŁAWA"
+   ],
+   [
+    "zwierzę z ryjkiem",
+    "ŚWINIA"
+   ],
+   [
+    "wykastrowany samiec bydła",
+    "WÓŁ"
+   ],
+   [
+    "zwierzę o długich uszach",
+    "KRÓLIK"
+   ]
+  ],
+  [
+   [
+    "blat w małym sklepie",
+    "LADA"
+   ],
+   [
+    "rosyjska marka samochodów",
+    "ŁADA"
+   ],
+   [
+    "dziki kuzyn królika",
+    "ZAJĄC"
+   ],
+   [
+    "kwaśna zupa z jajkiem",
+    "ŻUREK"
+   ],
+   [
+    "ryba słodkowodna w kropki",
+    "PSTRĄG"
+   ]
+  ],
+  [
+   [
+    "roślina na przewiewne tkaniny",
+    "LEN"
+   ],
+   [
+    "osoba niechętna do pracy",
+    "LEŃ"
+   ],
+   [
+    "ryba o różowym mięsie",
+    "ŁOSOŚ"
+   ],
+   [
+    "fioletowy mały owoc z pestką",
+    "ŚLIWKA"
+   ],
+   [
+    "mały czerwony owoc letni",
+    "WIŚNIA"
+   ]
+  ],
+  [
+   [
+    "zakończenie partii szachów",
+    "MAT"
+   ],
+   [
+    "osad na dnie płynu",
+    "MĄT"
+   ],
+   [
+    "podłużne zielone warzywo",
+    "OGÓREK"
+   ],
+   [
+    "owoc dębu na jesień",
+    "ŻOŁĄDŹ"
+   ],
+   [
+    "proszek do pieczenia chleba",
+    "MĄKA"
+   ]
+  ],
+  [
+   [
+    "nitka rosnąca na głowie",
+    "WŁOS"
+   ],
+   [
+    "dawniej majątek ziemski",
+    "WŁOŚ"
+   ],
+   [
+    "jadalna tkanka zwierzęca",
+    "MIĘSO"
+   ],
+   [
+    "wyrób mięsny w jelicie",
+    "KIEŁBASA"
+   ],
+   [
+    "pieczywo pszenne jedzone rano",
+    "BUŁKA"
+   ]
+  ],
+  [
+   [
+    "pierwiastek chemiczny z symbolem br",
+    "BROM"
+   ],
+   [
+    "służy żołnierzowi do walki",
+    "BROŃ"
+   ],
+   [
+    "grzyby do spulchniania ciasta",
+    "DROŻDŻE"
+   ],
+   [
+    "mebel z blatem i nogami",
+    "STÓŁ"
+   ],
+   [
+    "mebel przeznaczony do spania",
+    "ŁÓŻKO"
+   ]
+  ],
+  [
+   [
+    "część wielkiego dzieła książkowego",
+    "TOM"
+   ],
+   [
+    "głębina wielkiej wody",
+    "TOŃ"
+   ],
+   [
+    "deska do trzymania książek",
+    "PÓŁKA"
+   ],
+   [
+    "pokój do mycia ciała",
+    "ŁAZIENKA"
+   ],
+   [
+    "miękki przedmiot do kąpieli",
+    "GĄBKA"
+   ]
+  ],
+  [
+   [
+    "dawna jednostka w aptekarstwie",
+    "GRAN"
+   ],
+   [
+    "ostry grzbiet skalny w górach",
+    "GRAŃ"
+   ],
+   [
+    "kostka do mycia rąk",
+    "MYDŁO"
+   ],
+   [
+    "materiał do wycierania rąk",
+    "RĘCZNIK"
+   ],
+   [
+    "przyrząd do czesania włosów",
+    "GRZEBIEŃ"
+   ]
+  ],
+  [
+   [
+    "potrawa z płynnego wywaru",
+    "ZUPA"
+   ],
+   [
+    "dawna mała kopalnia soli",
+    "ŻUPA"
+   ],
+   [
+    "zbiór zadrukowanych stron",
+    "KSIĄŻKA"
+   ],
+   [
+    "przyrząd z wkładem grafitowym",
+    "OŁÓWEK"
+   ],
+   [
+    "pisze niebieskim wkładem w zeszycie",
+    "DŁUGOPIS"
+   ]
+  ],
+  [
+   [
+    "rozległa równina z trawą",
+    "STEP"
+   ],
+   [
+    "najwolniejszy chód konia",
+    "STĘP"
+   ],
+   [
+    "wieczne narzędzie atramentowe",
+    "PIÓRO"
+   ],
+   [
+    "ostre narzędzie z dwoma ostrzami",
+    "NOŻYCZKI"
+   ],
+   [
+    "ostre narzędzie w kuchni",
+    "NÓŻ"
+   ]
+  ],
+  [
+   [
+    "ciąg wartości na termometrze",
+    "SKALA"
+   ],
+   [
+    "twardy materiał tworzący góry",
+    "SKAŁA"
+   ],
+   [
+    "sztuciec do jedzenia zupy",
+    "ŁYŻKA"
+   ],
+   [
+    "narzędzie do wbijania gwoździa",
+    "MŁOTEK"
+   ],
+   [
+    "element dokręcany śrubokrętem",
+    "ŚRUBA"
+   ]
+  ],
+  [
+   [
+    "opad w postaci kulek lodu",
+    "GRAD"
+   ],
+   [
+    "las z dębami i grabami",
+    "GRĄD"
+   ],
+   [
+    "ostry metalowy bolec",
+    "GWÓŹDŹ"
+   ],
+   [
+    "zapięcie na mały klucz",
+    "KŁÓDKA"
+   ],
+   [
+    "biały puch lecący zimą",
+    "ŚNIEG"
+   ]
+  ],
+  [
+   [
+    "bardzo niska temperatura zimą",
+    "MRÓZ"
+   ],
+   [
+    "naturalny satelita świecący nocą",
+    "KSIĘŻYC"
+   ],
+   [
+    "wysokie wzniesienie terenu",
+    "GÓRA"
+   ],
+   [
+    "mały naturalny ciek wodny",
+    "STRUMIEŃ"
+   ],
+   [
+    "potężne drzewo rodzące żołędzie",
+    "DĄB"
+   ]
+  ],
+  [
+   [
+    "drzewo iglaste służące za choinkę",
+    "ŚWIERK"
+   ],
+   [
+    "zielona część rośliny na łodydze",
+    "LIŚĆ"
+   ],
+   [
+    "boczna odnoga pnia drzewa",
+    "GAŁĄŹ"
+   ],
+   [
+    "podziemna część rośliny",
+    "KORZEŃ"
+   ],
+   [
+    "duży gęsty las iglasty",
+    "BÓR"
+   ]
+  ],
+  [
+   [
+    "wąska droga wydeptana w lesie",
+    "ŚCIEŻKA"
+   ],
+   [
+    "twardy kawałek skały otoczak",
+    "KAMIEŃ"
+   ],
+   [
+    "bardzo duży odłam skalny",
+    "GŁAZ"
+   ],
+   [
+    "mokra lepka ziemia po ulewie",
+    "BŁOTO"
+   ],
+   [
+    "kruszywo budowlane z drobnych kamyczków",
+    "ŻWIR"
+   ]
+  ],
+  [
+   [
+    "czarna skała palna z kopalni",
+    "WĘGIEL"
+   ],
+   [
+    "głębokie uczucie do drugiej osoby",
+    "MIŁOŚĆ"
+   ],
+   [
+    "stan pomyślności i radości",
+    "SZCZĘŚCIE"
+   ],
+   [
+    "uczucie wielkiego uśmiechu zadowolenia",
+    "RADOŚĆ"
+   ],
+   [
+    "silne uczucie gniewu i irytacji",
+    "ZŁOŚĆ"
+   ]
+  ],
+  [
+   [
+    "brak lęku przed wyzwaniami",
+    "ŚMIAŁOŚĆ"
+   ],
+   [
+    "wiedza poparta życiowym doświadczeniem",
+    "MĄDROŚĆ"
+   ],
+   [
+    "brak inteligencji i rozsądku",
+    "GŁUPOTA"
+   ],
+   [
+    "zdolność umysłu do przechowywania informacji",
+    "PAMIĘĆ"
+   ],
+   [
+    "wytwór działania ludzkiego umysłu",
+    "MYŚL"
+   ]
+  ],
+  [
+   [
+    "nowa idea na zrobienie czegoś",
+    "POMYSŁ"
+   ],
+   [
+    "kierunek kompasu gdzie jest zimno",
+    "PÓŁNOC"
+   ],
+   [
+    "środek dnia słonecznego",
+    "POŁUDNIE"
+   ],
+   [
+    "strona świata ze słońcem wschodzącym",
+    "WSCHÓD"
+   ],
+   [
+    "strona świata gdzie słońce znika",
+    "ZACHÓD"
+   ]
+  ],
+  [
+   [
+    "czas który już bezpowrotnie minął",
+    "PRZESZŁOŚĆ"
+   ],
+   [
+    "czas który dopiero nadejdzie",
+    "PRZYSZŁOŚĆ"
+   ],
+   [
+    "obecna chwila i dzień dzisiejszy",
+    "TERAŹNIEJSZOŚĆ"
+   ],
+   [
+    "stan istnienia od narodzin",
+    "ŻYCIE"
+   ],
+   [
+    "koniec biologicznego istnienia organizmu",
+    "ŚMIERĆ"
+   ]
+  ],
+  [
+   [
+    "pierwszy etap robienia czegoś",
+    "POCZĄTEK"
+   ],
+   [
+    "fala akustyczna słyszana przez ucho",
+    "DŹWIĘK"
+   ],
+   [
+    "utwór wokalny do śpiewania",
+    "PIEŚŃ"
+   ],
+   [
+    "maszyna do podnoszenia ciężarów",
+    "DŹWIG"
+   ],
+   [
+    "narzędzie malarza z włosiem",
+    "PĘDZEL"
+   ]
+  ],
+  [
+   [
+    "materiał na którym powstaje obraz",
+    "PŁÓTNO"
+   ],
+   [
+    "trójwymiarowe dzieło wykute w kamieniu",
+    "RZEŹBA"
+   ],
+   [
+    "wydawanie melodyjnych dźwięków z gardła",
+    "ŚPIEW"
+   ],
+   [
+    "rytmiczny ruch ciała w tańcu",
+    "TANIEC"
+   ],
+   [
+    "mała jednostka pływająca na wiosła",
+    "ŁÓDKA"
+   ]
+  ],
+  [
+   [
+    "skład wielu wagonów na torach",
+    "POCIĄG"
+   ],
+   [
+    "miejsce w którym można spocząć",
+    "SIEDZENIE"
+   ],
+   [
+    "rzeczy zabierane w daleką podróż",
+    "BAGAŻ"
+   ],
+   [
+    "przemieszczanie się w odległe miejsce",
+    "PODRÓŻ"
+   ],
+   [
+    "mechanizm pozwalający unieść wielki ciężar",
+    "DŹWIGNIA"
+   ]
+  ],
+  [
+   [
+    "przepływ ładunków w kablu",
+    "PRĄD"
+   ],
+   [
+    "szklana bańka świecąca w lampie",
+    "ŻARÓWKA"
+   ],
+   [
+    "przycisk zapalający światło w pokoju",
+    "WŁĄCZNIK"
+   ],
+   [
+    "bolec z kablem wkładany do kontaktu",
+    "WTYCZKA"
+   ],
+   [
+    "pojazd z kołami badający inną planetę",
+    "ŁAZIK"
+   ]
+  ],
+  [
+   [
+    "kosmiczna przestrzeń pozbawiona materii",
+    "PRÓŻNIA"
+   ],
+   [
+    "stan kobiety przed narodzinami dziecka",
+    "CIĄŻA"
+   ],
+   [
+    "bardzo małe nowo narodzone dziecko",
+    "NIEMOWLĘ"
+   ],
+   [
+    "brat lub siostra z tego samego porodu",
+    "BLIŹNIAK"
+   ],
+   [
+    "formalny związek dwojga kochających się ludzi",
+    "MAŁŻEŃSTWO"
+   ]
+  ],
+  [
+   [
+    "relacja miłosna dwojga bliskich partnerów",
+    "ZWIĄZEK"
+   ],
+   [
+    "ceremonia zawarcia związku małżeńskiego",
+    "ŚLUB"
+   ],
+   [
+    "okrągła ozdoba na palec",
+    "PIERŚCIEŃ"
+   ],
+   [
+    "złote kółko symbolizujące wierność",
+    "OBRĄCZKA"
+   ],
+   [
+    "ozdobna tasiemka do wiązania prezentów",
+    "WSTĄŻKA"
+   ]
+  ],
+  [
+   [
+    "woskowy walec z knotem",
+    "ŚWIECA"
+   ],
+   [
+    "jasna widzialna część ognia",
+    "PŁOMIEŃ"
+   ],
+   [
+    "służba mundurowa gasząca pożary",
+    "STRAŻ"
+   ],
+   [
+    "uzbrojony członek polskiego wojska",
+    "ŻOŁNIERZ"
+   ],
+   [
+    "ochrona głowy przed uderzeniami",
+    "HEŁM"
+   ]
+  ],
+  [
+   [
+    "urzędowy symbol państwowy w postaci orła",
+    "GODŁO"
+   ],
+   [
+    "zorganizowana społeczność na terytorium",
+    "PAŃSTWO"
+   ],
+   [
+    "osada rolnicza z gospodarstwami",
+    "WIEŚ"
+   ],
+   [
+    "miejsce przecięcia dwóch ulic",
+    "RÓG"
+   ],
+   [
+    "uniwersalny środek płatniczy za zakupy",
+    "PIENIĄDZ"
+   ]
+  ],
+  [
+   [
+    "pożyczona suma do obowiązkowego oddania",
+    "DŁUG"
+   ],
+   [
+    "wykonywana profesja by zarobić",
+    "ZAWÓD"
+   ],
+   [
+    "praca wykonana odpłatnie dla kogoś",
+    "USŁUGA"
+   ],
+   [
+    "ile dany przedmiot jest warty",
+    "WARTOŚĆ"
+   ],
+   [
+    "poziom solidności wykonania produktu",
+    "JAKOŚĆ"
+   ]
+  ],
+  [
+   [
+    "masa przedmiotu przyciąganego przez grawitację",
+    "CIĘŻAR"
+   ],
+   [
+    "forma zewnętrzna przedmiotu i obrys",
+    "KSZTAŁT"
+   ],
+   [
+    "zmysł odpowiedzialny za czucie zapachów",
+    "WĘCH"
+   ],
+   [
+    "zmysł odpowiedzialny za odbieranie dźwięków",
+    "SŁUCH"
+   ],
+   [
+    "zmysł skóry związany z naciskiem",
+    "CZUCIE"
+   ]
+  ],
+  [
+   [
+    "przyjemna nagrzana temperatura kaloryfera",
+    "CIEPŁO"
+   ],
+   [
+    "bardzo wysoka temperatura latem",
+    "UPAŁ"
+   ],
+   [
+    "niska temperatura powodująca gęsią skórkę",
+    "CHŁÓD"
+   ],
+   [
+    "światło przecinające niebo podczas burzy",
+    "BŁYSKAWICA"
+   ],
+   [
+    "wielokolorowy łuk na niebie",
+    "TĘCZA"
+   ]
+  ],
+  [
+   [
+    "zawiesina kropelek wody w powietrzu",
+    "MGŁA"
+   ],
+   [
+    "lodowy osad na gałęziach drzew",
+    "SZADŹ"
+   ],
+   [
+    "pora roku pełna spadających liści",
+    "JESIEŃ"
+   ],
+   [
+    "pierwszy bardzo zimny miesiąc roku",
+    "STYCZEŃ"
+   ],
+   [
+    "czwarty miesiąc roku plecie pogodę",
+    "KWIECIEŃ"
+   ]
+  ],
+  [
+   [
+    "ósmy miesiąc roku czas żniw",
+    "SIERPIEŃ"
+   ],
+   [
+    "miesiąc powrotu uczniów do szkoły",
+    "WRZESIEŃ"
+   ],
+   [
+    "dziesiąty miesiąc z żółtymi liśćmi",
+    "PAŹDZIERNIK"
+   ],
+   [
+    "ostatni miesiąc roku czas świąt",
+    "GRUDZIEŃ"
+   ],
+   [
+    "ma dokładnie siedem dni",
+    "TYDZIEŃ"
+   ]
+  ],
+  [
+   [
+    "pierwszy dzień roboczy po weekendzie",
+    "PONIEDZIAŁEK"
+   ],
+   [
+    "trzeci w kolejności dzień roboczy",
+    "ŚRODA"
+   ],
+   [
+    "piąty dzień tygodnia przed wolnym",
+    "PIĄTEK"
+   ],
+   [
+    "uroczysty czerwony dzień wolny",
+    "ŚWIĘTO"
+   ],
+   [
+    "ubiór chroniący dłonie przed mrozem",
+    "RĘKAWICZKA"
+   ]
+  ],
+  [
+   [
+    "ptak z godła państwowego",
+    "ORZEŁ"
+   ],
+   [
+    "drapieżny ptak z doskonałym wzrokiem",
+    "SOKÓŁ"
+   ],
+   [
+    "wysoki ptak brodzący na łąkach",
+    "ŻURAW"
+   ],
+   [
+    "czarny ptak wodny z plamą",
+    "ŁYSKA"
+   ],
+   [
+    "niewielki skaczący owad często u psa",
+    "PCHŁA"
+   ]
+  ],
+  [
+   [
+    "urządzenie z nagrzewaną stopą do prasowania",
+    "ŻELAZKO"
+   ],
+   [
+    "duże urządzenie chłodzące żywność",
+    "LODÓWKA"
+   ],
+   [
+    "piecyk szybko podgrzewający posiłki",
+    "MIKROFALÓWKA"
+   ],
+   [
+    "zakładane na głowę do słuchania muzyki",
+    "SŁUCHAWKI"
+   ],
+   [
+    "sprzęt nagłaśniający dźwięk z telewizora",
+    "GŁOŚNIK"
+   ]
+  ],
+  [
+   [
+    "prymitywna łódka wydrążona w pniu",
+    "CZÓŁNO"
+   ],
+   [
+    "płótno napędzające łódź siłą wiatru",
+    "ŻAGIEL"
+   ],
+   [
+    "zewnętrzna górna podłoga na statku",
+    "POKŁAD"
+   ],
+   [
+    "ciężar zrzucany do morza",
+    "CIĘŻAREK"
+   ],
+   [
+    "wielki wir powietrzny niszczący wszystko",
+    "TRĄBA"
+   ]
+  ],
+  [
+   [
+    "zabawna opowieść mająca rozśmieszyć",
+    "ŻART"
+   ],
+   [
+    "wyraz twarzy oznaczający radość",
+    "UŚMIECH"
+   ],
+   [
+    "kropla słonej wody płynąca z oka",
+    "ŁZA"
+   ],
+   [
+    "szlochanie z powodu wielkiego smutku",
+    "PŁACZ"
+   ],
+   [
+    "pomyłka z niewiedzy lub pośpiechu",
+    "BŁĄD"
+   ]
+  ],
+  [
+   [
+    "silne pragnienie wielka ochota",
+    "ŻĄDZA"
+   ],
+   [
+    "możliwość rządzenia innymi ludźmi",
+    "WŁADZA"
+   ],
+   [
+    "duże miasto w centrum polski",
+    "ŁÓDŹ"
+   ],
+   [
+    "figura geometryczna bez rogów i kantów",
+    "KRĄG"
+   ],
+   [
+    "mężczyzna w świetle prawa dla żony",
+    "MĄŻ"
+   ]
+  ],
+  [
+   [
+    "duchowny odprawiający msze w kościele",
+    "KSIĄDZ"
+   ],
+   [
+    "osoba uznana za kanonizowaną",
+    "ŚWIĘTY"
+   ],
+   [
+    "zabawiacz na dawnym dworze królewskim",
+    "BŁAZEN"
+   ],
+   [
+    "syn króla w pałacu",
+    "KSIĄŻĘ"
+   ],
+   [
+    "środek pomieszczenia lub ludzkiej duszy",
+    "WNĘTRZE"
+   ]
+  ],
+  [
+   [
+    "poziom budynku tuż nad parterem",
+    "PIĘTRO"
+   ],
+   [
+    "pionowa przegroda oddzielająca pokoje",
+    "ŚCIANA"
+   ],
+   [
+    "pierwsze pomieszczenie po wejściu do mieszkania",
+    "PRZEDPOKÓJ"
+   ],
+   [
+    "element schodów którego można się trzymać",
+    "PORĘCZ"
+   ],
+   [
+    "zielony teren z roślinami przy domku",
+    "OGRÓD"
+   ]
+  ],
+  [
+   [
+    "drewniane lub metalowe ogrodzenie posesji",
+    "PŁOT"
+   ],
+   [
+    "pokrywa budynku chroniąca przed deszczem",
+    "DACH"
+   ],
+   [
+    "unosi się do góry podczas spalania",
+    "DYM"
+   ],
+   [
+    "zjawisko dające ciepło niszczy lasy",
+    "OGIEŃ"
+   ],
+   [
+    "odcięty gruby kawał pnia drzewa",
+    "KŁODA"
+   ]
+  ],
+  [
+   [
+    "zawiązka liścia przed rozwinięciem",
+    "PĄK"
+   ],
+   [
+    "zielone warzywo liściaste w główkach",
+    "SAŁATA"
+   ],
+   [
+    "zielone warzywo przypominające małe drzewko",
+    "BROKUŁ"
+   ],
+   [
+    "fioletowe warzywo przypominające kształtem gruszkę",
+    "BAKŁAŻAN"
+   ],
+   [
+    "duże nasiona strączkowe często jadane latem",
+    "BÓB"
+   ]
+  ],
+  [
+   [
+    "słodki kolczasty owoc leśny przypominający malinę",
+    "JEŻYNA"
+   ],
+   [
+    "aromatyczny owoc cytrusowy koloru pomarańczowego",
+    "POMARAŃCZA"
+   ],
+   [
+    "okrągły owoc jesienny często czerwony lub zielony",
+    "JABŁKO"
+   ],
+   [
+    "cienki placek smażony na patelni",
+    "NALEŚNIK"
+   ],
+   [
+    "potrawa z ciasta z nadzieniem lepiona z brzegów",
+    "PIERÓG"
+   ]
+  ],
+  [
+   [
+    "tłuszcz pozyskiwany ze śmietany do pieczywa",
+    "MASŁO"
+   ],
+   [
+    "gorący wywar z mięsa jedzony z makaronem",
+    "ROSÓŁ"
+   ],
+   [
+    "słodki lepki produkt tworzony przez pszczoły",
+    "MIÓD"
+   ],
+   [
+    "historyczny region w południowej polsce z kopalniami",
+    "ŚLĄSK"
+   ],
+   [
+    "budynek będący miejscem kultu religijnego",
+    "ŚWIĄTYNIA"
+   ]
+  ],
+  [
+   [
+    "mały uchwyt do trzymania przedmiotu",
+    "RĄCZKA"
+   ],
+   [
+    "radosny odgłos rozbawienia objaw zadowolenia",
+    "ŚMIECH"
+   ],
+   [
+    "gra polegająca na rzucaniu do zawieszonej obręczy",
+    "KOSZYKÓWKA"
+   ],
+   [
+    "sport drużynowy z przebijaniem piłki rękami nad siatką",
+    "SIATKÓWKA"
+   ],
+   [
+    "deska z ostrzem do jazdy na lodzie",
+    "ŁYŻWA"
+   ]
+  ],
+  [
+   [
+    "osoba profesjonalnie pływająca na basenie",
+    "PŁYWAK"
+   ],
+   [
+    "dokładnie jedna z dwóch równych części całości",
+    "POŁOWA"
+   ],
+   [
+    "jeden z kolorów ciepłych przypominający jasne światło",
+    "ŻÓŁĆ"
+   ],
+   [
+    "kosmetyk na policzki poprawiający cerę kobiet",
+    "RÓŻ"
+   ],
+   [
+    "dorosły osobnik płci męskiej, często posiadający zarost",
+    "MĘŻCZYZNA"
+   ]
+  ],
+  [
+   [
+    "mebel przy którym uczeń trzyma podręczniki w klasie",
+    "ŁAWKA"
+   ],
+   [
+    "książka zawierająca wiedzę dla uczniów szkoły",
+    "PODRĘCZNIK"
+   ],
+   [
+    "region w polsce z bogatą historią górniczą i hutniczą",
+    "ŚLĄSK"
+   ],
+   [
+    "figura w kartach z namalowanym koniem",
+    "RYCERZ"
+   ],
+   [
+    "największe jezioro słodkowodne w polsce",
+    "ŚNIARDWY"
+   ]
+  ]
+ ],
+ "przyslowia": [
+  [
+   "🚫⚒️🚫🥖",
+   "BEZ PRACY NIE MA KOŁACZY"
+  ],
+  [
+   "⛏️🕳️⬇️🧍‍♂️",
+   "KTO POD KIM DOŁY KOPIE TEN SAM W NIE WPADA"
+  ],
+  [
+   "👱‍♂️👱‍♀️➡️💡",
+   "CO DWIE GŁOWY TO NIE JEDNA"
+  ],
+  [
+   "🕵️‍♂️➡️🔥👿",
+   "CIEKAWOŚĆ TO PIERWSZY STOPIEŃ DO PIEKŁA"
+  ],
+  [
+   "👦🚫📚➡️👴🚫🧠",
+   "CZEGO JAŚ SIĘ NIE NAUCZY TEGO JAN NIE BĘDZIE UMIAŁ"
+  ],
+  [
+   "🧍‍♂️➡️☁️☁️➡️🧍‍♂️",
+   "JAK KUBA BOGU TAK BÓG KUBOWI"
+  ],
+  [
+   "🛏️🪡➡️😴",
+   "JAK SOBIE POŚCIELISZ TAK SIĘ WYŚPISZ"
+  ],
+  [
+   "😱➡️🙏⛪",
+   "JAK TRWOGA TO DO BOGA"
+  ],
+  [
+   "🍎⬇️🌳",
+   "JABŁKO NIE PADA DALEKO OD JABŁONI"
+  ],
+  [
+   "❓➡️✅🚶",
+   "KTO PYTA NIE BŁĄDZI"
+  ],
+  [
+   "⚔️➡️💀⚔️",
+   "KTO MIECZEM WOJUJE OD MIECZA GINIE"
+  ],
+  [
+   "💰🐄➡️🍼",
+   "BOGATEMU TO I BYK SIĘ OCIELI"
+  ],
+  [
+   "🌍➡️📜",
+   "CO KRAJ TO OBYCZAJ"
+  ],
+  [
+   "⏳➡️💰",
+   "CZAS TO PIENIĄDZ"
+  ],
+  [
+   "👶🐟➡️🔇",
+   "DZIECI I RYBY GŁOSU NIE MAJĄ"
+  ],
+  [
+   "🟢🥬➡️🤪",
+   "GROCH Z KAPUSTĄ"
+  ],
+  [
+   "🚶‍♂️🌲➡️🌲🌲🌲",
+   "IM DALEJ W LAS TYM WIĘCEJ DRZEW"
+  ],
+  [
+   "👀➡️📝",
+   "JAK CIĘ WIDZĄ TAK CIĘ PISZĄ"
+  ],
+  [
+   "🐦🚫➡️🌸",
+   "JEDNA JASKÓŁKA WIOSNY NIE CZYNI"
+  ],
+  [
+   "🤥➡️🦵⬇️",
+   "KŁAMSTWO MA KRÓTKIE NOGI"
+  ],
+  [
+   "🐓💭⛪➡️🔪",
+   "KOGUT MYŚLAŁ O NIEDZIELI A W SOBOTĘ ŁEB UCIĘLI"
+  ],
+  [
+   "🐄🔊➡️🥛⬇️",
+   "KROWA KTÓRA DUŻO RYCZY MAŁO MLEKA DAJE"
+  ],
+  [
+   "💧⬇️🪨",
+   "KROPLA DRĄŻY SKAŁĘ"
+  ],
+  [
+   "🥚👦➡️👴",
+   "CZYM SKORUPKA ZA MŁODU NASIĄKNIE TYM NA STAROŚĆ TRĄCA"
+  ],
+  [
+   "🍄➡️✅",
+   "LEPSZY RYDZ NIŻ NIC"
+  ],
+  [
+   "👑🐎➡️🎲",
+   "ŁASKA PAŃSKA NA PSTRYM KONIU JEŹDZI"
+  ],
+  [
+   "🇵🇱💡➡️💥",
+   "MĄDRY POLAK PO SZKODZIE"
+  ],
+  [
+   "🚫🐟➡️🦀🐟",
+   "NA BEZRYBIU I RAK RYBA"
+  ],
+  [
+   "🥷🧢🔥",
+   "NA ZŁODZIEJU CZAPKA GORE"
+  ],
+  [
+   "🚫👏☀️⬇️",
+   "NIE CHWAL DNIA PRZED ZACHODEM SŁOŃCA"
+  ],
+  [
+   "🚫✂️🐻",
+   "NIE DZIEL SKÓRY NA NIEDŹWIEDZIU"
+  ],
+  [
+   "🚫🛍️🐈",
+   "NIE KUPUJ KOTA W WORKU"
+  ],
+  [
+   "🚫😈➡️😇",
+   "NIE MA TEGO ZŁEGO CO BY NA DOBRE NIE WYSZŁO"
+  ],
+  [
+   "🚫😂👴➡️🚑",
+   "NIE ŚMIEJ SIĘ DZIADKU Z CUDZEGO WYPADKU"
+  ],
+  [
+   "🚫✨➡️🥇",
+   "NIE WSZYSTKO ZŁOTO CO SIĘ ŚWIECI"
+  ],
+  [
+   "🧹✨➡️🧹",
+   "NOWA MIOTŁA LEPIEJ ZMIATA"
+  ],
+  [
+   "👁️➡️👁️🦷➡️🦷",
+   "OKO ZA OKO ZĄB ZA ZĄB"
+  ],
+  [
+   "🎁🔙➡️🔥👿",
+   "KTO DAJE I ODBIERA TEN SIĘ W PIEKLE PONIEWIERA"
+  ],
+  [
+   "✅👁️➡️🤕",
+   "PRAWDA W OCZY KOLE"
+  ],
+  [
+   "🤝➡️📉",
+   "PRAWDZIWYCH PRZYJACIÓŁ POZNAJE SIĘ W BIEDZIE"
+  ],
+  [
+   "⬆️🛒⬇️🛒",
+   "RAZ NA WOZIE RAZ POD WOZEM"
+  ],
+  [
+   "😱➡️👀👀",
+   "STRACH MA WIELKIE OCZY"
+  ],
+  [
+   "🧱➡️👂",
+   "ŚCIANY MAJĄ USZY"
+  ],
+  [
+   "🏋️‍♂️➡️🥇",
+   "TRENING CZYNI MISTRZA"
+  ],
+  [
+   "🌊🏊‍♂️➡️🪒",
+   "TONĄCY BRZYTWY SIĘ CHWYTA"
+  ],
+  [
+   "👊🪵➡️✂️🔊",
+   "UDERZ W STÓŁ A NOŻYCE SIĘ ODEZWĄ"
+  ],
+  [
+   "🌙🐈➡️⬛",
+   "W NOCY WSZYSTKIE KOTY SĄ CZARNE"
+  ],
+  [
+   "🏃‍♂️💪➡️👻😇",
+   "W ZDROWYM CIELE ZDROWY DUCH"
+  ],
+  [
+   "☁️☁️➡️💧",
+   "Z WIELKIEJ CHMURY MAŁY DESZCZ"
+  ],
+  [
+   "🚫🛠️➡️😱",
+   "ŻADNA PRACA NIE HAŃBI"
+  ],
+  [
+   "🚫💨🚫🔥",
+   "NIE MA DYMU BEZ OGNIA"
+  ],
+  [
+   "🌱🌬️➡️🌪️",
+   "KTO SIEJE WIATR TEN ZBIERA BURZĘ"
+  ],
+  [
+   "👰🤵➡️🩹✅",
+   "DO WESELA SIĘ ZAGOI"
+  ],
+  [
+   "🚫🌱🤪➡️👶",
+   "GŁUPICH NIE SIEJĄ SAMI SIĘ RODZĄ"
+  ],
+  [
+   "👨➡️👦",
+   "JAKI OJCIEC TAKI SYN"
+  ],
+  [
+   "🚶‍♂️🚶‍♂️➡️👯‍♂️",
+   "KTO Z KIM PRZYSTAJE TAKIM SIĘ STAJE"
+  ],
+  [
+   "🤝🧱➡️⚔️💥",
+   "ZGODA BUDUJE NIEZGODA RUINUJE"
+  ],
+  [
+   "🌲⬆️➡️⚡",
+   "WYSOKIE DRZEWA ŚCIĄGAJĄ PIORUNY"
+  ],
+  [
+   "🚫😢➡️🥛💦",
+   "NIE PŁACZ NAD ROZLANYM MLEKIEM"
+  ],
+  [
+   "🚫💧➡️👑🚫",
+   "Z PUSTEGO I SALOMON NIE NALEJE"
+  ]
+ ]
+}

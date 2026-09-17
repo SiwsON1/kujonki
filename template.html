@@ -1,0 +1,895 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Kujonki</title>
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&family=Young+Serif&family=Caveat:wght@700&display=swap">
+<style>
+:root{
+  --paper:#FBFAF5; --grid:#DCE5EE; --ink:#1B2848; --ink-soft:#56627E;
+  --margin:#D5463A; --ok:#2E7A4E; --ok-bg:#DDEFE2; --bad:#C23A2E; --bad-bg:#F7DEDA;
+  --mark:#F5E27A; --tile:#FFFFFF; --tile-edge:#1B2848; --muted-tile:#E9EEF4; --grey:#9AA3B5; --redact:#1B2848; --rule:#C3D1DF; --hl-green:#BFE5C9;
+  --display:"Young Serif", Georgia, "Times New Roman", serif;
+  --ui:"Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#111827; --grid:#1D2840; --ink:#E8EDF6; --ink-soft:#9AA6BF;
+    --margin:#F06B5E; --ok:#6FD19A; --ok-bg:#173A29; --bad:#F2877C; --bad-bg:#3E1D1B;
+    --mark:#5F5012; --tile:#18223A; --tile-edge:#C9D3E6; --muted-tile:#1C2742; --grey:#4A5570; --redact:#3A4766; --rule:#2C3A57; --hl-green:#1F5A3A;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#111827; --grid:#1D2840; --ink:#E8EDF6; --ink-soft:#9AA6BF;
+  --margin:#F06B5E; --ok:#6FD19A; --ok-bg:#173A29; --bad:#F2877C; --bad-bg:#3E1D1B;
+  --mark:#5F5012; --tile:#18223A; --tile-edge:#C9D3E6; --muted-tile:#1C2742; --grey:#4A5570; --redact:#3A4766; --rule:#2C3A57; --hl-green:#1F5A3A;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{margin:0}
+body{
+  background-color:var(--paper);
+  background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+  background-size:22px 22px;
+  color:var(--ink); font-family:var(--ui); font-size:16px; line-height:1.45;
+  min-height:100vh; -webkit-tap-highlight-color:transparent;
+}
+.wrap{max-width:540px;margin:0 auto;padding:18px 16px 48px;position:relative}
+header{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:48px}
+h1{font-family:var(--display);font-weight:400;font-size:2.4rem;line-height:1;margin:0;letter-spacing:-.01em;cursor:pointer}
+h1 span{background:linear-gradient(transparent 58%,var(--mark) 58%,var(--mark) 88%,transparent 88%);padding:0 .08em}
+.date{font-size:.8rem;color:var(--ink-soft);text-transform:uppercase;letter-spacing:.08em;white-space:nowrap;text-align:right}
+.date b{display:block;color:var(--ink);font-size:.95rem;letter-spacing:.02em}
+button{font-family:var(--ui)}
+button:focus-visible,input:focus-visible{outline:3px solid var(--margin);outline-offset:2px}
+
+/* plan lekcji */
+.report{position:relative;overflow:hidden;margin:16px 0 18px;padding:14px 16px 16px;border:2px solid var(--tile-edge);border-radius:12px;background:var(--tile);box-shadow:0 4px 0 var(--tile-edge)}
+.report .rtitle{font-family:var(--display);font-size:1.35rem;line-height:1.2;margin-bottom:6px}
+.report .rline{margin:0 0 4px;color:var(--ink-soft);font-size:.95rem}
+.report .rline b{color:var(--ink);font-size:1.1rem}
+.report .rpasek{margin:6px 0 0;font:700 1.35rem "Caveat",cursive;color:var(--margin);line-height:1.1}
+.report .rpasek.soft{color:var(--ink-soft)}
+.report.pasek .rtitle{padding-right:48px}
+.report.pasek::after{content:"";position:absolute;top:14px;right:-50px;width:160px;height:18px;background:var(--margin);transform:rotate(38deg);opacity:.9}
+.ractions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.lessons{list-style:none;margin:0;padding:0;border-top:1px solid var(--rule);position:relative}
+.lessons::before{content:"";position:absolute;top:0;bottom:0;left:44px;width:2px;background:var(--margin);opacity:.45;pointer-events:none}
+.lesson{width:100%;display:grid;grid-template-columns:36px 1fr 52px;align-items:center;gap:16px;min-height:66px;padding:8px 4px 8px 0;background:none;border:0;border-bottom:1px solid var(--rule);color:var(--ink);text-align:left;cursor:pointer;font:inherit;transition:background-color .15s cubic-bezier(.22,1,.36,1)}
+@media (hover:hover){.lesson:hover{background:color-mix(in oklab, var(--mark) 25%, transparent)}}
+.lesson:active{background:color-mix(in oklab, var(--mark) 45%, transparent)}
+.lnum{font:700 1.55rem/1 "Caveat",cursive;color:var(--margin);text-align:right}
+.lbody{display:flex;flex-direction:column;gap:1px;min-width:0}
+.lname{font-family:var(--display);font-size:1.22rem;line-height:1.15}
+.lrule{font-size:.84rem;color:var(--ink-soft);line-height:1.3}
+.lgo{justify-self:center;font-size:1.6rem;color:var(--ink-soft);line-height:1}
+.lgrade{justify-self:center;width:42px;height:42px;border:2px solid var(--margin);border-radius:50%;display:grid;place-items:center;color:var(--margin);transform:rotate(-9deg)}
+.lgrade b,.stamp b{font:700 1.9rem/1 "Caveat",cursive;transform:translateY(1px)}
+.lesson.done .lname{color:var(--ink-soft)}
+body.in-game footer{display:none}
+
+/* game shell */
+.back{font:600 .9rem var(--ui);background:none;border:0;color:var(--ink);cursor:pointer;padding:6px 0;display:inline-flex;gap:6px;align-items:center}
+.card{background:var(--paper);border:2px solid var(--tile-edge);border-radius:14px;padding:16px 14px 20px;box-shadow:0 5px 0 var(--tile-edge);margin-top:8px}
+.ghead{display:flex;align-items:baseline;justify-content:space-between;gap:8px;margin-bottom:6px}
+.ghead .eyebrow{display:block;font-size:.72rem;text-transform:uppercase;letter-spacing:.1em;color:var(--margin);font-weight:600;margin-bottom:2px}
+.rules{margin:4px 0 14px;border-bottom:1px dashed var(--rule);padding-bottom:4px}
+.rules summary{cursor:pointer;font-size:.85rem;font-weight:600;color:var(--ink-soft);padding:4px 0;list-style-position:inside}
+.rules[open] summary{margin-bottom:4px}
+.rules .howto{margin:0 0 10px}
+.ghead h2{font-family:var(--display);font-weight:400;font-size:1.7rem;margin:0;line-height:1.1}
+.ghead span{font-size:.85rem;color:var(--ink-soft);white-space:nowrap}
+.howto{font-size:.92rem;color:var(--ink-soft);margin:0 0 14px;text-wrap:pretty}
+.howto b{color:var(--ink)}
+.status{display:flex;justify-content:space-between;align-items:center;font-size:.85rem;color:var(--ink-soft);margin-bottom:12px;gap:8px;min-height:18px}
+.pips{display:flex;gap:5px}
+.pip{width:12px;height:12px;border-radius:50%;border:2px solid var(--tile-edge)}
+.pip.used{background:var(--bad);border-color:var(--bad)}
+.pip.win{background:var(--ok);border-color:var(--ok)}
+.row{display:flex;gap:8px}
+input[type=text]{flex:1;min-width:0;font:600 1.15rem var(--ui);text-transform:uppercase;padding:11px 12px;border:2px solid var(--tile-edge);border-radius:10px;background:var(--tile);color:var(--ink)}
+.btn{font:700 1rem var(--ui);padding:11px 16px;border-radius:10px;border:2px solid var(--tile-edge);background:var(--ink);color:var(--paper);cursor:pointer;box-shadow:0 3px 0 var(--margin);transition:transform .08s, box-shadow .08s}
+.btn:active{transform:translateY(3px);box-shadow:none}
+.btn.ghost{background:var(--tile);color:var(--ink);box-shadow:0 3px 0 var(--tile-edge)}
+.btn.small{font-size:.85rem;padding:7px 11px}
+.center{display:flex;justify-content:center;gap:8px;flex-wrap:wrap}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
+.chip{font-size:.85rem;padding:3px 9px;border-radius:99px;background:var(--bad-bg);color:var(--bad)}
+.chip.x{text-decoration:line-through}
+.chip.ok{background:var(--ok-bg);color:var(--ok)}
+.feedback{text-align:center;min-height:1.5em;font-weight:600;margin:8px 0 4px}
+.feedback.ok{color:var(--ok)} .feedback.no{color:var(--bad)}
+.result{margin-top:20px;padding-top:16px;border-top:2px solid var(--margin)}
+.rhead{display:flex;align-items:center;gap:14px;margin-bottom:8px}
+.result h3{font-family:var(--display);font-weight:400;font-size:1.45rem;margin:0;line-height:1.15}
+.result .gname{margin:2px 0 0;font:700 1.3rem/1 "Caveat",cursive;color:var(--margin)}
+.result .rsub{margin:0 0 10px;color:var(--ink-soft)}
+.stamp{flex:none;width:66px;height:66px;border:3px solid var(--margin);border-radius:50%;display:grid;place-items:center;color:var(--margin);transform:rotate(-10deg);animation:stamp .5s cubic-bezier(.22,1,.36,1) both}
+.stamp b{font-size:2.7rem}
+@keyframes stamp{from{opacity:0;transform:rotate(-10deg) scale(1.9)}to{opacity:1;transform:rotate(-10deg) scale(1)}}
+.result .emo{font-size:1.2rem;letter-spacing:.08em;margin-bottom:14px;word-break:break-all}
+.result .center{justify-content:flex-start}
+.toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);width:max-content;max-width:calc(100% - 32px);text-align:center;background:var(--ink);color:var(--paper);padding:10px 16px;border-radius:10px;font-weight:600;opacity:0;transition:opacity .2s;pointer-events:none;z-index:9}
+.toast.show{opacity:1}
+footer{margin-top:22px;font-size:.78rem;color:var(--ink-soft);display:flex;flex-direction:column;gap:6px}
+footer button{font:inherit;color:inherit;background:none;border:0;text-decoration:underline;cursor:pointer;padding:0}
+@keyframes pop{0%{transform:scale(.8)}70%{transform:scale(1.08)}100%{transform:scale(1)}}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+.shake{animation:shake .35s}
+
+/* Łącznik */
+.clues{display:flex;flex-direction:column;gap:8px;margin-bottom:14px}
+.clue{display:flex;align-items:center;gap:8px;font-family:var(--display);font-size:1.35rem;flex-wrap:wrap}
+.blank{display:inline-block;min-width:4.2em;border-bottom:3px dashed var(--margin);height:1.1em;transform:translateY(-.1em)}
+.blank.solved{border:0;min-width:0;height:auto;transform:none;color:var(--ok)}
+.slots{display:flex;gap:5px;justify-content:center;margin:4px 0 14px;flex-wrap:wrap}
+.slot{width:34px;height:40px;border:2px solid var(--tile-edge);border-radius:7px;display:grid;place-items:center;font:800 1.15rem var(--ui);background:var(--tile)}
+.slot.shown{background:var(--mark);animation:pop .25s ease}
+.slot.win{background:var(--ok-bg);color:var(--ok);border-color:var(--ok)}
+
+/* Ogonki */
+.big-clue{font-family:var(--display);font-size:1.25rem;line-height:1.3;margin:4px 0 14px;text-wrap:balance;text-align:center}
+.letters{display:flex;gap:6px;justify-content:center;flex-wrap:wrap;margin-bottom:6px}
+.letter{width:46px;height:54px;border:2px solid var(--tile-edge);border-radius:9px;display:grid;place-items:center;font:800 1.55rem var(--ui);background:var(--muted-tile);color:var(--ink);position:relative;padding:0}
+.letter.tap{background:var(--tile);cursor:pointer;box-shadow:0 3px 0 var(--tile-edge)}
+.letter.tap::after{content:"";position:absolute;bottom:5px;left:50%;width:5px;height:5px;margin-left:-2.5px;border-radius:50%;background:var(--margin)}
+.letter.tap:active{transform:translateY(3px);box-shadow:none}
+.letter.changed{background:var(--mark)}
+.letter.ok{background:var(--ok-bg);border-color:var(--ok);color:var(--ok);box-shadow:none}
+.letter.no{background:var(--bad-bg);border-color:var(--bad);color:var(--bad);box-shadow:none}
+.hint{text-align:center;font-size:.8rem;color:var(--ink-soft);margin:8px 0 12px}
+.progress{display:flex;gap:5px;justify-content:center;margin-bottom:12px;flex-wrap:wrap}
+.progress i{width:22px;height:8px;border-radius:4px;background:var(--grid)}
+.progress i.ok{background:var(--ok)} .progress i.no{background:var(--bad)} .progress i.now{background:var(--ink)}
+
+/* Gofr */
+.waffle{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;max-width:330px;margin:0 auto 12px}
+.wcell{aspect-ratio:1;max-width:100%;border:2px solid var(--tile-edge);border-radius:9px;display:grid;place-items:center;font:800 1.5rem var(--ui);background:var(--tile);color:var(--ink);cursor:pointer;padding:0;box-shadow:0 3px 0 var(--tile-edge);transition:transform .15s cubic-bezier(.22,1,.36,1),box-shadow .15s,background-color .2s}
+.wcell.g{background:var(--hl-green);box-shadow:none;cursor:default}
+.wcell.y{background:var(--mark)}
+.wcell.sel{transform:translateY(3px);box-shadow:none;outline:3px solid var(--margin);outline-offset:1px}
+mark.hg,mark.hy{color:var(--ink);padding:0 .2em;border-radius:3px}
+mark.hg{background:var(--hl-green)} mark.hy{background:var(--mark)}
+.remark{margin:0 0 8px;font:700 1.25rem/1.15 "Caveat",cursive;color:var(--ink-soft)}
+.wcell.hole{visibility:hidden}
+
+/* Drabinka */
+.ladder{display:flex;flex-direction:column;align-items:center;gap:6px;margin-bottom:12px}
+.rung{display:flex;gap:5px}
+.rung i{width:40px;height:44px;border:2px solid var(--tile-edge);border-radius:8px;display:grid;place-items:center;font:800 1.3rem var(--ui);font-style:normal;background:var(--tile)}
+.rung.goal i{background:var(--mark)}
+.rung.start i{background:var(--muted-tile)}
+.rung i.diff{background:var(--ok-bg);color:var(--ok);border-color:var(--ok)}
+.dots{color:var(--ink-soft);font-size:.8rem;line-height:1}
+
+/* Zaczernione */
+.redact{font-family:var(--display);font-size:1.02rem;line-height:1.75;margin:0 0 12px;max-height:46vh;overflow:auto;padding-right:4px}
+.hright{display:flex;align-items:center;gap:10px}
+.clock{font:800 1rem var(--ui);font-variant-numeric:tabular-nums;padding:5px 9px;border:2px solid var(--tile-edge);border-radius:8px;background:var(--tile)}
+.clock.run{background:var(--mark)}
+.intro{margin:16px 0 4px;padding:2px 0 4px}
+.intro h2{font-family:var(--display);font-weight:400;font-size:1.5rem;margin:0 0 6px}
+.intro p{margin:0 0 10px;font-size:.95rem}
+.mdone{margin:0 0 12px;font-size:.95rem}
+.redact .h{background:var(--redact);color:transparent;border-radius:3px;user-select:none;position:relative}
+.redact .h[data-n]:hover::after{content:attr(data-n);position:absolute;left:0;top:-1.3em;font:600 .7rem var(--ui);color:var(--ink);background:var(--mark);padding:0 4px;border-radius:3px}
+.redact .new{background:var(--mark);border-radius:3px}
+.redact .title .h{background:var(--margin)}
+
+/* Rdzeń */
+.frag{font:800 2.6rem var(--ui);text-align:center;letter-spacing:.08em;margin:2px 0 10px}
+.frag span{background:var(--mark);padding:0 .25em;border-radius:8px;border:2px solid var(--tile-edge)}
+.tries{display:flex;flex-direction:column;gap:6px;margin-top:12px}
+.try{display:flex;justify-content:space-between;align-items:center;padding:6px 10px;border-radius:8px;background:var(--tile);border:2px solid var(--tile-edge);font-weight:700;letter-spacing:.03em;gap:8px}
+.try mark{background:var(--mark);color:inherit;border-radius:3px}
+.try small{font-weight:600;color:var(--ink-soft);white-space:nowrap}
+
+/* Pudełko */
+.box{display:grid;grid-template-columns:repeat(5,1fr);grid-template-rows:repeat(5,1fr);gap:4px;max-width:320px;aspect-ratio:1;margin:0 auto 10px}
+.box{position:relative}
+.box .lines{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:1;overflow:visible}
+.box .inner{position:relative;z-index:2;background:transparent!important}
+.box .cur,.box .past{background:var(--paper);border-radius:6px;padding:0 6px}
+.box .lines polyline{fill:none;stroke-linecap:round;stroke-linejoin:round}
+.box .lines .past{stroke:var(--ok);stroke-width:3;opacity:.45}
+.box .lines .now{stroke:var(--margin);stroke-width:4}
+.box .bl{position:relative;z-index:2}
+.box .inner{grid-column:2/5;grid-row:2/5;border:3px solid var(--tile-edge);border-radius:6px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;padding:6px;text-align:center;background:var(--tile)}
+.box .cur{font:800 1.3rem var(--ui);letter-spacing:.05em;min-height:1.6em;word-break:break-all}
+.box .past{font-size:.75rem;color:var(--ink-soft);line-height:1.25}
+.bl{border:2px solid var(--tile-edge);border-radius:50%;font:800 1.2rem var(--ui);background:var(--tile);color:var(--ink);cursor:pointer;padding:0;display:grid;place-items:center;aspect-ratio:1;max-width:100%}
+.bl.used{background:var(--ok-bg);border-color:var(--ok);color:var(--ok)}
+.bl.last{background:var(--mark);color:var(--ink);border-color:var(--tile-edge)}
+.bl:disabled{opacity:.35;cursor:default}
+
+/* Dyktando */
+.dword{font:800 2rem var(--ui);text-align:center;letter-spacing:.04em;margin:8px 0 16px;word-break:break-all}
+.dword .gap{display:inline-block;min-width:1.4em;border-bottom:4px solid var(--margin);color:var(--margin)}
+.opts{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.opts .btn{font-size:1.6rem;padding:14px}
+.timer{font-variant-numeric:tabular-nums}
+
+/* Częściej */
+.vs{display:grid;grid-template-columns:1fr;gap:10px;margin-bottom:6px}
+.vsbtn{font:800 1.45rem var(--ui);letter-spacing:.03em;padding:22px 10px 18px;border:2px solid var(--tile-edge);border-radius:12px;background:var(--tile);color:var(--ink);cursor:pointer;box-shadow:0 4px 0 var(--tile-edge);display:flex;flex-direction:column;align-items:center;gap:4px;word-break:break-word}
+.vsbtn small{font:600 .8rem var(--ui);color:var(--ink-soft);letter-spacing:0;min-height:1.2em}
+.vsbtn.ok{background:var(--ok-bg);border-color:var(--ok)}
+.vsbtn.no{background:var(--bad-bg);border-color:var(--bad)}
+.or{text-align:center;font-family:var(--display);color:var(--ink-soft);margin:-4px 0}
+
+/* Przysłowie */
+.emoji{font-size:2.3rem;text-align:center;letter-spacing:.08em;margin:4px 0 14px;line-height:1.3}
+.proverb{display:flex;flex-wrap:wrap;gap:8px 10px;justify-content:center;margin-bottom:14px}
+.pw{display:flex;gap:2px}
+.pw i{width:22px;height:30px;border-bottom:3px solid var(--tile-edge);display:grid;place-items:center;font:800 1.05rem var(--ui);font-style:normal}
+.pw.on i{border-color:var(--ok);color:var(--ok)}
+.pw.new i{background:var(--mark)}
+@media (max-width:380px){.letter{width:40px;height:48px;font-size:1.35rem}.slot{width:30px;height:36px}.clue{font-size:1.15rem}.rung i{width:36px;height:40px}.pw i{width:18px;height:26px;font-size:.9rem}}
+@media (min-width:720px){.wrap{max-width:600px}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1 id="home"><span>Kujonki</span></h1>
+    <div class="hright"><span class="clock" id="clock" hidden></span><div class="date" id="date"></div></div>
+  </header>
+  <div id="view"></div>
+  <footer>
+    <span>Nowy zestaw codziennie o północy. Słownik: SJP.PL (CC BY 4.0). Częstość słów: FrequencyWords, napisy OpenSubtitles (CC BY-SA 4.0). Teksty: Wikipedia (CC BY-SA 4.0).</span>
+    <span>Test: <button id="prev">poprzedni dzień</button> · <button id="next">następny dzień</button></span>
+  </footer>
+</div>
+<div class="toast" id="toast"></div>
+<script>
+const DATA = /*DATA*/;
+const WIKI = /*WIKI*/;
+
+const LACZNIK = [
+  {a:["ZŁOTA","ZŁOTY","ZŁOTE"], c:[["_","RYBKA"],["_","RĄCZKA"],["_","JESIEŃ"]]},
+  {a:["CZARNA","CZARNY","CZARNE"], c:[["_","OWCA"],["_","DZIURA"],["_","SKRZYNKA"]]},
+  {a:["KLUCZ"], c:[["_","WIOLINOWY"],["_","FRANCUSKI"],["_","BASOWY"]]},
+  {a:["ŚLEPA","ŚLEPY","ŚLEPE"], c:[["_","KISZKA"],["_","ULICZKA"],["_","MIŁOŚĆ"]]},
+  {a:["OKO"], c:[["SOKOLE","_"],["KOCIE","_"],["_","CYKLONU"]]},
+  {a:["ŚWIĘTY","ŚWIĘTA","ŚWIĘTE"], c:[["_","MIKOŁAJ"],["_","SPOKÓJ"],["_","GRAAL"]]},
+  {a:["ŻELAZNA","ŻELAZNY","ŻELAZNE"], c:[["_","PIĘŚĆ"],["_","DAMA"],["_","KURTYNA"]]},
+  {a:["DOM"], c:[["_","KULTURY"],["_","WARIATÓW"],["_","DZIECKA"]]},
+  {a:["KONIK"], c:[["_","MORSKI"],["_","POLNY"],["_","GARBUSEK"]]},
+  {a:["ZIELONE","ZIELONA","ZIELONY"], c:[["_","ŚWIATŁO"],["_","HERBATA"],["_","GROSZEK"]]},
+  {a:["MORSKA","MORSKI","MORSKIE"], c:[["_","ŚWINKA"],["_","BRYZA"],["_","CHOROBA"]]},
+  {a:["PAPIER"], c:[["_","TOALETOWY"],["_","ŚCIERNY"],["_","KREDOWY"]]},
+  {a:["ZIMNA","ZIMNY","ZIMNE"], c:[["_","WOJNA"],["_","KREW"],["_","KALKULACJA"]]},
+  {a:["BIAŁY","BIAŁA","BIAŁE"], c:[["_","KRUK"],["_","SZUM"],["_","MAZUR"]]}
+];
+const OGONKI = [
+  [["Smutek po stracie","ŻAL"],["Przychylność, darowanie winy","ŁASKA"],["Podpórka do chodzenia dla dziadka","LASKA"],["Tak robi pies, gdy gryzie: pies…","KĄSA"],["Tu płacisz za zakupy","KASA"]],
+  [["Liczba: cztery plus jeden","PIĘĆ"],["Grzeje dom, pali się w nim","PIEC"],["Nocny owad, leci do lampy","ĆMA"],["Kwiat z kolcami na łodydze","RÓŻA"],["Miejsce, gdzie woda wypływa spod ziemi","ŹRÓDŁO"]],
+  [["Zarost nad górną wargą","WĄS"],["Dokończ: „Widzę ___ wszystkich”","WAS"],["Gad, który nosi pancerz","ŻÓŁW"],["Trawiasty teren pełen kwiatów","ŁĄKA"],["Niedobrze, kiepsko","ŹLE"]],
+  [["Słodkie z nadzieniem na tłusty czwartek","PĄCZEK"],["Świeci na niebie w dzień","SŁOŃCE"],["Mycie w wannie pełnej wody","KĄPIEL"],["Instrument, w który wali się pałkami","BĘBEN"],["Ptak, który gęga","GĘŚ"]]
+];
+const PRZYSLOWIA = [
+  ["🐦✊ 👍 🕊️🏠", "LEPSZY WRÓBEL W GARŚCI NIŻ GOŁĄB NA DACHU"],
+  ["👩‍🍳×6 ➡️ 🍽️❌", "GDZIE KUCHAREK SZEŚĆ TAM NIE MA CO JEŚĆ"],
+  ["🎁🐴 🦷🙈", "DAROWANEMU KONIOWI W ZĘBY SIĘ NIE ZAGLĄDA"],
+  ["🌅⏰ ➡️ 🙏🎁", "KTO RANO WSTAJE TEMU PAN BÓG DAJE"],
+  ["🚫📣🐺🌲", "NIE WYWOŁUJ WILKA Z LASU"],
+  ["🏃💨 ➡️ 😈😄", "GDY SIĘ CZŁOWIEK SPIESZY TO SIĘ DIABEŁ CIESZY"],
+  ["👵⬇️🛒 ➡️ 🐴😌", "BABA Z WOZU KONIOM LŻEJ"],
+  ["🌹🚫🌵", "NIE MA RÓŻY BEZ KOLCÓW"],
+  ["🍽️ 📈 😋", "APETYT ROŚNIE W MIARĘ JEDZENIA"],
+  ["🪢 ➡️ 🚫🌊", "CO MA WISIEĆ NIE UTONIE"]
+];
+
+const RECZNE = /*RECZNE*/;
+const interleave = (old, add) => { const out = []; let j = 0; old.forEach(x => { out.push(x); for (let k = 0; k < 3 && j < add.length; k++) out.push(add[j++]); }); return out.concat(add.slice(j)); };
+LACZNIK.splice(0, LACZNIK.length, ...interleave([...LACZNIK], RECZNE.lacznik));
+OGONKI.splice(0, OGONKI.length, ...interleave([...OGONKI], RECZNE.ogonki));
+PRZYSLOWIA.splice(0, PRZYSLOWIA.length, ...interleave([...PRZYSLOWIA], RECZNE.przyslowia));
+const formFor = (clue, forms) => { if (forms.length === 1) return forms[0]; const e = clue.slice(-1); const want = e === "A" ? /A$/ : /[EOĘ]$/.test(e) ? /E$/ : /[YI]$/; return forms.find(f => want.test(f)) || forms[0]; };
+
+const GAMES = [
+  {id:"lacznik", name:"Łącznik", desc:"Jedno słowo pasuje do trzech tropów"},
+  {id:"ogonki", name:"Ogonki", desc:"Dodaj ogonki, żeby pasowało do opisu"},
+  {id:"gofr", name:"Gofr", desc:"Zamieniaj litery, aż ułożysz 6 słów"},
+  {id:"drabinka", name:"Drabinka", desc:"Po jednej literze aż do celu"},
+  {id:"zaczernione", name:"Zaczernione", desc:"Odkryj temat zaczernionego tekstu"},
+  {id:"rdzen", name:"Rdzeń", desc:"Najdłuższe słowo z podaną cząstką"},
+  {id:"pudelko", name:"Pudełko", desc:"12 liter w jak najmniej słowach"},
+  {id:"dyktando", name:"Dyktando", desc:"Ó czy u, rz czy ż, na czas"},
+  {id:"czesciej", name:"Częściej?", desc:"Które słowo Polacy mówią częściej"},
+  {id:"przyslowie", name:"Przysłowie", desc:"Rozszyfruj przysłowie z emoji"}
+];
+
+/* ---------- wspólne ---------- */
+const START = new Date(2026, 8, 17);
+const params = new URLSearchParams(location.search);
+function todayIndex(){ const n = new Date(); const d0 = new Date(n.getFullYear(), n.getMonth(), n.getDate()); return Math.max(0, Math.round((d0 - START) / 86400000)); }
+let day = params.has("d") ? Math.max(0, parseInt(params.get("d"), 10) || 0) : todayIndex();
+const num = () => day + 1;
+const pick = list => list[day % list.length];
+const store = {
+  get(k){ try { return JSON.parse(localStorage.getItem(k)); } catch(e){ return null; } },
+  set(k,v){ try { localStorage.setItem(k, JSON.stringify(v)); } catch(e){} }
+};
+const key = g => `kujonki2:${g}:${day}`;
+const $ = s => document.querySelector(s);
+const el = (tag, cls, txt) => { const e = document.createElement(tag); if (cls) e.className = cls; if (txt != null) e.textContent = txt; return e; };
+const html = (tag, cls, h) => { const e = el(tag, cls); e.innerHTML = h; return e; };
+const strip = s => s.normalize("NFD").replace(/[̀-ͯ]/g,"").replace(/Ł/g,"L").replace(/ł/g,"l");
+const pl = (n, one, few, many) => `${n} ${n === 1 ? one : [2,3,4].includes(n % 10) && ![12,13,14].includes(n % 100) ? few : many}`;
+const up = s => s.trim().toLocaleUpperCase("pl-PL");
+function toast(msg){ const t = $("#toast"); t.textContent = msg; t.classList.add("show"); clearTimeout(toast.t); toast.t = setTimeout(()=>t.classList.remove("show"), 1900); }
+async function share(text){
+  const full = text + "\n" + location.origin + location.pathname;
+  if (navigator.share) { try { await navigator.share({text: full}); return; } catch(e){} }
+  try { await navigator.clipboard.writeText(full); toast("Skopiowano wynik"); } catch(e){ toast("Nie udało się skopiować"); }
+}
+function finish(g, summary){ const s = store.get(key(g)) || {}; s.summary = summary; store.set(key(g), s); }
+const REMARKS = {
+  6: ["Wzorowy uczeń. Tak trzymać!", "Celująco. Do tablicy jako przykład.", "Brawo, piątka to byłoby za mało."],
+  5: ["Bardzo ładnie, drobne potknięcie.", "Prawie prymus.", "Solidna robota, gratuluję."],
+  4: ["Dobrze, ale stać cię na więcej.", "Nieźle, warto powtórzyć materiał.", "Dobra robota, bez fajerwerków."],
+  3: ["Może być, proszę się przyłożyć.", "Trzeba jeszcze poćwiczyć.", "Zaliczone na styk."],
+  2: ["Ledwo, ledwo. Jutro poprawka.", "Dopuszczam, ale z bólem serca.", "Uwaga: gada na lekcji."],
+  1: ["Uwaga do dzienniczka: brak zadania domowego.", "Nic straconego, jutro poprawa.", "Każdy prymus kiedyś zaczynał."]
+};
+const GRADE = {6:"celujący", 5:"bardzo dobry", 4:"dobry", 3:"dostateczny", 2:"dopuszczający", 1:"niedostateczny"};
+const steps = (v, list, low = 1) => { for (const [lim, g] of list) if (v >= lim) return g; return low; };
+function gradeOf(id){ try { return gradeRaw(id); } catch (e) { return null; } }
+function gradeRaw(id){
+  const s = store.get(key(id)) || {};
+  if (!s.summary) return null;
+  switch (id) {
+    case "lacznik": return s.win ? Math.max(2, 6 - s.g.length) : 1;
+    case "ogonki": return (s.r || []).filter(Boolean).length + 1;
+    case "gofr": { const sol = pick(DATA.gofr).solution.split(","); if (!s.cur || !s.cur.every((x,i) => x === sol[i])) return 1; return steps(15 - s.swaps, [[5,6],[3,5],[1,4]], 3); }
+    case "drabinka": { if (s.gave) return 1; const d = s.chain.length - 1 - pick(DATA.drabinka).par; return d <= 0 ? 6 : Math.max(2, 6 - d); }
+    case "zaczernione": { if (s.gave) return 1; const n = s.g.length; return n <= 8 ? 6 : n <= 15 ? 5 : n <= 25 ? 4 : n <= 40 ? 3 : 2; }
+    case "rdzen": { const best = Math.max(0, ...(s.t || []).map(w => w.length)); if (!best) return 1; return steps(best / pick(DATA.rdzen).goal.length, [[1,6],[.85,5],[.7,4],[.55,3]], 2); }
+    case "pudelko": { if (s.gave) return 1; const n = s.words.length; return n <= 2 ? 6 : Math.max(2, 8 - n); }
+    case "dyktando": return steps((s.r || []).filter(Boolean).length, [[10,6],[9,5],[8,4],[7,3],[5,2]]);
+    case "czesciej": return steps(s.i || 0, [[12,6],[9,5],[6,4],[4,3],[2,2]]);
+    case "przyslowie": { if (s.gave) return 1; const words = pick(PRZYSLOWIA)[1].split(" "); const miss = s.g.filter(x => !words.some(w => strip(w) === strip(x))).length; const g = miss === 0 ? 6 : miss <= 2 ? 5 : miss <= 4 ? 4 : miss <= 7 ? 3 : 2; return s.hint ? Math.max(2, g - 1) : g; }
+  }
+  return null;
+}
+const stamp = (g, cls = "stamp") => html("div", cls, `<b>${g}</b>`);
+function resultBox(title, sub, emo, shareText){
+  const box = el("div","result");
+  const g = CURRENT ? gradeOf(CURRENT.id) : null;
+  const head = el("div","rhead");
+  if (g) head.append(stamp(g));
+  const hwrap = el("div"); hwrap.append(el("h3",null,title)); if (g) hwrap.append(el("p","gname",`ocena: ${GRADE[g]}`));
+  head.append(hwrap); box.append(head);
+  if (g) { const pool = REMARKS[g]; box.append(el("p","remark", pool[(day + GAMES.indexOf(CURRENT)) % pool.length])); }
+  box.append(el("p","rsub",sub));
+  if (emo) box.append(el("div","emo",emo));
+  const full = g ? `${shareText} · ocena ${g}` : shareText;
+  if (CURRENT) {
+    const s = store.get(key(CURRENT.id)) || {}; const line = `${CURRENT.name}: ${g ?? "–"}${emo ? " " + emo : ""}`;
+    if (s.line !== line || s.grade !== g) { s.line = line; s.grade = g; store.set(key(CURRENT.id), s); }
+    store.set(`kujonki2:seen:${CURRENT.id}`, 1);
+  }
+  const c = el("div","center");
+  const b = el("button","btn","Udostępnij wynik"); b.onclick = () => share(full);
+  c.append(b);
+  const nextG = GAMES.find(x => x !== CURRENT && !(store.get(key(x.id)) || {}).summary);
+  const h = el("button","btn ghost", nextG ? `Dalej: ${nextG.name} →` : "Świadectwo dnia"); h.onclick = () => go(nextG ? nextG.id : "");
+  c.append(h); box.append(c);
+  tickClock();
+  return box;
+}
+let CURRENT = null;
+function shell(g, howto){
+  CURRENT = g; document.body.classList.add("in-game");
+  const root = $("#view"); root.replaceChildren();
+  const back = el("button","back","← Plan lekcji"); back.onclick = () => go("");
+  const card = el("main","card");
+  const head = el("div","ghead");
+  const idx = GAMES.indexOf(g) + 1;
+  head.append(html("div",null,`<span class="eyebrow">Lekcja ${idx} z ${GAMES.length}</span><h2>${g.name}</h2>`));
+  const rules = el("details","rules"); rules.open = !store.get(`kujonki2:seen:${g.id}`);
+  rules.append(el("summary",null,"Zasady"), html("p","howto",howto));
+  card.append(head, rules);
+  root.append(back, card);
+  return card;
+}
+const saveState = (g, st) => store.set(key(g), st);
+
+/* ---------- 1. Łącznik ---------- */
+function lacznik(g){
+  const p = pick(LACZNIK), main = p.a[0], MAX = 5;
+  const st = store.get(key(g.id)) || {g:[], win:false};
+  const done = () => st.win || st.g.length >= MAX;
+  const root = shell(g, "Jakie <b>jedno słowo</b> pasuje do wszystkich trzech? Każde pudło odsłania literę.");
+  const status = el("div","status"), pips = el("div","pips"); status.append(el("span",null,`${MAX} prób`), pips);
+  const clues = el("div","clues"), slots = el("div","slots");
+  const form = el("form","row"), inp = el("input"); inp.type = "text"; inp.id = "in-lacznik"; inp.autocomplete = "off"; inp.placeholder = "Twoje słowo"; inp.setAttribute("aria-label","Twoje słowo");
+  const btn = el("button","btn","Sprawdź"); btn.type = "submit"; form.append(inp, btn);
+  const chips = el("div","chips"), res = el("div");
+  root.append(status, clues, slots, form, chips, res);
+  function draw(){
+    const reveal = done() ? main.length : st.g.length;
+    clues.replaceChildren(...p.c.map(pair => { const r = el("div","clue"); pair.forEach(w => { if (w === "_") { const b = el("span","blank" + (done() ? " solved" : "")); if (done()) b.textContent = formFor(pair.find(x => x !== "_"), p.a); r.append(b); } else r.append(el("span",null,w)); }); return r; }));
+    slots.replaceChildren(...[...main].map((ch,i) => el("div","slot" + (st.win ? " win" : i < reveal ? " shown" : ""), (st.win || i < reveal) ? ch : "")));
+    pips.replaceChildren(...Array.from({length:MAX},(_,i)=> el("span","pip" + (i < st.g.length ? " used" : "") + (st.win && i === st.g.length ? " win" : ""))));
+    chips.replaceChildren(...st.g.map(x => el("span","chip x",x)));
+    form.hidden = done(); res.replaceChildren();
+    if (done()) {
+      const emo = "🟥".repeat(st.g.length) + (st.win ? "🟩" : "");
+      res.append(resultBox(st.win ? (st.g.length ? "Jest!" : "Za pierwszym!") : "Tym razem nie", `Hasło: ${main}.`, emo, `Kujonki · Łącznik #${num()} ${emo}`));
+    }
+  }
+  form.onsubmit = e => { e.preventDefault(); const v = up(inp.value); if (!v) return;
+    if (p.a.some(a => a === v || strip(a) === strip(v))) { st.win = true; finish(g.id, st.g.length ? pl(st.g.length, "pudło", "pudła", "pudeł") : "za 1."); }
+    else { if (st.g.includes(v)) return toast("To już było"); st.g.push(v); toast("Pudło, odsłaniam literę"); if (st.g.length >= MAX) finish(g.id, "nie wyszło"); }
+    inp.value = ""; st.summary = (store.get(key(g.id))||{}).summary; saveState(g.id, st); draw(); };
+  draw();
+}
+
+/* ---------- 2. Ogonki ---------- */
+const CYCLE = {A:["A","Ą"],E:["E","Ę"],L:["L","Ł"],O:["O","Ó"],S:["S","Ś"],C:["C","Ć"],N:["N","Ń"],Z:["Z","Ż","Ź"]};
+function ogonki(g){
+  const set = pick(OGONKI);
+  const st = store.get(key(g.id)) || {r:[]};
+  const root = shell(g, "Słowo zgubiło ogonki. <b>Stukaj litery z kropką</b> (Z → Ż → Ź), aż pasuje do opisu.");
+  const prog = el("div","progress"), body = el("div"); root.append(prog, body);
+  let cur = [], checked = false;
+  const next = () => { if (st.r.length < set.length) cur = [...strip(set[st.r.length][1])]; };
+  function draw(){
+    const i = st.r.length;
+    prog.replaceChildren(...set.map((_,k)=> el("i", k < i ? (st.r[k] ? "ok" : "no") : k === i ? "now" : "")));
+    body.replaceChildren();
+    if (i >= set.length && !checked) {
+      const pts = st.r.filter(Boolean).length, emo = st.r.map(x => x ? "🟩" : "🟥").join("");
+      body.append(resultBox(pts === set.length ? "Profesor polszczyzny!" : pts >= 3 ? "Nieźle!" : "Ogonki bolą", `Trafione: ${pts} z ${set.length}.`, emo, `Kujonki · Ogonki #${num()} ${emo}`));
+      return;
+    }
+    const idx = checked ? i - 1 : i, [clue, ans] = set[idx];
+    body.append(el("p","big-clue",clue));
+    const letters = el("div","letters");
+    [...ans].forEach((ch, k) => {
+      const base = strip(ch), tappable = !!CYCLE[base];
+      const b = el("button","letter" + (tappable && !checked ? " tap" : ""), cur[k]); b.type = "button";
+      if (cur[k] !== base && !checked) b.classList.add("changed");
+      if (checked) { b.classList.add(cur[k] === ch ? "ok" : "no"); b.disabled = true; }
+      else if (tappable) b.onclick = () => { const c = CYCLE[base]; cur[k] = c[(c.indexOf(cur[k]) + 1) % c.length]; draw(); };
+      else b.disabled = true;
+      letters.append(b);
+    });
+    body.append(letters);
+    if (checked) { const ok = st.r[idx]; body.append(el("div","feedback " + (ok ? "ok" : "no"), ok ? `Tak! ${ans}` : `Poprawnie: ${ans}`)); }
+    else body.append(el("div","hint",`${i + 1} z ${set.length}`));
+    const c = el("div","center"), btn = el("button","btn", checked ? "Dalej" : "Sprawdź");
+    btn.onclick = () => { if (!checked) { st.r.push(cur.join("") === ans); if (st.r.length === set.length) st.summary = `${st.r.filter(Boolean).length}/${set.length}`; saveState(g.id, st); checked = true; } else { checked = false; next(); } draw(); };
+    c.append(btn); body.append(c);
+  }
+  next(); draw();
+}
+
+/* ---------- 3. Gofr ---------- */
+function gofr(g){
+  const p = pick(DATA.gofr), sol = p.solution.split(","), MAXS = 15;
+  const st = store.get(key(g.id)) || {cur: p.start.split(","), swaps: 0};
+  const root = shell(g, "Ułóż <b>3 słowa poziomo i 3 pionowo</b>. Stuknij dwie litery, żeby je zamienić. <mark class='hg'>Zielony</mark> to dobre miejsce, <mark class='hy'>żółty</mark> to litera z tego słowa, ale w innym polu.");
+  const status = el("div","status"), grid = el("div","waffle"), res = el("div");
+  root.append(status, grid, res);
+  let sel = null;
+  const WORDS = []; for (let r = 0; r < 5; r += 2) WORDS.push([0,1,2,3,4].map(c => r*5+c)); for (let c = 0; c < 5; c += 2) WORDS.push([0,1,2,3,4].map(r => r*5+c));
+  const won = () => st.cur.every((x,i) => x === sol[i]);
+  const over = () => won() || st.swaps >= MAXS;
+  function colors(){
+    const col = st.cur.map((x,i) => x === sol[i] ? "g" : "");
+    st.cur.forEach((x,i) => { if (!x || col[i] === "g") return;
+      for (const w of WORDS) { if (!w.includes(i)) continue; const pool = w.filter(j => col[j] !== "g").map(j => sol[j]); if (pool.includes(x)) { col[i] = "y"; break; } } });
+    return col;
+  }
+  function draw(){
+    const left = MAXS - st.swaps; status.replaceChildren(el("span",null,`Zamiany: ${left} z ${MAXS}`), el("span",null, won() ? "⭐".repeat(Math.max(0, Math.min(5, left))) : ""));
+    const col = over() && !won() ? sol.map(()=>"") : colors();
+    grid.replaceChildren(...(over() && !won() ? sol : st.cur).map((x,i) => {
+      const b = el("button","wcell" + (x ? "" : " hole") + (col[i] ? " " + col[i] : "") + (sel === i ? " sel" : ""), x); b.type = "button";
+      if (x && !over()) b.onclick = () => tap(i);
+      return b;
+    }));
+    res.replaceChildren();
+    if (over()) {
+      const stars = Math.max(0, Math.min(5, left));
+      if (!st.summary) { st.summary = won() ? `${stars}⭐` : "nie wyszło"; saveState(g.id, st); }
+      res.append(resultBox(won() ? (stars >= 4 ? "Mistrzowski gofr!" : "Gofr gotowy!") : "Skończyły się zamiany", won() ? `Zostało ${left} zamian.` : `Słowa: ${p.words.join(", ").toUpperCase()}.`, won() ? "⭐".repeat(stars) || "✅" : "🧇❌", `Kujonki · Gofr #${num()} ${won() ? "⭐".repeat(stars) + ` (${left} zamian w zapasie)` : "❌"}`));
+    }
+  }
+  function tap(i){
+    if (sel === null) { sel = i; return draw(); }
+    if (sel === i) { sel = null; return draw(); }
+    if (st.cur[sel] !== sol[sel] || st.cur[i] !== sol[i]) { [st.cur[sel], st.cur[i]] = [st.cur[i], st.cur[sel]]; st.swaps++; }
+    sel = null; saveState(g.id, st); draw();
+  }
+  draw();
+}
+
+/* ---------- 4. Drabinka ---------- */
+const unpack = s => { const out = []; let prev = ""; for (const tok of s.split(" ")) { const w = prev.slice(0, parseInt(tok[0], 36)) + tok.slice(1); out.push(w); prev = w; } return out; };
+const WORDS4 = new Set(unpack(DATA.slowa4));
+function drabinka(g){
+  const p = pick(DATA.drabinka);
+  const st = store.get(key(g.id)) || {chain:[p.start], gave:false};
+  const root = shell(g, `Przejdź od <b>${p.start}</b> do <b>${p.end}</b>. Na każdym kroku zmieniasz <b>jedną literę</b> i musi wyjść prawdziwe słowo. Liczą się też formy: RĘKA, RĘKĘ.`);
+  const status = el("div","status"), lad = el("div","ladder");
+  const form = el("form","row"), inp = el("input"); inp.type = "text"; inp.id = "in-drabinka"; inp.maxLength = 4; inp.autocomplete = "off"; inp.placeholder = "Następne słowo"; inp.setAttribute("aria-label","Następne słowo");
+  const btn = el("button","btn","Dalej"); btn.type = "submit"; form.append(inp, btn);
+  const tools = el("div","center"); tools.style.marginTop = "10px";
+  const undo = el("button","btn ghost small","Cofnij krok"), give = el("button","btn ghost small","Pokaż rozwiązanie");
+  tools.append(undo, give);
+  const res = el("div"); root.append(status, lad, form, tools, res);
+  const last = () => st.chain[st.chain.length - 1];
+  const won = () => last() === p.end;
+  const rung = (w, cls, prev) => { const r = el("div","rung " + cls); [...w].forEach((ch,i) => r.append(el("i", prev && prev[i] !== ch ? "diff" : "", ch))); return r; };
+  function draw(){
+    const steps = st.chain.length - 1;
+    status.replaceChildren(el("span",null,`Kroki: ${steps}`), el("span",null,`Norma: ${p.par}`));
+    const items = [];
+    st.chain.forEach((w,i) => items.push(rung(w, i === 0 ? "start" : (w === p.end ? "goal" : ""), st.chain[i-1])));
+    if (!won()) { items.push(el("div","dots","⋮")); items.push(rung(p.end, "goal")); }
+    lad.replaceChildren(...items);
+    const over = won() || st.gave;
+    form.hidden = over; tools.hidden = over; res.replaceChildren();
+    if (won()) {
+      const diff = steps - p.par, label = diff < 0 ? `${-diff} poniżej normy` : diff === 0 ? "równo z normą" : `${diff} ponad normę`;
+      if (!st.summary) { st.summary = pl(steps, "krok", "kroki", "kroków"); saveState(g.id, st); }
+      const emo = "🟩".repeat(Math.min(steps, p.par)) + (diff > 0 ? "🟨".repeat(diff) : "") + (diff < 0 ? "⭐" : "");
+      res.append(resultBox(diff <= 0 ? "Czysta robota!" : "Jest na górze!", `${pl(steps,"krok","kroki","kroków")}, ${label}.`, emo, `Kujonki · Drabinka #${num()} ${p.start}→${p.end}: ${pl(steps,"krok","kroki","kroków")} (norma ${p.par}) ${emo}`));
+    } else if (st.gave) {
+      if (!st.summary) { st.summary = "poddane"; saveState(g.id, st); }
+      res.append(resultBox("Przykładowa droga", p.path.join(" → "), "", `Kujonki · Drabinka #${num()} 🏳️`));
+    }
+  }
+  form.onsubmit = e => { e.preventDefault(); const v = up(inp.value); const l = last();
+    if (v.length !== 4) return toast("Słowo musi mieć 4 litery");
+    const d = [...v].filter((ch,i) => ch !== l[i]).length;
+    if (d !== 1) { inp.classList.add("shake"); setTimeout(()=>inp.classList.remove("shake"),400); return toast("Zmień dokładnie jedną literę"); }
+    if (!WORDS4.has(v)) { inp.classList.add("shake"); setTimeout(()=>inp.classList.remove("shake"),400); return toast(`Nie znam słowa ${v}`); }
+    st.chain.push(v); inp.value = ""; saveState(g.id, st); draw(); };
+  undo.onclick = () => { if (st.chain.length > 1) { st.chain.pop(); saveState(g.id, st); draw(); } };
+  give.onclick = () => { st.gave = true; saveState(g.id, st); draw(); };
+  draw();
+}
+
+/* ---------- 5. Zaczernione ---------- */
+const STOP = new Set("I W Z NA DO SIĘ JEST SĄ A O OD PO ZA ZE WE ORAZ LUB OD TO TEN TA TE JAK CZY KTÓRY KTÓRA KTÓRE KTÓREJ KTÓRYCH NIE PRZEZ PRZY DLA JEGO JEJ ICH ALE TAKŻE ROKU R KM M".split(" "));
+function zaczernione(g){
+  const p = pick(WIKI), ans = up(p.answer);
+  const st = store.get(key(g.id)) || {g:[], gave:false};
+  const root = shell(g, "Tekst z Wikipedii, <b>wszystkie słowa zaczernione</b>. Wpisuj słowa, które mogą tam być. Każde trafienie odsłania je w całym tekście. Wygrywasz, gdy zgadniesz <b>temat</b> (czerwone pola).");
+  const status = el("div","status"), text = el("div","redact");
+  const form = el("form","row"), inp = el("input"); inp.type = "text"; inp.id = "in-zaczernione"; inp.autocomplete = "off"; inp.placeholder = "Słowo albo temat"; inp.setAttribute("aria-label","Słowo albo temat");
+  const btn = el("button","btn","Odkryj"); btn.type = "submit"; form.append(inp, btn);
+  const tools = el("div","center"); tools.style.marginTop = "10px"; const give = el("button","btn ghost small","Poddaję się"); tools.append(give);
+  const chips = el("div","chips"), res = el("div");
+  root.append(status, text, form, tools, chips, res);
+  const tokens = (p.answer + "\n" + p.text).split(/(\s+|[.,;:()–\-„”"!?]+)/).filter(t => t !== "");
+  const isWord = t => /[A-Za-zĄĆĘŁŃÓŚŹŻąćęłńóśźż0-9]/.test(t);
+  const match = (t, gs) => { const T = strip(up(t)); return gs.some(x => { const G = strip(x); if (T === G) return true; if (G.length >= 4) { const stem = G.slice(0, Math.max(3, G.length - 2)); return T.startsWith(stem) && Math.abs(T.length - G.length) <= 3; } return false; }); };
+  const titleWords = ans.split(/\s+/);
+  const won = () => titleWords.every(w => match(w, st.g));
+  let lastGuess = null;
+  function draw(){
+    const over = won() || st.gave;
+    const hits = st.g.filter(x => tokens.some(t => isWord(t) && match(t, [x]))).length;
+    status.replaceChildren(el("span",null,`Próby: ${st.g.length}`), el("span",null,`Trafione: ${hits}`));
+    text.replaceChildren();
+    let inTitle = true;
+    const title = el("div","title"), body = el("p"); body.style.margin = "8px 0 0";
+    for (const t of tokens) {
+      if (t === "\n") { inTitle = false; continue; }
+      const target = inTitle ? title : body;
+      if (!isWord(t)) { target.append(document.createTextNode(t)); continue; }
+      const open = over || /^[0-9]+$/.test(t) || (!inTitle && STOP.has(up(t))) || match(t, st.g);
+      if (open) { const s = el("span", lastGuess && match(t, [lastGuess]) ? "new" : "", t); target.append(s); }
+      else { const s = el("span","h", t); s.dataset.n = t.length; target.append(s); }
+    }
+    title.style.fontSize = "1.4rem"; text.append(title, body);
+    chips.replaceChildren(...[...st.g].reverse().map(x => el("span","chip " + (tokens.some(t => isWord(t) && match(t,[x])) ? "ok" : "x"), x)));
+    form.hidden = over; tools.hidden = over; res.replaceChildren();
+    if (over) {
+      if (!st.summary) { st.summary = won() && !st.gave ? pl(st.g.length, "próba", "próby", "prób") : "poddane"; saveState(g.id, st); }
+      res.append(resultBox(st.gave ? `To było: ${p.answer}` : `Tak! ${p.answer}`, st.gave ? "Jutro nowy tekst." : `Liczba prób: ${st.g.length}, trafione słowa: ${hits}.`, "", `Kujonki · Zaczernione #${num()} ${st.gave ? "🏳️" : `🔎 ${pl(st.g.length,"próba","próby","prób")}`}`));
+    }
+  }
+  form.onsubmit = e => { e.preventDefault(); const v = up(inp.value); if (!v) return;
+    if (v.includes(" ")) { v.split(/\s+/).forEach(x => { if (!st.g.includes(x)) st.g.push(x); }); }
+    else { if (st.g.includes(v)) return toast("To już było"); st.g.push(v); }
+    lastGuess = v.split(/\s+/)[0];
+    const n = tokens.filter(t => isWord(t) && match(t,[lastGuess])).length;
+    if (!n) toast(`${v}: brak w tekście`);
+    inp.value = ""; saveState(g.id, st); draw(); };
+  give.onclick = () => { st.gave = true; saveState(g.id, st); draw(); };
+  draw();
+}
+
+/* ---------- 6. Rdzeń ---------- */
+function rdzen(g){
+  const p = pick(DATA.rdzen), WORDS = new Set(unpack(p.words)), MAX = 5;
+  const st = store.get(key(g.id)) || {t:[], end:false};
+  const root = shell(g, `Wpisz <b>jak najdłuższe słowo</b> zawierające cząstkę. Liczą się formy odmiany. Masz ${MAX} prób, liczy się najlepsza.`);
+  const status = el("div","status"), frag = html("div","frag",`<span>${p.frag}</span>`);
+  const form = el("form","row"), inp = el("input"); inp.type = "text"; inp.id = "in-rdzen"; inp.autocomplete = "off"; inp.placeholder = "Długie słowo…"; inp.setAttribute("aria-label","Długie słowo");
+  const btn = el("button","btn","Wpisz"); btn.type = "submit"; form.append(inp, btn);
+  const tries = el("div","tries"), res = el("div");
+  root.append(status, frag, form, tries, res);
+  const best = () => st.t.reduce((a,b) => b.length > a.length ? b : a, "");
+  function draw(){
+    const over = st.t.length >= MAX || st.end;
+    status.replaceChildren(el("span",null,`Próby: ${st.t.length} z ${MAX}`), el("span",null, best() ? `Najlepsze: ${best().length} liter` : ""));
+    tries.replaceChildren(...st.t.map(w => { const r = el("div","try"); const i = w.indexOf(p.frag); r.append(html("span",null, `${w.slice(0,i)}<mark>${p.frag}</mark>${w.slice(i + p.frag.length)}`), el("small",null,`${w.length} liter`)); return r; }));
+    form.hidden = over; res.replaceChildren();
+    if (over) {
+      const b = best().length, goal = p.goal.length, ratio = b / goal;
+      const emo = ratio >= 1 ? "🌳" : ratio >= .8 ? "🌿" : ratio >= .6 ? "🌱" : "🫘";
+      if (!st.summary) { st.summary = pl(b, "litera", "litery", "liter"); saveState(g.id, st); }
+      res.append(resultBox(ratio >= 1 ? "Słownik chodzący!" : ratio >= .8 ? "Blisko ideału" : "Da się dłużej", `Twoje: ${best() || "brak"} (${b}). Wzorcowe: ${p.goal} (${goal}). Rekord słownika: ${p.longest} (${p.longest.length}).`, emo, `Kujonki · Rdzeń #${num()} „${p.frag}”: ${b} liter ${emo}`));
+    }
+  }
+  form.onsubmit = e => { e.preventDefault(); const v = up(inp.value); if (!v) return;
+    if (!v.includes(p.frag)) return toast(`Słowo musi zawierać ${p.frag}`);
+    if (st.t.includes(v)) return toast("To już było");
+    if (!WORDS.has(v)) { inp.classList.add("shake"); setTimeout(()=>inp.classList.remove("shake"),400); return toast(`Nie znam słowa ${v}`); }
+    st.t.push(v); inp.value = ""; saveState(g.id, st); draw(); };
+  draw();
+}
+
+/* ---------- 7. Pudełko ---------- */
+function pudelko(g){
+  const p = pick(DATA.pudelko), WORDS = new Set(unpack(p.words));
+  const sideOf = {}; p.sides.forEach((s,i) => [...s].forEach(ch => sideOf[ch] = i));
+  const all = p.sides.join("");
+  const st = store.get(key(g.id)) || {words:[], gave:false};
+  const root = shell(g, "Układaj słowa z liter na brzegach. <b>Kolejna litera musi być z innego boku.</b> Nowe słowo zaczyna się ostatnią literą poprzedniego. Zużyj wszystkie 12 liter w jak najmniejszej liczbie słów.");
+  const status = el("div","status"), box = el("div","box");
+  const tools = el("div","center"); const del = el("button","btn ghost small","⌫ Usuń"), ok = el("button","btn small","Zatwierdź słowo"), give = el("button","btn ghost small","Poddaję się");
+  tools.append(del, ok, give);
+  const res = el("div"); root.append(status, box, tools, res);
+  let cur = st.words.length ? st.words[st.words.length - 1].slice(-1) : "";
+  const used = () => new Set((st.words.join("") + cur).split(""));
+  const won = () => [...all].every(ch => st.words.join("").includes(ch));
+  const POS = [[0,1],[0,2],[0,3],[1,4],[2,4],[3,4],[4,3],[4,2],[4,1],[3,0],[2,0],[1,0]];
+  function draw(){
+    const over = won() || st.gave;
+    status.replaceChildren(el("span",null,`Słowa: ${st.words.length}`), el("span",null,`Użyte litery: ${[...all].filter(ch => st.words.join("").includes(ch)).length}/12`));
+    const inner = el("div","inner");
+    inner.append(el("div","cur", cur || "…"), el("div","past", st.words.join(" → ")));
+    const kids = [inner];
+    [...all].forEach((ch, k) => {
+      const b = el("button","bl", ch); b.type = "button";
+      const [r,c] = POS[k]; b.style.gridRow = r + 1; b.style.gridColumn = c + 1;
+      if ((st.words.join("") + cur).includes(ch)) b.classList.add("used");
+      const lastCh = cur.slice(-1);
+      if (lastCh === ch) b.classList.add("last");
+      if (over || (lastCh && sideOf[lastCh] === sideOf[ch])) b.disabled = true;
+      b.onclick = () => { cur += ch; draw(); };
+      kids.push(b);
+    });
+    box.replaceChildren(...kids);
+    requestAnimationFrame(() => {
+      const bb = box.getBoundingClientRect(); if (!bb.width) return;
+      const at = {}; box.querySelectorAll(".bl").forEach(x => { const r = x.getBoundingClientRect(); at[x.textContent] = [r.left - bb.left + r.width / 2, r.top - bb.top + r.height / 2]; });
+      const NS = "http://www.w3.org/2000/svg", svg = document.createElementNS(NS, "svg");
+      svg.setAttribute("class", "lines"); svg.setAttribute("viewBox", `0 0 ${bb.width} ${bb.height}`);
+      const line = (word, cls) => { if (word.length < 2) return; const pl = document.createElementNS(NS, "polyline"); pl.setAttribute("points", [...word].map(ch => at[ch].join(",")).join(" ")); pl.setAttribute("class", cls); svg.append(pl); };
+      st.words.forEach(w => line(w, "past")); line(cur, "now");
+      box.prepend(svg);
+    });
+    tools.hidden = over; res.replaceChildren();
+    if (over) {
+      const n = st.words.length;
+      if (!st.summary) { st.summary = st.gave ? "poddane" : pl(n, "słowo", "słowa", "słów"); saveState(g.id, st); }
+      res.append(resultBox(st.gave ? "Przykładowe rozwiązanie" : n <= 2 ? "Perfekcja!" : "Pudełko puste!", st.gave ? p.sol.join(" → ") : `${st.words.join(" → ")}. Wzorcowo w 2 słowach: ${p.sol.join(" → ")}.`, st.gave ? "" : "📦".repeat(n), `Kujonki · Pudełko #${num()} ${st.gave ? "🏳️" : `${pl(n,"słowo","słowa","słów")} ` + "📦".repeat(n)}`));
+    }
+  }
+  del.onclick = () => { const minLen = st.words.length ? 1 : 0; if (cur.length > minLen) { cur = cur.slice(0,-1); draw(); } else if (st.words.length && cur.length === 1) { cur = st.words.pop(); saveState(g.id, st); draw(); } };
+  ok.onclick = () => { if (cur.length < 3) return toast("Słowo musi mieć co najmniej 3 litery");
+    if (!WORDS.has(cur)) { box.classList.add("shake"); setTimeout(()=>box.classList.remove("shake"),400); return toast(`Nie znam słowa ${cur}`); }
+    st.words.push(cur); cur = cur.slice(-1); saveState(g.id, st); draw(); if (won()) toast("Wszystkie litery!"); };
+  give.onclick = () => { st.gave = true; saveState(g.id, st); draw(); };
+  draw();
+}
+
+/* ---------- 8. Dyktando ---------- */
+function dyktando(g){
+  const set = pick(DATA.dyktando);
+  const st = store.get(key(g.id)) || {r:[], t0:null, t1:null};
+  const root = shell(g, "Dziesięć słów, w każdym brakuje kawałka. <b>Wybierz poprawną pisownię.</b> Stoper rusza po pierwszym kliknięciu.");
+  const status = el("div","status"), prog = el("div","progress"), body = el("div"); root.append(status, prog, body);
+  let timer = null, lock = false;
+  const secs = () => st.t0 ? Math.round(((st.t1 || Date.now()) - st.t0) / 1000) : 0;
+  function tick(){ status.replaceChildren(el("span",null,`${Math.min(st.r.length + 1, set.length)} z ${set.length}`), el("span","timer",`⏱ ${secs()} s`)); }
+  function draw(){
+    prog.replaceChildren(...set.map((_,k)=> el("i", k < st.r.length ? (st.r[k] ? "ok" : "no") : k === st.r.length ? "now" : "")));
+    tick(); body.replaceChildren();
+    if (st.r.length >= set.length) {
+      clearInterval(timer);
+      const pts = st.r.filter(Boolean).length, emo = st.r.map(x => x ? "🟩" : "🟥").join("");
+      if (!st.summary) { st.summary = `${pts}/10 · ${secs()} s`; saveState(g.id, st); }
+      const wrong = set.map((x,k) => st.r[k] ? null : x.pre + x.ok + x.post).filter(Boolean);
+      res = resultBox(pts === 10 ? "Bezbłędnie!" : pts >= 8 ? "Prawie jak Miodek" : "Do poprawki", `${pts} z 10 w ${secs()} s.` + (wrong.length ? ` Poprawnie: ${wrong.join(", ")}.` : ""), emo, `Kujonki · Dyktando #${num()} ${pts}/10 ⏱ ${secs()} s ${emo}`);
+      body.append(res); return;
+    }
+    const item = set[st.r.length];
+    body.append(html("div","dword", `${item.pre}<span class="gap">?</span>${item.post}`));
+    const opts = el("div","opts");
+    item.opts.forEach(o => { const b = el("button","btn ghost", o); b.onclick = () => choose(o, b); opts.append(b); });
+    body.append(opts);
+  }
+  let res;
+  function choose(o, b){
+    if (lock) return; lock = true;
+    if (!st.t0) { st.t0 = Date.now(); timer = setInterval(tick, 500); }
+    const item = set[st.r.length], ok = o === item.ok;
+    b.style.background = ok ? "var(--ok-bg)" : "var(--bad-bg)";
+    const gap = body.querySelector(".gap"); gap.textContent = item.ok; gap.style.color = ok ? "var(--ok)" : "var(--bad)";
+    st.r.push(ok); if (st.r.length === set.length) st.t1 = Date.now();
+    saveState(g.id, st);
+    setTimeout(() => { lock = false; draw(); }, ok ? 450 : 1100);
+  }
+  if (st.t0 && !st.t1) timer = setInterval(tick, 500);
+  draw();
+}
+
+/* ---------- 9. Częściej ---------- */
+function czesciej(g){
+  const pairs = pick(DATA.czesciej);
+  const st = store.get(key(g.id)) || {i:0, lost:false};
+  const root = shell(g, "Które słowo pada <b>częściej</b> w polskich napisach do filmów i seriali? Grasz do pierwszej pomyłki.");
+  const status = el("div","status"), body = el("div"); root.append(status, body);
+  let lock = false;
+  function draw(){
+    status.replaceChildren(el("span",null,`Seria: ${st.i}`), el("span",null,`${Math.min(st.i + 1, pairs.length)} z ${pairs.length}`));
+    body.replaceChildren();
+    if (st.lost || st.i >= pairs.length) {
+      const emo = "🟩".repeat(st.i) + (st.lost ? "🟥" : "🏆");
+      if (!st.summary) { st.summary = `seria ${st.i}`; saveState(g.id, st); }
+      body.append(resultBox(st.i >= pairs.length ? "Komplet!" : st.i >= 8 ? "Czujesz język!" : "Koniec serii", `Seria: ${st.i} z ${pairs.length}.`, emo, `Kujonki · Częściej? #${num()} seria ${st.i} ${emo}`));
+      return;
+    }
+    const [a, ca, b, cb] = pairs[st.i];
+    const vs = el("div","vs");
+    const mk = (w, c, other) => { const btn = el("button","vsbtn"); btn.append(el("span",null,w), el("small",null,"")); btn.onclick = () => choose(btn, c >= other, vs, [ca, cb]); return btn; };
+    const b1 = mk(a, ca, cb), b2 = mk(b, cb, ca);
+    vs.append(b1, el("div","or","czy"), b2); body.append(vs);
+  }
+  function choose(btn, ok, vs, counts){
+    if (lock) return; lock = true;
+    const btns = vs.querySelectorAll(".vsbtn");
+    btns.forEach((x,k) => { x.querySelector("small").textContent = `${counts[k].toLocaleString("pl-PL")} razy`; });
+    btn.classList.add(ok ? "ok" : "no");
+    const ratio = Math.max(...counts) / Math.min(...counts);
+    toast(ok ? `Tak, ${ratio.toFixed(1).replace(".",",")}× częściej` : "Pudło!");
+    setTimeout(() => { if (ok) st.i++; else st.lost = true; saveState(g.id, st); lock = false; draw(); }, 1100);
+  }
+  draw();
+}
+
+/* ---------- 10. Przysłowie ---------- */
+function przyslowie(g){
+  const [emo, text] = pick(PRZYSLOWIA); const words = text.split(" ");
+  const st = store.get(key(g.id)) || {g:[], gave:false};
+  const root = shell(g, "Rozszyfruj przysłowie z emoji. <b>Wpisuj słowa</b>, a trafione pojawią się na swoich miejscach. Jak znasz całe, wpisz je od razu.");
+  const status = el("div","status"), e = el("div","emoji", emo), prov = el("div","proverb");
+  const form = el("form","row"), inp = el("input"); inp.type = "text"; inp.id = "in-przyslowie"; inp.autocomplete = "off"; inp.placeholder = "Słowo albo całe przysłowie"; inp.setAttribute("aria-label","Słowo albo całe przysłowie");
+  const btn = el("button","btn","Sprawdź"); btn.type = "submit"; form.append(inp, btn);
+  const tools = el("div","center"); tools.style.marginTop = "10px"; const hint = el("button","btn ghost small","Podpowiedź: pierwsze litery"), give = el("button","btn ghost small","Poddaję się"); tools.append(hint, give);
+  const chips = el("div","chips"), res = el("div");
+  root.append(status, e, prov, form, tools, chips, res);
+  const hit = w => st.g.some(x => strip(x) === strip(w));
+  const won = () => words.every(hit);
+  let fresh = [];
+  function draw(){
+    const over = won() || st.gave;
+    const misses = st.g.filter(x => !words.some(w => strip(w) === strip(x))).length;
+    status.replaceChildren(el("span",null,`Pudła: ${misses}`), el("span",null,`Odkryte: ${words.filter(hit).length}/${words.length}`));
+    prov.replaceChildren(...words.map(w => { const on = over || hit(w); const d = el("div","pw" + (on ? " on" : "") + (fresh.includes(w) ? " new" : "")); [...w].forEach((ch,i) => d.append(el("i",null, on ? ch : (st.hint && i === 0 ? ch : "")))); return d; }));
+    chips.replaceChildren(...st.g.filter(x => !words.some(w => strip(w) === strip(x))).map(x => el("span","chip x",x)));
+    form.hidden = over; tools.hidden = over; res.replaceChildren();
+    if (over) {
+      if (!st.summary) { st.summary = st.gave ? "poddane" : pl(misses, "pudło", "pudła", "pudeł"); saveState(g.id, st); }
+      const sq = st.gave ? "🏳️" : "🟥".repeat(misses) + "🟩" + (st.hint ? " 💡" : "");
+      res.append(resultBox(st.gave ? "Następnym razem!" : misses === 0 ? "Bez pudła!" : "Rozszyfrowane!", text.charAt(0) + text.slice(1).toLocaleLowerCase("pl-PL") + ".", sq, `Kujonki · Przysłowie #${num()} ${emo} ${sq}`));
+    }
+  }
+  form.onsubmit = ev => { ev.preventDefault(); const v = up(inp.value).replace(/[.,!?]/g,""); if (!v) return;
+    const parts = v.split(/\s+/); fresh = [];
+    parts.forEach(x => { if (!st.g.some(y => strip(y) === strip(x))) { st.g.push(x); words.filter(w => strip(w) === strip(x)).forEach(w => fresh.push(w)); } });
+    if (!fresh.length) toast(parts.length > 1 ? "Nic nowego" : `${v}: nie ma w przysłowiu`);
+    inp.value = ""; saveState(g.id, st); draw(); };
+  hint.onclick = () => { st.hint = true; saveState(g.id, st); draw(); };
+  give.onclick = () => { st.gave = true; saveState(g.id, st); draw(); };
+  draw();
+}
+
+/* ---------- hub ---------- */
+const RUN = {lacznik, ogonki, gofr, drabinka, zaczernione, rdzen, pudelko, dyktando, czesciej, przyslowie};
+const MKEY = () => `kujonki2:maraton:${day}`;
+const marathon = () => store.get(MKEY());
+const fmt = ms => { const t = Math.round(ms / 1000); return `${Math.floor(t / 60)}:${String(t % 60).padStart(2, "0")}`; };
+function tickClock(){
+  const m = marathon(), c = $("#clock");
+  if (m && !m.t1 && GAMES.every(g => (store.get(key(g.id)) || {}).summary)) { m.t1 = Date.now(); store.set(MKEY(), m); }
+  c.hidden = !m; if (m) c.textContent = `⏱ ${fmt((m.t1 || Date.now()) - m.t0)}`;
+  c.classList.toggle("run", !!m && !m.t1);
+}
+setInterval(tickClock, 1000);
+function playedOn(d){ return GAMES.some(g => (store.get(`kujonki2:${g.id}:${d}`) || {}).summary); }
+function streak(){ let d = playedOn(day) ? day : day - 1, n = 0; while (d >= 0 && playedOn(d)) { n++; d--; } return n; }
+function hub(){
+  CURRENT = null; document.body.classList.remove("in-game");
+  const root = $("#view"); root.replaceChildren();
+  const done = GAMES.filter(g => (store.get(key(g.id)) || {}).summary);
+  const s = streak(), m = marathon();
+  const grades = done.map(g => gradeOf(g.id)).filter(Boolean);
+  const avg = grades.length ? grades.reduce((a,b) => a + b, 0) / grades.length : 0;
+  const avgTxt = avg.toFixed(2).replace(".", ",");
+  const pasek = grades.length === GAMES.length && avg >= 4.75;
+  if (!store.get("kujonki2:intro")) {
+    const intro = el("section","intro");
+    intro.append(el("h2",null,"Cześć, kujonie!"),
+      html("p",null,"Codziennie o północy nowy plan lekcji: <b>10 krótkich zagadek słownych</b>. Za każdą dostajesz ocenę od 1 do 6, a na koniec dnia świadectwo."),
+      html("p",null,"Średnia 4,75 daje <b>czerwony pasek</b>. Oceny udostępniasz bez zdradzania odpowiedzi, a codzienna gra nabija frekwencję 🔥."));
+    const ok = el("button","btn","Zaczynam"); ok.onclick = () => { store.set("kujonki2:intro", 1); hub(); };
+    intro.append(ok); root.append(intro);
+  }
+  const report = el("section","report" + (pasek ? " pasek" : ""));
+  const shownDay = new Date(START); shownDay.setDate(START.getDate() + day);
+  report.append(el("div","rtitle",`Świadectwo · ${shownDay.toLocaleDateString("pl-PL", {day:"numeric", month:"long"})}`));
+  if (grades.length) {
+    report.append(html("p","rline",`Średnia <b>${avgTxt}</b> z ${pl(grades.length, "oceny", "ocen", "ocen")} · ${done.length} z ${GAMES.length} lekcji${s ? ` · frekwencja 🔥 ${pl(s, "dzień", "dni", "dni")}` : ""}`));
+    if (pasek) report.append(el("p","rpasek","Z czerwonym paskiem. Jutro nowy plan lekcji."));
+    else if (done.length === GAMES.length) report.append(el("p","rpasek soft","Komplet ocen. Na czerwony pasek trzeba średniej 4,75."));
+  } else {
+    report.append(html("p","rline", s ? `Dziś jeszcze bez ocen · frekwencja 🔥 ${pl(s, "dzień", "dni", "dni")}` : "Dziś jeszcze bez ocen. Dziesięć krótkich lekcji, każda na 1–3 minuty."));
+  }
+  if (m && m.t1) report.append(html("p","rline",`Maraton: <b>${fmt(m.t1 - m.t0)}</b>`));
+  const actions = el("div","ractions");
+  if (done.length) {
+    const sb = el("button","btn", done.length === GAMES.length ? "Udostępnij świadectwo" : "Udostępnij oceny");
+    sb.onclick = () => share(`Kujonki #${num()} · średnia ${avgTxt}${pasek ? " 🟥 czerwony pasek" : ""}${m && m.t1 ? ` · ⏱ ${fmt(m.t1 - m.t0)}` : ""}${s > 1 ? ` · 🔥 ${s} dni` : ""}\n` + GAMES.map(g => (store.get(key(g.id)) || {}).line).filter(Boolean).join("\n"));
+    actions.append(sb);
+  } else {
+    const start = el("button","btn","Zacznij lekcję 1"); start.onclick = () => go(GAMES[0].id);
+    actions.append(start);
+  }
+  if (!done.length && !m) {
+    const mb = el("button","btn ghost","⏱ Maraton na czas");
+    mb.onclick = () => { store.set(MKEY(), {t0: Date.now()}); tickClock(); go(GAMES[0].id); };
+    actions.append(mb);
+  }
+  report.append(actions); root.append(report);
+  const list = el("ol","lessons");
+  GAMES.forEach((g, i) => {
+    const gr = gradeOf(g.id);
+    const li = el("li"), b = el("button","lesson" + (gr ? " done" : "")); b.type = "button";
+    b.append(el("span","lnum",`${i + 1}`), html("span","lbody",`<span class="lname">${g.name}</span><span class="lrule">${g.desc}</span>`), gr ? stamp(gr, "lgrade") : el("span","lgo","›"));
+    b.setAttribute("aria-label", `${g.name}${gr ? `, ocena ${gr}` : ""}`);
+    b.onclick = () => go(g.id);
+    li.append(b); list.append(li);
+  });
+  root.append(list);
+}
+function go(id){ if (id) location.hash = id; else history.pushState("", "", location.pathname + location.search); route(); window.scrollTo(0,0); }
+function route(){ const id = location.hash.slice(1); const g = GAMES.find(x => x.id === id); if (g) RUN[g.id](g); else hub(); }
+window.addEventListener("hashchange", route);
+$("#home").onclick = () => go("");
+function setDay(d){ const u = new URL(location.href); u.searchParams.set("d", Math.max(0,d)); location.href = u; }
+$("#prev").onclick = () => setDay(day - 1);
+$("#next").onclick = () => setDay(day + 1);
+const shown = new Date(START); shown.setDate(START.getDate() + day);
+$("#date").innerHTML = `<b>#${num()}</b>` + shown.toLocaleDateString("pl-PL", {day:"numeric", month:"long"});
+route();
+tickClock();
+</script>
+</body>
+</html>
