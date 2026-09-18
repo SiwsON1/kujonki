@@ -152,6 +152,16 @@ footer button{font:inherit;color:inherit;background:none;border:0;text-decoratio
 .wcell.g{background:var(--hl-green);box-shadow:none;cursor:default}
 .wcell.y{background:var(--mark)}
 .wcell.sel{transform:translateY(3px);box-shadow:none;outline:3px solid var(--margin);outline-offset:1px}
+.wcell.far{opacity:.32}
+.coach{margin:10px 2px 0;min-height:2.6em;font:700 1.25rem/1.25 "Caveat",cursive;color:var(--margin);text-wrap:pretty}
+.rule-step{display:block;margin-bottom:6px}
+.rule-step b{color:var(--margin)}
+.legend{display:flex;align-items:center;gap:8px;margin:0 0 5px}
+.lg{flex:none;width:28px;height:28px;border:2px solid var(--tile-edge);border-radius:6px;display:grid;place-items:center;font:800 .95rem var(--ui);background:var(--tile);color:var(--ink)}
+.lg.g{background:var(--hl-green)} .lg.y{background:var(--mark)}
+.shape{display:grid;grid-template-columns:repeat(5,12px);gap:3px;margin:10px 0 8px}
+.shape i{width:12px;height:12px;border-radius:2px;background:var(--grey)}
+.shape i.hole{background:transparent;border:2px dotted var(--ink-soft);width:10px;height:10px}
 mark.hg,mark.hy{color:var(--ink);padding:0 .2em;border-radius:3px}
 mark.hg{background:var(--hl-green)} mark.hy{background:var(--mark)}
 .remark{margin:0 0 8px;font:700 1.25rem/1.15 "Caveat",cursive;color:var(--ink-soft)}
@@ -510,9 +520,18 @@ function ogonki(g){
 function gofr(g){
   const p = pick(DATA.gofr), sol = p.solution.split(","), MAXS = 15;
   const st = store.get(key(g.id)) || {cur: p.start.split(","), swaps: 0};
-  const root = shell(g, "Ułóż <b>3 słowa poziomo i 3 pionowo</b>. Stuknij dwie litery, żeby je zamienić. <mark class='hg'>Zielony</mark> to dobre miejsce, <mark class='hy'>żółty</mark> to litera z tego słowa, ale w innym polu.");
-  const status = el("div","status"), grid = el("div","waffle"), res = el("div");
-  root.append(status, grid, res);
+  const root = shell(g, `<span class="rule-step"><b>1.</b> W siatce ukrytych jest 6 słów: 3 czytane w poziomie i 3 w pionie, po 5 liter każde. Litery są pomieszane.</span>
+<span class="rule-step"><b>2.</b> Stukasz dwie litery i one zamieniają się miejscami. Masz na to 15 zamian, a im mniej zużyjesz, tym wyższa ocena.</span>
+<span class="rule-step"><b>3.</b> Kolory mówią, co jest dobrze:</span>
+<span class="legend"><span class="lg g">K</span> jest na swoim miejscu</span>
+<span class="legend"><span class="lg y">K</span> należy do tego słowa, ale do innego pola</span>
+<span class="legend"><span class="lg">K</span> w tym słowie jej nie ma, przenieś ją gdzie indziej</span>
+<span class="shape" aria-hidden="true"></span>
+<span class="rule-step">Kształt planszy: pełne pola to litery, kropkowane są puste.</span>`);
+  const status = el("div","status"), grid = el("div","waffle"), coach = el("p","coach"), res = el("div");
+  root.append(status, grid, coach, res);
+  const shape = root.querySelector(".shape");
+  for (let r = 0; r < 5; r++) for (let c = 0; c < 5; c++) shape.append(el("i", r % 2 && c % 2 ? "hole" : ""));
   let sel = null;
   const WORDS = []; for (let r = 0; r < 5; r += 2) WORDS.push([0,1,2,3,4].map(c => r*5+c)); for (let c = 0; c < 5; c += 2) WORDS.push([0,1,2,3,4].map(r => r*5+c));
   const won = () => st.cur.every((x,i) => x === sol[i]);
@@ -526,11 +545,17 @@ function gofr(g){
   function draw(){
     const left = MAXS - st.swaps; status.replaceChildren(el("span",null,`Zamiany: ${left} z ${MAXS}`), el("span",null, won() ? "⭐".repeat(Math.max(0, Math.min(5, left))) : ""));
     const col = over() && !won() ? sol.map(()=>"") : colors();
+    const near = sel === null ? null : WORDS.filter(w => w.includes(sel)).flat();
     grid.replaceChildren(...(over() && !won() ? sol : st.cur).map((x,i) => {
-      const b = el("button","wcell" + (x ? "" : " hole") + (col[i] ? " " + col[i] : "") + (sel === i ? " sel" : ""), x); b.type = "button";
+      const b = el("button","wcell" + (x ? "" : " hole") + (col[i] ? " " + col[i] : "") + (sel === i ? " sel" : "") + (near && !near.includes(i) ? " far" : ""), x); b.type = "button";
       if (x && !over()) b.onclick = () => tap(i);
       return b;
     }));
+    const zielone = col.filter(c => c === "g").length;
+    coach.hidden = over();
+    coach.textContent = sel === null
+      ? (st.swaps === 0 ? "Stuknij literę, która stoi w złym miejscu." : `Zielonych liter: ${zielone} z 21. Stuknij kolejną literę do przestawienia.`)
+      : `Litera ${st.cur[sel]} wybrana. Teraz stuknij pole, z którym ma się zamienić. Podświetlone są słowa, do których należy.`;
     res.replaceChildren();
     if (over()) {
       const stars = Math.max(0, Math.min(5, left));
@@ -712,11 +737,14 @@ function pudelko(g){
   const sideOf = {}; p.sides.forEach((s,i) => [...s].forEach(ch => sideOf[ch] = i));
   const all = p.sides.join("");
   const st = store.get(key(g.id)) || {words:[], gave:false};
-  const root = shell(g, "Układaj słowa z liter na brzegach. <b>Kolejna litera musi być z innego boku.</b> Nowe słowo zaczyna się ostatnią literą poprzedniego. Zużyj wszystkie 12 liter w jak najmniejszej liczbie słów.");
-  const status = el("div","status"), box = el("div","box");
+  const root = shell(g, `<span class="rule-step"><b>1.</b> Stukaj litery z brzegów, żeby ułożyć słowo. Pojawia się ono w środku kwadratu.</span>
+<span class="rule-step"><b>2.</b> Kolejna litera musi być z <b>innego boku</b> niż poprzednia. Litery z tego samego boku są wtedy przygaszone.</span>
+<span class="rule-step"><b>3.</b> „Zatwierdź słowo”, a następne zaczyna się jego ostatnią literą.</span>
+<span class="rule-step"><b>4.</b> Wygrywasz, gdy zużyjesz wszystkie 12 liter. Im mniej słów, tym wyższa ocena: dwa słowa to szóstka.</span>`);
+  const status = el("div","status"), box = el("div","box"), coach = el("p","coach");
   const tools = el("div","center"); const del = el("button","btn ghost small","⌫ Usuń"), ok = el("button","btn small","Zatwierdź słowo"), give = el("button","btn ghost small","Poddaję się");
   tools.append(del, ok, give);
-  const res = el("div"); root.append(status, box, tools, res);
+  const res = el("div"); root.append(status, box, coach, tools, res);
   let cur = st.words.length ? st.words[st.words.length - 1].slice(-1) : "";
   const used = () => new Set((st.words.join("") + cur).split(""));
   const won = () => [...all].every(ch => st.words.join("").includes(ch));
@@ -747,6 +775,11 @@ function pudelko(g){
       st.words.forEach(w => line(w, "past")); line(cur, "now");
       box.prepend(svg);
     });
+    const left = [...all].filter(ch => !(st.words.join("") + cur).includes(ch)).length;
+    coach.hidden = over;
+    coach.textContent = cur.length === 0 ? "Stuknij pierwszą literę."
+      : cur.length < 3 ? `Zbierasz słowo: ${cur}. Potrzebne są co najmniej 3 litery.`
+      : `Słowo: ${cur}. Zatwierdź je albo dobierz kolejne litery. Zostało ${left} nieużytych liter.`;
     tools.hidden = over; res.replaceChildren();
     if (over) {
       const n = st.words.length;
