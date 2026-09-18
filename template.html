@@ -156,6 +156,9 @@ footer button{font:inherit;color:inherit;background:none;border:0;text-decoratio
 .coach{margin:10px 2px 0;min-height:2.6em;font:700 1.25rem/1.25 "Caveat",cursive;color:var(--margin);text-wrap:pretty}
 .rule-step{display:block;margin-bottom:6px}
 .rule-step b{color:var(--margin)}
+.tldr{display:block;font-weight:600;color:var(--ink);margin-bottom:8px}
+.rule-note{display:block;margin-top:8px;padding-top:8px;border-top:1px dashed var(--rule);font-size:.88rem}
+.rule-note b{color:var(--ink)}
 .legend{display:flex;align-items:center;gap:8px;margin:0 0 5px}
 .lg{flex:none;width:28px;height:28px;border:2px solid var(--tile-edge);border-radius:6px;display:grid;place-items:center;font:800 .95rem var(--ui);background:var(--tile);color:var(--ink)}
 .lg.g{background:var(--hl-green)} .lg.y{background:var(--mark)}
@@ -428,6 +431,7 @@ function resultBox(title, sub, emo, shareText){
   tickClock();
   return box;
 }
+const rules = (tldr, steps, note) => `<span class="tldr">${tldr}</span>` + steps.map((s, i) => `<span class="rule-step"><b>${i + 1}.</b> ${s}</span>`).join("") + (note ? `<span class="rule-note">${note}</span>` : "");
 let CURRENT = null;
 function shell(g, howto){
   CURRENT = g; document.body.classList.add("in-game");
@@ -450,20 +454,27 @@ function lacznik(g){
   const p = pick(LACZNIK), main = p.a[0], MAX = 5;
   const st = store.get(key(g.id)) || {g:[], win:false};
   const done = () => st.win || st.g.length >= MAX;
-  const root = shell(g, "Jakie <b>jedno słowo</b> pasuje do wszystkich trzech? Każde pudło odsłania literę.");
+  const root = shell(g, rules("Szukasz jednego słowa, które pasuje do trzech podpowiedzi.", [
+    "Pod spodem masz trzy wyrażenia z luką, np. <b>___ KAWA</b>, <b>___ HERBATA</b>, <b>___ CZEKOLADA</b>.",
+    "Wpisujesz słowo, które pasuje do wszystkich trzech. W tym przykładzie: <b>GORĄCA</b>.",
+    `Masz ${MAX} prób. Każde pudło odsłania kolejną literę hasła w kratkach.`
+  ], "Forma nie musi się zgadzać co do litery: wpisz GORĄCY albo GORĄCA, uznam oba."));
   const status = el("div","status"), pips = el("div","pips"); status.append(el("span",null,`${MAX} prób`), pips);
-  const clues = el("div","clues"), slots = el("div","slots");
+  const clues = el("div","clues"), slots = el("div","slots"), coach = el("p","coach");
   const form = el("form","row"), inp = el("input"); inp.type = "text"; inp.id = "in-lacznik"; inp.autocomplete = "off"; inp.placeholder = "Twoje słowo"; inp.setAttribute("aria-label","Twoje słowo");
   const btn = el("button","btn","Sprawdź"); btn.type = "submit"; form.append(inp, btn); focusScroll(inp);
   const chips = el("div","chips"), res = el("div");
-  root.append(status, clues, slots, form, chips, res);
+  root.append(status, clues, slots, form, coach, chips, res);
   function draw(){
     const reveal = done() ? main.length : st.g.length;
     clues.replaceChildren(...p.c.map(pair => { const r = el("div","clue"); pair.forEach(w => { if (w === "_") { const b = el("span","blank" + (done() ? " solved" : "")); if (done()) b.textContent = formFor(pair.find(x => x !== "_"), p.a); r.append(b); } else r.append(el("span",null,w)); }); return r; }));
     slots.replaceChildren(...[...main].map((ch,i) => el("div","slot" + (st.win ? " win" : i < reveal ? " shown" : ""), (st.win || i < reveal) ? ch : "")));
     pips.replaceChildren(...Array.from({length:MAX},(_,i)=> el("span","pip" + (i < st.g.length ? " used" : "") + (st.win && i === st.g.length ? " win" : ""))));
     chips.replaceChildren(...st.g.map(x => el("span","chip x",x)));
-    form.hidden = done(); res.replaceChildren();
+    form.hidden = done(); coach.hidden = done(); res.replaceChildren();
+    coach.textContent = st.g.length === 0
+      ? "Wpisz słowo, które pasuje do wszystkich trzech wyrażeń."
+      : `Pudło. Odsłaniam ${st.g.length === 1 ? "pierwszą literę" : `${st.g.length} pierwsze litery`} hasła. Zostało ${pl(MAX - st.g.length, "próba", "próby", "prób")}.`;
     if (done()) {
       const emo = "🟥".repeat(st.g.length) + (st.win ? "🟩" : "");
       res.append(resultBox(st.win ? (st.g.length ? "Jest!" : "Za pierwszym!") : "Tym razem nie", `Hasło: ${main}.`, emo, `Kujonki · Łącznik #${num()} ${emo}`));
@@ -481,14 +492,20 @@ const CYCLE = {A:["A","Ą"],E:["E","Ę"],L:["L","Ł"],O:["O","Ó"],S:["S","Ś"],
 function ogonki(g){
   const set = pick(OGONKI);
   const st = store.get(key(g.id)) || {r:[]};
-  const root = shell(g, "Słowo zgubiło ogonki. <b>Stukaj litery z kropką</b> (Z → Ż → Ź), aż pasuje do opisu.");
-  const prog = el("div","progress"), body = el("div"); root.append(prog, body);
+  const root = shell(g, rules("Dopisujesz polskie ogonki do słowa, żeby pasowało do opisu.", [
+    "Nad literami jest opis, a pod nim słowo bez ogonków, np. <b>WEZEL</b> z opisem „supeł na sznurku”.",
+    "Stukasz literę z czerwoną kropką i ona zmienia się na wersję z ogonkiem: E → Ę, O → Ó, L → Ł, S → Ś, C → Ć, N → Ń, A → Ą, Z → Ż → Ź.",
+    "W przykładzie stukasz E i L, i wychodzi <b>WĘZEŁ</b>. Potem klikasz „Sprawdź”.",
+    "Tak przechodzisz 5 słów. Każde trafione to jeden stopień oceny."
+  ], "Uwaga na pułapki: część słów jest dobra bez zmian, np. <b>KASA</b> (do płacenia) i <b>KĄSA</b> (gryzie) wyglądają tak samo bez ogonków."));
+  const prog = el("div","progress"), body = el("div"), coach = el("p","coach"); root.append(prog, body, coach);
   let cur = [], checked = false;
   const next = () => { if (st.r.length < set.length) cur = [...strip(set[st.r.length][1])]; };
   function draw(){
     const i = st.r.length;
     prog.replaceChildren(...set.map((_,k)=> el("i", k < i ? (st.r[k] ? "ok" : "no") : k === i ? "now" : "")));
     body.replaceChildren();
+    coach.hidden = true;
     if (i >= set.length && !checked) {
       const pts = st.r.filter(Boolean).length, emo = st.r.map(x => x ? "🟩" : "🟥").join("");
       body.append(resultBox(pts === set.length ? "Profesor polszczyzny!" : pts >= 3 ? "Nieźle!" : "Ogonki bolą", `Trafione: ${pts} z ${set.length}.`, emo, `Kujonki · Ogonki #${num()} ${emo}`));
@@ -512,6 +529,11 @@ function ogonki(g){
     const c = el("div","center"), btn = el("button","btn", checked ? "Dalej" : "Sprawdź");
     btn.onclick = () => { if (!checked) { st.r.push(cur.join("") === ans); if (st.r.length === set.length) st.summary = `${st.r.filter(Boolean).length}/${set.length}`; saveState(g.id, st); checked = true; } else { checked = false; next(); } draw(); };
     c.append(btn); body.append(c);
+    const changed = cur.filter((ch, k) => ch !== strip(ans[k])).length;
+    coach.hidden = false;
+    coach.textContent = checked ? "Kliknij „Dalej”, żeby wziąć następne słowo."
+      : changed === 0 ? "Stukaj litery z czerwoną kropką, żeby dodać ogonki. Jeśli słowo już pasuje do opisu, od razu sprawdź."
+      : `Zmieniłeś ${pl(changed, "literę", "litery", "liter")}. Pasuje do opisu? Sprawdź.`;
   }
   next(); draw();
 }
@@ -520,7 +542,8 @@ function ogonki(g){
 function gofr(g){
   const p = pick(DATA.gofr), sol = p.solution.split(","), MAXS = 15;
   const st = store.get(key(g.id)) || {cur: p.start.split(","), swaps: 0};
-  const root = shell(g, `<span class="rule-step"><b>1.</b> W siatce ukrytych jest 6 słów: 3 czytane w poziomie i 3 w pionie, po 5 liter każde. Litery są pomieszane.</span>
+  const root = shell(g, `<span class="tldr">Układasz 6 słów, zamieniając pomieszane litery miejscami.</span>
+<span class="rule-step"><b>1.</b> W siatce ukrytych jest 6 słów: 3 czytane w poziomie i 3 w pionie, po 5 liter każde. Litery są pomieszane.</span>
 <span class="rule-step"><b>2.</b> Stukasz dwie litery i one zamieniają się miejscami. Masz na to 15 zamian, a im mniej zużyjesz, tym wyższa ocena.</span>
 <span class="rule-step"><b>3.</b> Kolory mówią, co jest dobrze:</span>
 <span class="legend"><span class="lg g">K</span> jest na swoim miejscu</span>
@@ -578,14 +601,19 @@ const WORDS4 = new Set(unpack(DATA.slowa4));
 function drabinka(g){
   const p = pick(DATA.drabinka);
   const st = store.get(key(g.id)) || {chain:[p.start], gave:false};
-  const root = shell(g, `Przejdź od <b>${p.start}</b> do <b>${p.end}</b>. Na każdym kroku zmieniasz <b>jedną literę</b> i musi wyjść prawdziwe słowo. Liczą się też formy: RĘKA, RĘKĘ.`);
+  const root = shell(g, rules(`Przechodzisz od ${p.start} do ${p.end}, zmieniając po jednej literze.`, [
+    "Wpisujesz słowo, które różni się od poprzedniego <b>dokładnie jedną literą</b>. Reszta liter zostaje na swoich miejscach.",
+    "Każdy krok musi być prawdziwym polskim słowem, np. <b>MAMA → MAMY → DAMY → DAMA</b>.",
+    "Liczą się wszystkie formy odmiany: RĘKA, RĘKĘ, RĘKI są w porządku.",
+    `Norma to ${pl(p.par, "krok", "kroki", "kroków")}. Zmieścisz się w normie, masz szóstkę.`
+  ], "Pomyliłeś się? „Cofnij krok” zabiera ostatnie słowo i nie liczy się do wyniku."));
   const status = el("div","status"), lad = el("div","ladder");
   const form = el("form","row"), inp = el("input"); inp.type = "text"; inp.id = "in-drabinka"; inp.maxLength = 4; inp.autocomplete = "off"; inp.placeholder = "Następne słowo"; inp.setAttribute("aria-label","Następne słowo");
   const btn = el("button","btn","Dalej"); btn.type = "submit"; form.append(inp, btn); focusScroll(inp);
   const tools = el("div","center"); tools.style.marginTop = "10px";
   const undo = el("button","btn ghost small","Cofnij krok"), give = el("button","btn ghost small","Pokaż rozwiązanie");
   tools.append(undo, give);
-  const res = el("div"); root.append(status, lad, form, tools, res);
+  const coach = el("p","coach"), res = el("div"); root.append(status, lad, form, coach, tools, res);
   const last = () => st.chain[st.chain.length - 1];
   const won = () => last() === p.end;
   const rung = (w, cls, prev) => { const r = el("div","rung " + cls); [...w].forEach((ch,i) => r.append(el("i", prev && prev[i] !== ch ? "diff" : "", ch))); return r; };
@@ -596,6 +624,10 @@ function drabinka(g){
     st.chain.forEach((w,i) => items.push(rung(w, i === 0 ? "start" : (w === p.end ? "goal" : ""), st.chain[i-1])));
     if (!won()) { items.push(el("div","dots","⋮")); items.push(rung(p.end, "goal")); }
     lad.replaceChildren(...items);
+    coach.hidden = won() || st.gave;
+    coach.textContent = st.chain.length === 1
+      ? `Wpisz słowo różniące się jedną literą od ${p.start}.`
+      : `Jesteś na ${last()}. Zostało ${pl(Math.max(1, p.par - (st.chain.length - 1)), "krok", "kroki", "kroków")} do normy.`;
     const over = won() || st.gave;
     form.hidden = over; tools.hidden = over; res.replaceChildren();
     if (won()) {
@@ -624,13 +656,18 @@ const STOP = new Set("I W Z NA DO SIĘ JEST SĄ A O OD PO ZA ZE WE ORAZ LUB OD T
 function zaczernione(g){
   const p = pick(WIKI), ans = up(p.answer);
   const st = store.get(key(g.id)) || {g:[], gave:false};
-  const root = shell(g, "Tekst z Wikipedii, <b>wszystkie słowa zaczernione</b>. Wpisuj słowa, które mogą tam być. Każde trafienie odsłania je w całym tekście. Wygrywasz, gdy zgadniesz <b>temat</b> (czerwone pola).");
+  const root = shell(g, rules("Odkrywasz zamazany tekst z Wikipedii i zgadujesz, o czym jest.", [
+    "Cały tekst jest zaczerniony. Zostawiłem widoczne tylko krótkie słówka w stylu „i”, „na”, „się”.",
+    "Wpisujesz słowo, które według ciebie tam jest. Trafione odsłania się w całym tekście, np. „woda” odkryje też „wodzie”.",
+    "Z odkrytych słów wnioskujesz, o czym jest tekst. Temat jest w <b>czerwonych polach</b> na górze.",
+    "Wygrywasz, gdy wpiszesz temat. Im mniej prób, tym lepsza ocena."
+  ], "Nie wiesz, od czego zacząć? Wpisz zwykłe słowa: <b>miasto</b>, <b>woda</b>, <b>Polska</b>, <b>rok</b>. Dotknięcie zamazanego pola pokaże, ile ma liter."));
   const status = el("div","status"), text = el("div","redact"), rbar = html("div","revealbar","<i></i>");
   const form = el("form","row"), inp = el("input"); inp.type = "text"; inp.id = "in-zaczernione"; inp.autocomplete = "off"; inp.placeholder = "Słowo albo temat"; inp.setAttribute("aria-label","Słowo albo temat");
   const btn = el("button","btn","Odkryj"); btn.type = "submit"; form.append(inp, btn); focusScroll(inp);
   const tools = el("div","center"); tools.style.marginTop = "8px"; const give = el("button","btn ghost small","Poddaję się"); tools.append(give);
-  const chips = el("div","chips"), res = el("div"), dock = el("div","sticky-form");
-  dock.append(form, tools);
+  const chips = el("div","chips"), res = el("div"), coach = el("p","coach"), dock = el("div","sticky-form");
+  dock.append(coach, form, tools);
   root.append(status, rbar, text, dock, chips, res);
   text.addEventListener("click", e => { const h = e.target.closest(".h"); if (h) toast(`Zakryte słowo: ${pl(+h.dataset.n, "litera", "litery", "liter")}`); });
   const tokens = (p.answer + "\n" + p.text).split(/(\s+|[.,;:()–\-„”"!?]+)/).filter(t => t !== "");
@@ -661,6 +698,9 @@ function zaczernione(g){
     title.style.fontSize = "1.4rem"; text.append(title, body);
     chips.replaceChildren(...[...st.g].reverse().map(x => el("span","chip " + (tokens.some(t => isWord(t) && match(t,[x])) ? "ok" : "x"), x)));
     dock.hidden = over; res.replaceChildren();
+    coach.textContent = st.g.length === 0 ? "Zacznij od zwykłych słów: miasto, woda, Polska, rok."
+      : hits === 0 ? "Żadne słowo nie trafiło. Spróbuj słów z innej dziedziny."
+      : `Odkryte słowa mówią, o czym jest tekst. Wpisz temat, gdy będziesz wiedzieć: jest w czerwonych polach.`;
     if (over) {
       if (!st.summary) { st.summary = won() && !st.gave ? pl(st.g.length, "próba", "próby", "prób") : "poddane"; saveState(g.id, st); }
       res.append(resultBox(st.gave ? `To było: ${p.answer}` : `Tak! ${p.answer}`, st.gave ? "Jutro nowy tekst." : `Liczba prób: ${st.g.length}, trafione słowa: ${hits}.`, "", `Kujonki · Zaczernione #${num()} ${st.gave ? "🏳️" : `🔎 ${pl(st.g.length,"próba","próby","prób")}`}`));
@@ -682,7 +722,12 @@ function zaczernione(g){
 function rdzen(g){
   const p = pick(DATA.rdzen), WORDS = new Set(unpack(p.words)), MAX = 5;
   const st = store.get(key(g.id)) || {t:[], end:false};
-  const root = shell(g, `Wpisz <b>jak najdłuższe słowo</b> zawierające cząstkę. Liczą się formy odmiany. Masz ${MAX} prób, liczy się najdłuższe. Linijka pokazuje twój wynik, a na końcu wzorzec.`);
+  const root = shell(g, rules("Szukasz najdłuższego polskiego słowa z podaną cząstką w środku.", [
+    `Cząstka dnia jest w żółtej ramce, np. <b>MIAS</b>. Szukasz słowa, w którym ona występuje: <b>NATYCHMIASTOWE</b>.`,
+    "Cząstka może być na początku, w środku albo na końcu. Liczą się wszystkie formy odmiany.",
+    `Masz ${MAX} prób, a liczy się tylko najdłuższe trafione słowo. Linijka pokazuje, ile liter uzbierałeś.`,
+    "Skończyłeś wcześniej? Kliknij „Kończę, to moje najdłuższe”."
+  ], "Ocena zależy od tego, jak blisko jesteś wzorcowego słowa, które pokażę na końcu."));
   const status = el("div","status"), frag = html("div","frag",`<span>${p.frag}</span>`), ruler = el("div","ruler");
   const form = el("form","row"), inp = el("input"); inp.type = "text"; inp.id = "in-rdzen"; inp.autocomplete = "off"; inp.placeholder = "Długie słowo…"; inp.setAttribute("aria-label","Długie słowo");
   const btn = el("button","btn","Wpisz"); btn.type = "submit"; form.append(inp, btn); focusScroll(inp);
@@ -737,7 +782,8 @@ function pudelko(g){
   const sideOf = {}; p.sides.forEach((s,i) => [...s].forEach(ch => sideOf[ch] = i));
   const all = p.sides.join("");
   const st = store.get(key(g.id)) || {words:[], gave:false};
-  const root = shell(g, `<span class="rule-step"><b>1.</b> Stukaj litery z brzegów, żeby ułożyć słowo. Pojawia się ono w środku kwadratu.</span>
+  const root = shell(g, `<span class="tldr">Zużywasz wszystkie 12 liter z brzegów kwadratu, budując z nich słowa.</span>
+<span class="rule-step"><b>1.</b> Stukaj litery z brzegów, żeby ułożyć słowo. Pojawia się ono w środku kwadratu.</span>
 <span class="rule-step"><b>2.</b> Kolejna litera musi być z <b>innego boku</b> niż poprzednia. Litery z tego samego boku są wtedy przygaszone.</span>
 <span class="rule-step"><b>3.</b> „Zatwierdź słowo”, a następne zaczyna się jego ostatnią literą.</span>
 <span class="rule-step"><b>4.</b> Wygrywasz, gdy zużyjesz wszystkie 12 liter. Im mniej słów, tym wyższa ocena: dwa słowa to szóstka.</span>`);
@@ -799,7 +845,12 @@ function pudelko(g){
 function dyktando(g){
   const set = pick(DATA.dyktando);
   const st = store.get(key(g.id)) || {r:[], t0:null, t1:null};
-  const root = shell(g, "Dziesięć słów, w każdym brakuje kawałka. <b>Wybierz poprawną pisownię.</b> Stoper rusza po pierwszym kliknięciu.");
+  const root = shell(g, rules("Wybierasz poprawną pisownię w dziesięciu słowach, na czas.", [
+    "W słowie brakuje kawałka, np. <b>OT?YMAŁEŚ</b>. Pod spodem są dwie możliwości: <b>RZ</b> i <b>Ż</b>.",
+    "Stukasz właściwą. Od razu widzisz, czy dobrze, i lecisz dalej.",
+    "Pod planszą zapisuje się zeszyt: dobre słowa na zielono, a przy błędzie poprawna pisownia i twój wybór przekreślony.",
+    "Stoper rusza po pierwszym kliknięciu. Liczy się liczba trafień, czas jest tylko dla szpanu."
+  ], "Zestawy są ze słów, w których druga pisownia nie istnieje, więc zawsze jest jedna poprawna odpowiedź."));
   const status = el("div","status"), prog = el("div","progress"), body = el("div"), book = el("div","copybook"); root.append(status, prog, body, book);
   if (!st.ch) st.ch = [];
   let timer = null, lock = false;
@@ -844,7 +895,12 @@ function dyktando(g){
 function czesciej(g){
   const pairs = pick(DATA.czesciej);
   const st = store.get(key(g.id)) || {i:0, lost:false};
-  const root = shell(g, "Które słowo pada <b>częściej</b> w polskich napisach do filmów i seriali? Stuknij kartkę. Grasz do pierwszej pomyłki, każda trafiona para to kreska w serii.");
+  const root = shell(g, rules("Zgadujesz, które z dwóch słów Polacy mówią częściej.", [
+    "Dostajesz dwie kartki ze słowami. Stukasz tę, która według ciebie pada częściej.",
+    "Po wyborze dopisuję na obu liczbę wystąpień i rysuję pasek porównania.",
+    "Grasz do pierwszej pomyłki. Każda trafiona para to kreska w serii, a co piąta kreska jest przekreślona.",
+    "Do policzenia użyłem polskich napisów do filmów i seriali, czyli języka mówionego."
+  ], "Podpowiedź: krótkie, zwykłe słowa (dom, woda, czas) prawie zawsze wygrywają z długimi i specjalistycznymi."));
   const status = el("div","status"), body = el("div"); root.append(status, body);
   let lock = false;
   function draw(){
@@ -882,13 +938,19 @@ function czesciej(g){
 function przyslowie(g){
   const [emo, text] = pick(PRZYSLOWIA); const words = text.split(" ");
   const st = store.get(key(g.id)) || {g:[], gave:false};
-  const root = shell(g, "Rozszyfruj przysłowie z emoji. <b>Wpisuj słowa</b>, a trafione pojawią się na swoich miejscach. Jak znasz całe, wpisz je od razu.");
+  const root = shell(g, rules("Odczytujesz polskie przysłowie zapisane emoji.", [
+    "Na górze są emoji, np. 🧠🧠 &gt; 🧠, a pod nimi kreski: jedna kreska to jedna litera, a odstęp to nowe słowo.",
+    "Wpisujesz pojedyncze słowa. Trafione wskakują na swoje miejsca (tu: „co dwie głowy to nie jedna”).",
+    "Jak już wiesz, o co chodzi, wpisz całe przysłowie jednym ciągiem.",
+    "Ocena spada z każdym pudłem i za użycie podpowiedzi z pierwszymi literami."
+  ], "Emoji nie są dosłowne, pokazują sens przysłowia."));
   const status = el("div","status"), e = el("div","emoji", emo), prov = el("div","proverb");
   const form = el("form","row"), inp = el("input"); inp.type = "text"; inp.id = "in-przyslowie"; inp.autocomplete = "off"; inp.placeholder = "Słowo albo całe przysłowie"; inp.setAttribute("aria-label","Słowo albo całe przysłowie");
   const btn = el("button","btn","Sprawdź"); btn.type = "submit"; form.append(inp, btn); focusScroll(inp);
   const tools = el("div","center"); tools.style.marginTop = "10px"; const hint = el("button","btn ghost small","Podpowiedź: pierwsze litery"), give = el("button","btn ghost small","Poddaję się"); tools.append(hint, give);
   const chips = el("div","chips"), res = el("div");
-  root.append(status, e, prov, form, tools, chips, res);
+  const coach = el("p","coach");
+  root.append(status, e, prov, form, coach, tools, chips, res);
   const hit = w => st.g.some(x => strip(x) === strip(w));
   const won = () => words.every(hit);
   let fresh = [];
@@ -898,7 +960,11 @@ function przyslowie(g){
     status.replaceChildren(el("span",null,`Pudła: ${misses}`), el("span",null,`Odkryte: ${words.filter(hit).length}/${words.length}`));
     prov.replaceChildren(...words.map(w => { const on = over || hit(w); const d = el("div","pw" + (on ? " on" : "") + (fresh.includes(w) ? " new" : "")); [...w].forEach((ch,i) => d.append(el("i",null, on ? ch : (st.hint && i === 0 ? ch : "")))); return d; }));
     chips.replaceChildren(...st.g.filter(x => !words.some(w => strip(w) === strip(x))).map(x => el("span","chip x",x)));
-    form.hidden = over; tools.hidden = over; res.replaceChildren();
+    form.hidden = over; tools.hidden = over; coach.hidden = over; res.replaceChildren();
+    const got = words.filter(hit).length;
+    coach.textContent = got === 0 ? "Wpisz pojedyncze słowo, które może być w tym przysłowiu. Częste są: NIE, LEPSZY, KTO, MA."
+      : got === words.length - 1 ? "Zostało jedno słowo. Domyślasz się całości? Wpisz ją."
+      : `Masz ${got} z ${words.length} słów. Dopisuj kolejne albo wpisz całe przysłowie.`;
     if (over) {
       if (!st.summary) { st.summary = st.gave ? "poddane" : pl(misses, "pudło", "pudła", "pudeł"); saveState(g.id, st); }
       const sq = st.gave ? "🏳️" : "🟥".repeat(misses) + "🟩" + (st.hint ? " 💡" : "");
