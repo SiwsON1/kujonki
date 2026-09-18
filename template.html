@@ -72,6 +72,13 @@ button:focus-visible,input:focus-visible{outline:3px solid var(--margin);outline
 .lesson.done .lname{color:var(--ink-soft)}
 body.in-game footer{display:none}
 
+.level{margin:2px 0 12px;padding:10px 12px;border-radius:10px;background:var(--paper);border:1px solid var(--rule)}
+.lvtop{display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap}
+.lvtop b{font:700 1.45rem/1 "Caveat",cursive;color:var(--margin)}
+.lvtop span{font-size:.82rem;color:var(--ink-soft);font-variant-numeric:tabular-nums}
+.lvbar{height:8px;border-radius:4px;background:var(--muted-tile);overflow:hidden;margin:8px 0 6px}
+.lvbar i{display:block;height:100%;background:var(--margin);transition:width .6s cubic-bezier(.22,1,.36,1)}
+.lvnext{font-size:.8rem;color:var(--ink-soft)}
 .duelmake{display:flex;gap:8px;margin-top:12px;padding-top:12px;border-top:1px dashed var(--rule)}
 .duelmake input[type=text]{flex:1;min-width:0;font:600 .95rem var(--ui);padding:8px 10px;border:2px solid var(--tile-edge);border-radius:8px;background:var(--paper);color:var(--ink);text-transform:none}
 .duel{margin:-6px 0 18px;padding:12px 14px;border:2px dashed var(--margin);border-radius:12px;background:var(--tile)}
@@ -1032,6 +1039,15 @@ function hub(){
   const report = el("section","report" + (pasek ? " pasek" : ""));
   const shownDay = new Date(START); shownDay.setDate(START.getDate() + day);
   report.append(el("div","rtitle",`Świadectwo · ${shownDay.toLocaleDateString("pl-PL", {day:"numeric", month:"long"})}`));
+  const lv = levelInfo();
+  const lvBox = el("div","level");
+  lvBox.append(html("div","lvtop", lv.next ? `<b>${lv.name}</b><span>${lv.pts} pkt · do awansu: ${lv.next.min - lv.pts}</span>` : `<b>${lv.name}</b><span>${lv.pts} pkt · najwyższy stopień</span>`));
+  const lvBar = html("div","lvbar","<i></i>"); lvBar.firstChild.style.width = `${lv.pct}%`; lvBox.append(lvBar);
+  if (lv.next) lvBox.append(el("div","lvnext",`Następnie: ${lv.next.name}. Punkty to suma wszystkich twoich ocen.`));
+  report.append(lvBox);
+  const seenLevel = store.get("kujonki2:level");
+  if (seenLevel !== null && seenLevel < lv.idx) { setTimeout(() => toast(`Awans! Jesteś teraz: ${lv.name}`), 300); }
+  if (seenLevel === null || seenLevel < lv.idx) store.set("kujonki2:level", lv.idx);
   if (grades.length) {
     report.append(html("p","rline",`Średnia <b>${avgTxt}</b> z ${pl(grades.length, "oceny", "ocen", "ocen")} · ${done.length} z ${GAMES.length} lekcji${s ? ` · frekwencja 🔥 ${pl(s, "dzień", "dni", "dni")}` : ""}`));
     if (pasek) report.append(el("p","rpasek","Z czerwonym paskiem. Jutro nowy plan lekcji."));
@@ -1121,6 +1137,17 @@ if (params.has("vs")) {
 }
 
 /* ---------- dzienniczek ---------- */
+const LEVELS = [
+  [0, "1 klasa"], [30, "2 klasa"], [70, "3 klasa"], [120, "4 klasa"], [180, "5 klasa"], [250, "6 klasa"], [330, "7 klasa"], [420, "8 klasa"],
+  [520, "1 liceum"], [640, "2 liceum"], [780, "3 liceum"], [940, "Maturzysta"], [1150, "Student"], [1400, "Magister"], [1700, "Doktor"], [2100, "Profesor"]
+];
+function levelInfo(){
+  const data = allGrades();
+  const pts = Object.values(data).flatMap(d => Object.values(d)).reduce((a, b) => a + b, 0);
+  let idx = 0; LEVELS.forEach(([min], i) => { if (pts >= min) idx = i; });
+  const cur = LEVELS[idx], nx = LEVELS[idx + 1];
+  return {idx, pts, name: cur[1], next: nx ? {min: nx[0], name: nx[1]} : null, pct: nx ? Math.round((pts - cur[0]) / (nx[0] - cur[0]) * 100) : 100};
+}
 function allGrades(){
   const out = {};
   try {
@@ -1149,7 +1176,8 @@ function dzienniczek(){
   const paski = days.filter(d => { const v = Object.values(data[d]); return v.length === GAMES.length && v.reduce((a,b) => a + b, 0) / v.length >= 4.75; }).length;
   let best = 0, run = 0, prev = null;
   for (const d of days) { run = prev !== null && d === prev + 1 ? run + 1 : 1; best = Math.max(best, run); prev = d; }
-  card.append(html("p","bsum",`Zagrane dni: <b>${days.length}</b> · lekcje: <b>${flat.length}</b> · średnia: <b>${avg.toFixed(2).replace(".",",")}</b><br>Czerwone paski: <b>${paski}</b> · najdłuższa frekwencja: <b>${pl(best, "dzień", "dni", "dni")}</b>`));
+  const lv = levelInfo();
+  card.append(html("p","bsum",`Stopień: <b>${lv.name}</b> (${lv.pts} pkt${lv.next ? `, do awansu ${lv.next.min - lv.pts}` : ""})<br>Zagrane dni: <b>${days.length}</b> · lekcje: <b>${flat.length}</b> · średnia: <b>${avg.toFixed(2).replace(".",",")}</b><br>Czerwone paski: <b>${paski}</b> · najdłuższa frekwencja: <b>${pl(best, "dzień", "dni", "dni")}</b>`));
   const table = el("div","gradebook");
   GAMES.forEach(g => {
     const gs = days.map(d => data[d][g.id]).filter(Boolean);
