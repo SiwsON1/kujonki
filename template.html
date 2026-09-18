@@ -72,6 +72,23 @@ button:focus-visible,input:focus-visible{outline:3px solid var(--margin);outline
 .lesson.done .lname{color:var(--ink-soft)}
 body.in-game footer{display:none}
 
+.duelmake{display:flex;gap:8px;margin-top:12px;padding-top:12px;border-top:1px dashed var(--rule)}
+.duelmake input[type=text]{flex:1;min-width:0;font:600 .95rem var(--ui);padding:8px 10px;border:2px solid var(--tile-edge);border-radius:8px;background:var(--paper);color:var(--ink);text-transform:none}
+.duel{margin:-6px 0 18px;padding:12px 14px;border:2px dashed var(--margin);border-radius:12px;background:var(--tile)}
+.duel .dtitle{font-family:var(--display);font-size:1.2rem;margin-bottom:4px}
+.duel .dline{margin:0 0 4px;color:var(--ink-soft);font-size:.92rem}
+.duel .dverdict{margin:0;font:700 1.3rem/1.2 "Caveat",cursive;color:var(--margin)}
+.lvs{font:700 1rem/1 "Caveat",cursive;color:var(--margin);margin-top:2px}
+.bsum{margin:4px 0 14px;line-height:1.7}
+.bsum b{font-size:1.05rem}
+.gradebook{border-top:1px solid var(--rule);margin-bottom:12px}
+.gb-row{display:grid;grid-template-columns:96px 1fr 40px;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--rule)}
+.gb-name{font-family:var(--display);font-size:1rem}
+.gb-marks{display:flex;flex-wrap:wrap;gap:2px 8px;font:700 1.35rem/1 "Caveat",cursive;color:var(--margin)}
+.gb-marks .m1,.gb-marks .m2{color:var(--bad)}
+.gb-marks i{font:400 .85rem var(--ui);color:var(--ink-soft)}
+.gb-avg{text-align:right;font-weight:700;font-variant-numeric:tabular-nums}
+
 /* game shell */
 .back{font:600 .9rem var(--ui);background:none;border:0;color:var(--ink);cursor:pointer;padding:6px 0;display:inline-flex;gap:6px;align-items:center}
 .card{background:var(--paper);border:2px solid var(--tile-edge);border-radius:14px;padding:16px 14px 20px;box-shadow:0 5px 0 var(--tile-edge);margin-top:8px}
@@ -371,8 +388,8 @@ const strip = s => s.normalize("NFD").replace(/[̀-ͯ]/g,"").replace(/Ł/g,"L").
 const pl = (n, one, few, many) => `${n} ${n === 1 ? one : [2,3,4].includes(n % 10) && ![12,13,14].includes(n % 100) ? few : many}`;
 const up = s => s.trim().toLocaleUpperCase("pl-PL");
 function toast(msg){ const t = $("#toast"); t.textContent = msg; t.classList.add("show"); clearTimeout(toast.t); toast.t = setTimeout(()=>t.classList.remove("show"), 1900); }
-async function share(text){
-  const full = text + "\n" + location.origin + location.pathname;
+async function share(text, url = location.origin + location.pathname){
+  const full = text + "\n" + url;
   if (navigator.share) { try { await navigator.share({text: full}); return; } catch(e){} }
   try { await navigator.clipboard.writeText(full); toast("Skopiowano wynik"); } catch(e){ toast("Nie udało się skopiować"); }
 }
@@ -1037,20 +1054,117 @@ function hub(){
     mb.onclick = () => { store.set(MKEY(), {t0: Date.now()}); tickClock(); go(GAMES[0].id); };
     actions.append(mb);
   }
-  report.append(actions); root.append(report);
+  const book = el("button","btn ghost","Dzienniczek ocen"); book.onclick = () => go("dzienniczek");
+  actions.append(book);
+  report.append(actions);
+  if (done.length) {
+    const duel = el("div","duelmake");
+    const nick = el("input"); nick.type = "text"; nick.id = "nick"; nick.maxLength = 16; nick.placeholder = "Twoje imię"; nick.setAttribute("aria-label","Twoje imię do wyzwania");
+    nick.value = store.get("kujonki2:nick") || "";
+    const dbtn = el("button","btn small","Wyzwij znajomego");
+    dbtn.onclick = () => {
+      const n = nick.value.trim().replace(/\|/g, "") || "Znajomy"; store.set("kujonki2:nick", n);
+      share(`${n} rzuca ci wyzwanie w Kujonkach! Średnia dziś: ${avgTxt} z ${pl(grades.length, "oceny", "ocen", "ocen")}. Pobijesz?`, `${location.origin}${location.pathname}?vs=${encodeDuel(n)}`);
+    };
+    duel.append(nick, dbtn); report.append(duel);
+  }
+  root.append(report);
+  const vs = store.get(VSKEY());
+  if (vs) {
+    const theirs = vs.grades.filter(Boolean), mine = GAMES.map((g, i) => vs.grades[i] ? gradeOf(g.id) : null).filter(Boolean);
+    const tAvg = theirs.reduce((a,b) => a + b, 0) / (theirs.length || 1), mAvg = mine.reduce((a,b) => a + b, 0) / (mine.length || 1);
+    const card = el("section","duel");
+    const h = el("div","dtitle"); h.append(document.createTextNode("Pojedynek: ty kontra "), el("b",null,vs.nick)); card.append(h);
+    const line = el("p","dline");
+    line.append(el("span",null,`${vs.nick}: średnia ${tAvg.toFixed(2).replace(".",",")} z ${pl(theirs.length, "lekcji", "lekcji", "lekcji")}`), document.createTextNode(" · "), el("span",null, mine.length ? `ty: ${mAvg.toFixed(2).replace(".",",")} z ${mine.length}` : "ty: jeszcze bez ocen"));
+    card.append(line);
+    const verdict = el("p","dverdict");
+    verdict.textContent = mine.length < theirs.length ? `Zagraj te same lekcje co ${vs.nick}, żeby porównać wynik.` : mAvg > tAvg ? "Wygrywasz pojedynek!" : mAvg < tAvg ? `Tym razem górą ${vs.nick}. Jutro rewanż?` : "Remis co do setnej części oceny.";
+    card.append(verdict); root.append(card);
+  }
   const list = el("ol","lessons");
   GAMES.forEach((g, i) => {
     const gr = gradeOf(g.id);
     const li = el("li"), b = el("button","lesson" + (gr ? " done" : "")); b.type = "button";
-    b.append(el("span","lnum",`${i + 1}`), html("span","lbody",`<span class="lname">${g.name}</span><span class="lrule">${g.desc}</span>`), gr ? stamp(gr, "lgrade") : el("span","lgo","›"));
+    const body = html("span","lbody",`<span class="lname">${g.name}</span><span class="lrule">${g.desc}</span>`);
+    if (vs && vs.grades[i]) body.append(el("span","lvs",`${vs.nick}: ${vs.grades[i]}`));
+    b.append(el("span","lnum",`${i + 1}`), body, gr ? stamp(gr, "lgrade") : el("span","lgo","›"));
     b.setAttribute("aria-label", `${g.name}${gr ? `, ocena ${gr}` : ""}`);
     b.onclick = () => go(g.id);
     li.append(b); list.append(li);
   });
   root.append(list);
 }
+
+/* ---------- pojedynek przez link ---------- */
+const VSKEY = () => `kujonki2:vs:${day}`;
+function encodeDuel(nick){
+  const raw = `${day}|${nick}|${GAMES.map(g => gradeOf(g.id) || 0).join("")}`;
+  return btoa(unescape(encodeURIComponent(raw))).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+}
+function decodeDuel(s){
+  try {
+    const raw = decodeURIComponent(escape(atob(s.replace(/-/g, "+").replace(/_/g, "/"))));
+    const [d, nick, g] = raw.split("|");
+    if (!/^\d+$/.test(d) || !/^[0-6]{10}$/.test(g)) return null;
+    return {day: +d, nick: (nick || "Znajomy").slice(0, 16), grades: [...g].map(Number)};
+  } catch (e) { return null; }
+}
+let duelNote = "";
+if (params.has("vs")) {
+  const v = decodeDuel(params.get("vs"));
+  if (v && v.day === day) store.set(VSKEY(), v);
+  else if (v) duelNote = "To wyzwanie było na inny dzień. Poproś o nowy link.";
+  params.delete("vs");
+  const q = params.toString();
+  history.replaceState("", "", location.pathname + (q ? `?${q}` : "") + location.hash);
+}
+
+/* ---------- dzienniczek ---------- */
+function allGrades(){
+  const out = {};
+  try {
+    for (let i = 0; i < localStorage.length; i++) {
+      const m = (localStorage.key(i) || "").match(/^kujonki2:([a-z]+):(\d+)$/);
+      if (!m || !GAMES.some(g => g.id === m[1])) continue;
+      const s = store.get(m[0]) || {};
+      if (s.summary && s.grade) (out[m[2]] = out[m[2]] || {})[m[1]] = s.grade;
+    }
+  } catch (e) {}
+  return out;
+}
+function dzienniczek(){
+  CURRENT = null; document.body.classList.add("in-game");
+  const root = $("#view"); root.replaceChildren();
+  const back = el("button","back","← Plan lekcji"); back.onclick = () => go("");
+  const card = el("main","card");
+  card.append(html("div","ghead",`<div><span class="eyebrow">Twoje wyniki</span><h2>Dzienniczek ocen</h2></div>`));
+  const data = allGrades(), days = Object.keys(data).map(Number).sort((a,b) => a - b);
+  if (!days.length) {
+    card.append(el("p","howto","Dzienniczek jest pusty. Zagraj pierwszą lekcję, a oceny pojawią się tutaj."));
+    root.append(back, card); return;
+  }
+  const flat = days.flatMap(d => Object.values(data[d]));
+  const avg = flat.reduce((a,b) => a + b, 0) / flat.length;
+  const paski = days.filter(d => { const v = Object.values(data[d]); return v.length === GAMES.length && v.reduce((a,b) => a + b, 0) / v.length >= 4.75; }).length;
+  let best = 0, run = 0, prev = null;
+  for (const d of days) { run = prev !== null && d === prev + 1 ? run + 1 : 1; best = Math.max(best, run); prev = d; }
+  card.append(html("p","bsum",`Zagrane dni: <b>${days.length}</b> · lekcje: <b>${flat.length}</b> · średnia: <b>${avg.toFixed(2).replace(".",",")}</b><br>Czerwone paski: <b>${paski}</b> · najdłuższa frekwencja: <b>${pl(best, "dzień", "dni", "dni")}</b>`));
+  const table = el("div","gradebook");
+  GAMES.forEach(g => {
+    const gs = days.map(d => data[d][g.id]).filter(Boolean);
+    const row = el("div","gb-row");
+    row.append(el("span","gb-name",g.name));
+    const marks = el("span","gb-marks");
+    if (gs.length) gs.slice(-14).forEach(x => marks.append(el("b", "m" + x, x))); else marks.append(el("i",null,"brak"));
+    row.append(marks, el("span","gb-avg", gs.length ? (gs.reduce((a,b) => a + b, 0) / gs.length).toFixed(1).replace(".",",") : "–"));
+    table.append(row);
+  });
+  card.append(table, el("p","howto","Oceny zapisują się w tej przeglądarce. Na innym telefonie dzienniczek zaczyna się od zera."));
+  root.append(back, card);
+}
 function go(id){ if (id) location.hash = id; else history.pushState("", "", location.pathname + location.search); route(); window.scrollTo(0,0); }
-function route(){ const id = location.hash.slice(1); const g = GAMES.find(x => x.id === id); if (g) RUN[g.id](g); else hub(); }
+function route(){ const id = location.hash.slice(1); if (id === "dzienniczek") return dzienniczek(); const g = GAMES.find(x => x.id === id); if (g) RUN[g.id](g); else hub(); }
 window.addEventListener("hashchange", route);
 $("#home").onclick = () => go("");
 function setDay(d){ const u = new URL(location.href); u.searchParams.set("d", Math.max(0,d)); location.href = u; }
@@ -1061,6 +1175,7 @@ const shown = new Date(START); shown.setDate(START.getDate() + day);
 $("#date").innerHTML = `<b>#${num()}</b>` + shown.toLocaleDateString("pl-PL", {day:"numeric", month:"long"});
 route();
 tickClock();
+if (duelNote) toast(duelNote);
 </script>
 </body>
 </html>
