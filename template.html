@@ -72,11 +72,19 @@ button:focus-visible,input:focus-visible{outline:3px solid var(--margin);outline
 .lesson.done .lname{color:var(--ink-soft)}
 body.in-game footer{display:none}
 
-.level{margin:2px 0 12px;padding:10px 12px;border-radius:10px;background:var(--paper);border:1px solid var(--rule)}
-.lvtop{display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap}
-.lvtop b{font:700 1.45rem/1 "Caveat",cursive;color:var(--margin)}
-.lvtop span{font-size:.82rem;color:var(--ink-soft);font-variant-numeric:tabular-nums}
-.lvbar{height:8px;border-radius:4px;background:var(--muted-tile);overflow:hidden;margin:8px 0 6px}
+.rhead2{display:flex;align-items:baseline;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.rtitle small{display:block;font:600 .72rem var(--ui);text-transform:uppercase;letter-spacing:.08em;color:var(--ink-soft);margin-top:2px}
+.rhead2{flex-wrap:nowrap}
+.lvchip{font:700 1.4rem/1 "Caveat",cursive;color:var(--margin);white-space:nowrap}
+.lvbar{height:6px;border-radius:3px;background:var(--muted-tile);overflow:hidden;margin:8px 0 4px}
+.rline.first{color:var(--ink)}
+.btn.primary{display:block;width:100%;margin-top:12px;font-size:1.05rem;padding:13px 16px}
+.rlinks{display:flex;flex-wrap:wrap;gap:4px 16px;margin-top:10px}
+.tlink{font:600 .88rem var(--ui);color:var(--ink);background:none;border:0;padding:6px 0;text-decoration:underline;text-decoration-color:var(--margin);text-underline-offset:3px;cursor:pointer;min-height:32px}
+.lesson.next{background:color-mix(in oklab, var(--mark) 30%, transparent)}
+.lesson.next .lgo{font:700 1.15rem/1 "Caveat",cursive;color:var(--margin);white-space:nowrap}
+#view{animation:viewin .22s cubic-bezier(.22,1,.36,1)}
+@keyframes viewin{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
 .lvbar i{display:block;height:100%;background:var(--margin);transition:width .6s cubic-bezier(.22,1,.36,1)}
 .lvnext{font-size:.8rem;color:var(--ink-soft)}
 .duelmake{display:flex;gap:8px;margin-top:12px;padding-top:12px;border-top:1px dashed var(--rule)}
@@ -212,9 +220,6 @@ mark.hg{background:var(--hl-green)} mark.hy{background:var(--mark)}
 .hright{display:flex;align-items:center;gap:10px}
 .clock{font:800 1rem var(--ui);font-variant-numeric:tabular-nums;padding:5px 9px;border:2px solid var(--tile-edge);border-radius:8px;background:var(--tile)}
 .clock.run{background:var(--mark)}
-.intro{margin:16px 0 4px;padding:2px 0 4px}
-.intro h2{font-family:var(--display);font-weight:400;font-size:1.5rem;margin:0 0 6px}
-.intro p{margin:0 0 10px;font-size:.95rem}
 .mdone{margin:0 0 12px;font-size:.95rem}
 .redact .h{background:var(--redact);color:transparent;border-radius:3px;user-select:none;position:relative}
 .redact .h[data-n]:hover::after{content:attr(data-n);position:absolute;left:0;top:-1.3em;font:600 .7rem var(--ui);color:var(--ink);background:var(--mark);padding:0 4px;border-radius:3px}
@@ -315,7 +320,7 @@ mark.hg{background:var(--hl-green)} mark.hy{background:var(--mark)}
     <span id="testnav" hidden>Test: <button id="prev">poprzedni dzień</button> · <button id="next">następny dzień</button></span>
   </footer>
 </div>
-<div class="toast" id="toast"></div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
 <script>
 const DATA = /*DATA*/;
 const WIKI = /*WIKI*/;
@@ -1028,56 +1033,50 @@ function hub(){
   const avg = grades.length ? grades.reduce((a,b) => a + b, 0) / grades.length : 0;
   const avgTxt = avg.toFixed(2).replace(".", ",");
   const pasek = grades.length === GAMES.length && avg >= 4.75;
-  if (!store.get("kujonki2:intro")) {
-    const intro = el("section","intro");
-    intro.append(el("h2",null,"Cześć, kujonie!"),
-      html("p",null,"Codziennie o północy nowy plan lekcji: <b>10 krótkich zagadek słownych</b>. Za każdą dostajesz ocenę od 1 do 6, a na koniec dnia świadectwo."),
-      html("p",null,"Średnia 4,75 daje <b>czerwony pasek</b>. Oceny udostępniasz bez zdradzania odpowiedzi, a codzienna gra nabija frekwencję 🔥."));
-    const ok = el("button","btn","Zaczynam"); ok.onclick = () => { store.set("kujonki2:intro", 1); hub(); };
-    intro.append(ok); root.append(intro);
-  }
-  const report = el("section","report" + (pasek ? " pasek" : ""));
   const shownDay = new Date(START); shownDay.setDate(START.getDate() + day);
-  report.append(el("div","rtitle",`Świadectwo · ${shownDay.toLocaleDateString("pl-PL", {day:"numeric", month:"long"})}`));
   const lv = levelInfo();
-  const lvBox = el("div","level");
-  lvBox.append(html("div","lvtop", lv.next ? `<b>${lv.name}</b><span>${lv.pts} pkt · do awansu: ${lv.next.min - lv.pts}</span>` : `<b>${lv.name}</b><span>${lv.pts} pkt · najwyższy stopień</span>`));
-  const lvBar = html("div","lvbar","<i></i>"); lvBar.firstChild.style.width = `${lv.pct}%`; lvBox.append(lvBar);
-  if (lv.next) lvBox.append(el("div","lvnext",`Następnie: ${lv.next.name}. Punkty to suma wszystkich twoich ocen.`));
-  report.append(lvBox);
   const seenLevel = store.get("kujonki2:level");
-  if (seenLevel !== null && seenLevel < lv.idx) { setTimeout(() => toast(`Awans! Jesteś teraz: ${lv.name}`), 300); }
+  if (seenLevel !== null && seenLevel < lv.idx) setTimeout(() => toast(`Awans! Jesteś teraz: ${lv.name}`), 300);
   if (seenLevel === null || seenLevel < lv.idx) store.set("kujonki2:level", lv.idx);
-  if (grades.length) {
-    report.append(html("p","rline",`Średnia <b>${avgTxt}</b> z ${pl(grades.length, "oceny", "ocen", "ocen")} · ${done.length} z ${GAMES.length} lekcji${s ? ` · frekwencja 🔥 ${pl(s, "dzień", "dni", "dni")}` : ""}`));
+  const nextG = GAMES.find(g => !(store.get(key(g.id)) || {}).summary);
+  const shareDay = () => share(`Kujonki #${num()} · średnia ${avgTxt}${pasek ? " 🟥 czerwony pasek" : ""}${m && m.t1 ? ` · ⏱ ${fmt(m.t1 - m.t0)}` : ""}${s > 1 ? ` · 🔥 ${s} dni` : ""} · ${lv.name}\n` + GAMES.map(g => (store.get(key(g.id)) || {}).line).filter(Boolean).join("\n"));
+
+  const report = el("section","report" + (pasek ? " pasek" : ""));
+  const head = el("div","rhead2");
+  head.append(el("div","rtitle","Świadectwo dnia"), el("span","lvchip", lv.name));
+  report.append(head);
+  const lvBar = html("div","lvbar","<i></i>"); lvBar.firstChild.style.width = `${lv.pct}%`;
+  lvBar.title = lv.next ? `${lv.pts} pkt, do awansu na ${lv.next.name}: ${lv.next.min - lv.pts} pkt` : `${lv.pts} pkt`;
+  report.append(lvBar, el("div","lvnext", lv.next ? `${lv.pts} pkt · do stopnia „${lv.next.name}” brakuje ${lv.next.min - lv.pts}` : `${lv.pts} pkt · najwyższy stopień`));
+
+  if (!store.get("kujonki2:intro") && !done.length) {
+    report.append(html("p","rline first","<b>Pierwszy raz?</b> Codziennie 10 krótkich zagadek słownych. Za każdą dostajesz ocenę 1–6, a średnia 4,75 daje czerwony pasek na świadectwie."));
+  } else if (grades.length) {
+    report.append(html("p","rline",`Średnia <b>${avgTxt}</b> · ${done.length} z ${GAMES.length} lekcji${s ? ` · 🔥 ${pl(s, "dzień", "dni", "dni")}` : ""}${m && m.t1 ? ` · maraton ${fmt(m.t1 - m.t0)}` : ""}`));
     if (pasek) report.append(el("p","rpasek","Z czerwonym paskiem. Jutro nowy plan lekcji."));
     else if (done.length === GAMES.length) report.append(el("p","rpasek soft","Komplet ocen. Na czerwony pasek trzeba średniej 4,75."));
   } else {
-    report.append(html("p","rline", s ? `Dziś jeszcze bez ocen · frekwencja 🔥 ${pl(s, "dzień", "dni", "dni")}` : "Dziś jeszcze bez ocen. Dziesięć krótkich lekcji, każda na 1–3 minuty."));
+    report.append(html("p","rline", `Dziś jeszcze bez ocen${s ? ` · 🔥 ${pl(s, "dzień", "dni", "dni")}` : ""}`));
   }
-  if (m && m.t1) report.append(html("p","rline",`Maraton: <b>${fmt(m.t1 - m.t0)}</b>`));
-  const actions = el("div","ractions");
+
+  const primary = el("button","btn primary");
+  if (nextG) { primary.textContent = done.length ? `Graj dalej: ${nextG.name} →` : `Zacznij: ${nextG.name} →`; primary.onclick = () => { store.set("kujonki2:intro", 1); go(nextG.id); }; }
+  else { primary.textContent = pasek ? "Udostępnij świadectwo z paskiem" : "Udostępnij świadectwo"; primary.onclick = shareDay; }
+  report.append(primary);
+
+  const links = el("div","rlinks");
+  const link = (txt, fn) => { const b = el("button","tlink", txt); b.type = "button"; b.onclick = fn; links.append(b); return b; };
+  if (!done.length && !m) link("⏱ Maraton na czas", () => { store.set("kujonki2:intro", 1); store.set(MKEY(), {t0: Date.now()}); tickClock(); go(GAMES[0].id); });
+  if (done.length && nextG) link("Udostępnij oceny", shareDay);
+  const duel = el("div","duelmake"); duel.hidden = true;
+  if (done.length) link("Wyzwij znajomego", () => { duel.hidden = !duel.hidden; if (!duel.hidden) duel.querySelector("input").focus(); });
+  link("Dzienniczek ocen", () => go("dzienniczek"));
+  report.append(links);
+
   if (done.length) {
-    const sb = el("button","btn", done.length === GAMES.length ? "Udostępnij świadectwo" : "Udostępnij oceny");
-    sb.onclick = () => share(`Kujonki #${num()} · średnia ${avgTxt}${pasek ? " 🟥 czerwony pasek" : ""}${m && m.t1 ? ` · ⏱ ${fmt(m.t1 - m.t0)}` : ""}${s > 1 ? ` · 🔥 ${s} dni` : ""}\n` + GAMES.map(g => (store.get(key(g.id)) || {}).line).filter(Boolean).join("\n"));
-    actions.append(sb);
-  } else {
-    const start = el("button","btn","Zacznij lekcję 1"); start.onclick = () => go(GAMES[0].id);
-    actions.append(start);
-  }
-  if (!done.length && !m) {
-    const mb = el("button","btn ghost","⏱ Maraton na czas");
-    mb.onclick = () => { store.set(MKEY(), {t0: Date.now()}); tickClock(); go(GAMES[0].id); };
-    actions.append(mb);
-  }
-  const book = el("button","btn ghost","Dzienniczek ocen"); book.onclick = () => go("dzienniczek");
-  actions.append(book);
-  report.append(actions);
-  if (done.length) {
-    const duel = el("div","duelmake");
     const nick = el("input"); nick.type = "text"; nick.id = "nick"; nick.maxLength = 16; nick.placeholder = "Twoje imię"; nick.setAttribute("aria-label","Twoje imię do wyzwania");
     nick.value = store.get("kujonki2:nick") || "";
-    const dbtn = el("button","btn small","Wyzwij znajomego");
+    const dbtn = el("button","btn small","Wyślij wyzwanie");
     dbtn.onclick = () => {
       const n = nick.value.trim().replace(/\|/g, "") || "Znajomy"; store.set("kujonki2:nick", n);
       share(`${n} rzuca ci wyzwanie w Kujonkach! Średnia dziś: ${avgTxt} z ${pl(grades.length, "oceny", "ocen", "ocen")}. Pobijesz?`, `${location.origin}${location.pathname}?vs=${encodeDuel(n)}`);
@@ -1101,10 +1100,11 @@ function hub(){
   const list = el("ol","lessons");
   GAMES.forEach((g, i) => {
     const gr = gradeOf(g.id);
-    const li = el("li"), b = el("button","lesson" + (gr ? " done" : "")); b.type = "button";
+    const isNext = !gr && GAMES.find(x => !(store.get(key(x.id)) || {}).summary) === g;
+    const li = el("li"), b = el("button","lesson" + (gr ? " done" : "") + (isNext ? " next" : "")); b.type = "button";
     const body = html("span","lbody",`<span class="lname">${g.name}</span><span class="lrule">${g.desc}</span>`);
     if (vs && vs.grades[i]) body.append(el("span","lvs",`${vs.nick}: ${vs.grades[i]}`));
-    b.append(el("span","lnum",`${i + 1}`), body, gr ? stamp(gr, "lgrade") : el("span","lgo","›"));
+    b.append(el("span","lnum",`${i + 1}`), body, gr ? stamp(gr, "lgrade") : el("span","lgo", isNext ? "teraz ›" : "›"));
     b.setAttribute("aria-label", `${g.name}${gr ? `, ocena ${gr}` : ""}`);
     b.onclick = () => go(g.id);
     li.append(b); list.append(li);
@@ -1191,7 +1191,7 @@ function dzienniczek(){
   card.append(table, el("p","howto","Oceny zapisują się w tej przeglądarce. Na innym telefonie dzienniczek zaczyna się od zera."));
   root.append(back, card);
 }
-function go(id){ if (id) location.hash = id; else history.pushState("", "", location.pathname + location.search); route(); window.scrollTo(0,0); }
+function go(id){ if (id) location.hash = id; else history.pushState("", "", location.pathname + location.search); route(); window.scrollTo(0,0); const v = $("#view"); v.style.animation = "none"; void v.offsetWidth; v.style.animation = ""; }
 function route(){ const id = location.hash.slice(1); if (id === "dzienniczek") return dzienniczek(); const g = GAMES.find(x => x.id === id); if (g) RUN[g.id](g); else hub(); }
 window.addEventListener("hashchange", route);
 $("#home").onclick = () => go("");
