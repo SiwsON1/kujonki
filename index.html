@@ -150,8 +150,28 @@ input[type=text]{flex:1;min-width:0;font:600 1.15rem var(--ui);text-transform:up
 footer{margin-top:22px;font-size:.78rem;color:var(--ink-soft);display:flex;flex-direction:column;gap:6px}
 footer button{font:inherit;color:inherit;background:none;border:0;text-decoration:underline;cursor:pointer;padding:0}
 @keyframes pop{0%{transform:scale(.8)}70%{transform:scale(1.08)}100%{transform:scale(1)}}
-@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
-.shake{animation:shake .35s}
+@keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-7px)}40%{transform:translateX(6px)}60%{transform:translateX(-4px)}80%{transform:translateX(2px)}}
+.shake{animation:shake .38s cubic-bezier(.36,.07,.19,.97)}
+/* ruch: pokazuje, co się stało */
+:root{--ease:cubic-bezier(.22,1,.36,1)}
+@keyframes flipin{from{transform:rotateX(90deg)}to{transform:rotateX(0)}}
+.flip{animation:flipin .42s var(--ease) both;backface-visibility:hidden}
+@keyframes tap{0%{transform:scale(1)}35%{transform:scale(.86)}100%{transform:scale(1)}}
+.tapped{animation:tap .22s var(--ease)}
+@keyframes lift{0%{transform:scale(1)}40%{transform:scale(1.12)}100%{transform:scale(1)}}
+.landed{animation:lift .34s var(--ease)}
+@keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+.rise{animation:rise .32s var(--ease) both}
+@keyframes wave{0%,100%{transform:none}40%{transform:translateY(-10px)}}
+.wave{animation:wave .5s var(--ease) both}
+@keyframes ink{from{clip-path:inset(0 100% 0 0)}to{clip-path:inset(0 0 0 0)}}
+.inked{display:inline-block;animation:ink .38s var(--ease) both}
+@keyframes unredact{0%{background:var(--redact);color:transparent}55%{background:var(--mark);color:transparent}100%{background:var(--mark);color:inherit}}
+.redact .new{animation:unredact .6s var(--ease) both}
+@keyframes thump{0%{transform:translateY(0)}30%{transform:translateY(2px)}100%{transform:none}}
+.result{animation:thump .3s .32s var(--ease) both}
+@keyframes rowin{from{opacity:.25;transform:translateX(-8px)}to{opacity:1;transform:none}}
+.lessons li{animation:rowin .3s var(--ease) both}
 
 /* Łącznik */
 .clues{display:flex;flex-direction:column;gap:8px;margin-bottom:14px}
@@ -394,6 +414,16 @@ const store = {
 const key = g => `kujonki2:${g}:${day}`;
 const $ = s => document.querySelector(s);
 const focusScroll = inp => inp.addEventListener("focus", () => setTimeout(() => inp.scrollIntoView({block: "center", behavior: "smooth"}), 250));
+const calm = () => matchMedia("(prefers-reduced-motion: reduce)").matches;
+const buzz = p => { try { if (!calm() && navigator.vibrate) navigator.vibrate(p); } catch (e) {} };
+const stagger = (nodes, cls, step = 45) => { if (calm()) return; [...nodes].forEach((n, i) => { n.style.animationDelay = `${i * step}ms`; n.classList.add(cls); }); };
+const shakeEl = n => { if (!n || calm()) return; n.classList.remove("shake"); void n.offsetWidth; n.classList.add("shake"); };
+const countUp = (node, to, ms = 700, suffix = "") => {
+  if (calm()) { node.textContent = `${to.toLocaleString("pl-PL")}${suffix}`; return; }
+  const t0 = performance.now();
+  const step = t => { const k = Math.min(1, (t - t0) / ms), e = 1 - Math.pow(1 - k, 4); node.textContent = `${Math.round(to * e).toLocaleString("pl-PL")}${suffix}`; if (k < 1) requestAnimationFrame(step); };
+  requestAnimationFrame(step);
+};
 const el = (tag, cls, txt) => { const e = document.createElement(tag); if (cls) e.className = cls; if (txt != null) e.textContent = txt; return e; };
 const html = (tag, cls, h) => { const e = el(tag, cls); e.innerHTML = h; return e; };
 const strip = s => s.normalize("NFD").replace(/[̀-ͯ]/g,"").replace(/Ł/g,"L").replace(/ł/g,"l");
@@ -510,9 +540,12 @@ function lacznik(g){
     }
   }
   form.onsubmit = e => { e.preventDefault(); const v = up(inp.value); if (!v) return;
-    if (p.a.some(a => a === v || strip(a) === strip(v))) { st.win = true; finish(g.id, st.g.length ? pl(st.g.length, "pudło", "pudła", "pudeł") : "za 1."); }
+    let hit = false;
+    if (p.a.some(a => a === v || strip(a) === strip(v))) { st.win = true; hit = true; finish(g.id, st.g.length ? pl(st.g.length, "pudło", "pudła", "pudeł") : "za 1."); }
     else { if (st.g.includes(v)) return toast("To już było"); st.g.push(v); toast("Pudło, odsłaniam literę"); if (st.g.length >= MAX) finish(g.id, "nie wyszło"); }
-    inp.value = ""; st.summary = (store.get(key(g.id))||{}).summary; saveState(g.id, st); draw(); };
+    inp.value = ""; st.summary = (store.get(key(g.id))||{}).summary; saveState(g.id, st); draw();
+    if (hit) { stagger(slots.children, "flip", 70); stagger(clues.querySelectorAll(".blank"), "inked", 90); buzz([20, 40, 20]); }
+    else { shakeEl(form); buzz(40); const nw = slots.children[st.g.length - 1]; if (nw && !calm()) nw.classList.add("flip"); } };
   draw();
 }
 
@@ -548,7 +581,7 @@ function ogonki(g){
       const b = el("button","letter" + (tappable && !checked ? " tap" : ""), cur[k]); b.type = "button";
       if (cur[k] !== base && !checked) b.classList.add("changed");
       if (checked) { b.classList.add(cur[k] === ch ? "ok" : "no"); b.disabled = true; }
-      else if (tappable) b.onclick = () => { const c = CYCLE[base]; cur[k] = c[(c.indexOf(cur[k]) + 1) % c.length]; draw(); };
+      else if (tappable) b.onclick = () => { const c = CYCLE[base]; cur[k] = c[(c.indexOf(cur[k]) + 1) % c.length]; draw(); const nb = body.querySelectorAll(".letter")[k]; if (nb && !calm()) nb.classList.add("tapped"); buzz(8); };
       else b.disabled = true;
       letters.append(b);
     });
@@ -556,7 +589,12 @@ function ogonki(g){
     if (checked) { const ok = st.r[idx]; body.append(el("div","feedback " + (ok ? "ok" : "no"), ok ? `Tak! ${ans}` : `Poprawnie: ${ans}`)); }
     else body.append(el("div","hint",`${i + 1} z ${set.length}`));
     const c = el("div","center"), btn = el("button","btn", checked ? "Dalej" : "Sprawdź");
-    btn.onclick = () => { if (!checked) { st.r.push(cur.join("") === ans); if (st.r.length === set.length) st.summary = `${st.r.filter(Boolean).length}/${set.length}`; saveState(g.id, st); checked = true; } else { checked = false; next(); } draw(); };
+    btn.onclick = () => {
+      if (!checked) {
+        const ok = cur.join("") === ans; st.r.push(ok); if (st.r.length === set.length) st.summary = `${st.r.filter(Boolean).length}/${set.length}`; saveState(g.id, st); checked = true;
+        draw(); stagger(body.querySelectorAll(".letter"), "flip", 60); buzz(ok ? [15, 30, 15] : 45);
+      } else { checked = false; next(); draw(); stagger(body.querySelectorAll(".letter"), "rise", 35); }
+    };
     c.append(btn); body.append(c);
     const changed = cur.filter((ch, k) => ch !== strip(ans[k])).length;
     coach.hidden = false;
@@ -616,10 +654,20 @@ function gofr(g){
     }
   }
   function tap(i){
-    if (sel === null) { sel = i; return draw(); }
+    if (sel === null) { sel = i; draw(); if (!calm()) grid.children[i].classList.add("tapped"); buzz(8); return; }
     if (sel === i) { sel = null; return draw(); }
-    if (st.cur[sel] !== sol[sel] || st.cur[i] !== sol[i]) { [st.cur[sel], st.cur[i]] = [st.cur[i], st.cur[sel]]; st.swaps++; }
+    const a = sel, b = i;
+    const ra = grid.children[a].getBoundingClientRect(), rb = grid.children[b].getBoundingClientRect();
+    const greenBefore = colors().map(c => c === "g");
+    if (st.cur[a] !== sol[a] || st.cur[b] !== sol[b]) { [st.cur[a], st.cur[b]] = [st.cur[b], st.cur[a]]; st.swaps++; }
     sel = null; saveState(g.id, st); draw();
+    if (calm()) return;
+    const fly = (n, from, to) => n && n.animate([{transform: `translate(${from.left - to.left}px, ${from.top - to.top}px)`, zIndex: 2}, {transform: "none", zIndex: 2}], {duration: 300, easing: "cubic-bezier(.22,1,.36,1)"});
+    fly(grid.children[a], rb, ra); fly(grid.children[b], ra, rb);
+    const col = colors(); let gained = false;
+    col.forEach((c, k) => { if (c === "g" && !greenBefore[k]) { gained = true; const n = grid.children[k]; setTimeout(() => n && n.classList.add("landed"), 260); } });
+    buzz(gained ? [12, 30, 12] : 10);
+    if (won()) { buzz([20, 40, 20, 40, 60]); [...grid.children].forEach((n, k) => { if (n.textContent) { n.style.animationDelay = `${300 + (Math.floor(k / 5) + (k % 5)) * 55}ms`; n.classList.add("wave"); } }); }
   }
   draw();
 }
@@ -672,9 +720,11 @@ function drabinka(g){
   form.onsubmit = e => { e.preventDefault(); const v = up(inp.value); const l = last();
     if (v.length !== 4) return toast("Słowo musi mieć 4 litery");
     const d = [...v].filter((ch,i) => ch !== l[i]).length;
-    if (d !== 1) { inp.classList.add("shake"); setTimeout(()=>inp.classList.remove("shake"),400); return toast("Zmień dokładnie jedną literę"); }
-    if (!WORDS4.has(v)) { inp.classList.add("shake"); setTimeout(()=>inp.classList.remove("shake"),400); return toast(`Nie znam słowa ${v}`); }
-    st.chain.push(v); inp.value = ""; saveState(g.id, st); draw(); };
+    if (d !== 1) { shakeEl(form); buzz(40); return toast("Zmień dokładnie jedną literę"); }
+    if (!WORDS4.has(v)) { shakeEl(form); buzz(40); return toast(`Nie znam słowa ${v}`); }
+    st.chain.push(v); inp.value = ""; saveState(g.id, st); draw();
+    if (!calm()) { const rungs = lad.querySelectorAll(".rung:not(.goal), .rung.goal"); const newest = [...lad.querySelectorAll(".rung")][st.chain.length - 1]; if (newest) { newest.classList.add("rise"); const df = newest.querySelector(".diff"); if (df) setTimeout(() => df.classList.add("landed"), 200); } }
+    if (won()) { stagger(lad.querySelectorAll(".rung"), "wave", 70); buzz([20, 40, 20, 40, 60]); } else buzz(12); };
   undo.onclick = () => { if (st.chain.length > 1) { st.chain.pop(); saveState(g.id, st); draw(); } };
   give.onclick = () => { st.gave = true; saveState(g.id, st); draw(); };
   draw();
@@ -742,7 +792,9 @@ function zaczernione(g){
     const n = tokens.filter(t => isWord(t) && match(t,[lastGuess])).length;
     toast(n ? `${v}: ${pl(n, "trafienie", "trafienia", "trafień")}` : `${v}: brak w tekście`);
     inp.value = ""; saveState(g.id, st); draw();
-    const fresh = text.querySelector(".new"); if (fresh) fresh.scrollIntoView({block: "nearest", behavior: "smooth"}); };
+    if (n) { text.querySelectorAll(".new").forEach((s, k) => { s.style.animationDelay = `${k * 60}ms`; }); buzz(won() ? [20, 40, 20, 40, 60] : 12); }
+    else { shakeEl(form); buzz(40); }
+    const fresh = text.querySelector(".new"); if (fresh) fresh.scrollIntoView({block: "nearest", behavior: calm() ? "auto" : "smooth"}); };
   give.onclick = () => { st.gave = true; saveState(g.id, st); draw(); };
   draw();
 }
@@ -801,7 +853,10 @@ function rdzen(g){
     if (!v.includes(p.frag)) return toast(`Słowo musi zawierać ${p.frag}`);
     if (st.t.includes(v)) return toast("To już było");
     if (!WORDS.has(v)) { inp.classList.add("shake"); setTimeout(()=>inp.classList.remove("shake"),400); return toast(`Nie znam słowa ${v}`); }
-    st.t.push(v); inp.value = ""; live.replaceChildren(); saveState(g.id, st); draw(); };
+    const rec = v.length > best().length;
+    st.t.push(v); inp.value = ""; live.replaceChildren(); saveState(g.id, st); draw();
+    const rows = tries.querySelectorAll(".try"); if (rows.length && !calm()) rows[rows.length - 1].classList.add("rise");
+    if (rec) { const star = tries.querySelector(".try.best small"); if (star && !calm()) star.classList.add("landed"); buzz([12, 30, 12]); } else buzz(10); };
   draw();
 }
 
@@ -837,7 +892,7 @@ function pudelko(g){
       const lastCh = cur.slice(-1);
       if (lastCh === ch) b.classList.add("last");
       if (over || (lastCh && sideOf[lastCh] === sideOf[ch])) b.disabled = true;
-      b.onclick = () => { cur += ch; draw(); };
+      b.onclick = () => { cur += ch; draw(); const nb = [...box.querySelectorAll(".bl")].find(x => x.textContent === ch); if (nb && !calm()) nb.classList.add("tapped"); buzz(8); };
       kids.push(b);
     });
     box.replaceChildren(...kids);
@@ -865,7 +920,9 @@ function pudelko(g){
   del.onclick = () => { const minLen = st.words.length ? 1 : 0; if (cur.length > minLen) { cur = cur.slice(0,-1); draw(); } else if (st.words.length && cur.length === 1) { cur = st.words.pop(); saveState(g.id, st); draw(); } };
   ok.onclick = () => { if (cur.length < 3) return toast("Słowo musi mieć co najmniej 3 litery");
     if (!WORDS.has(cur)) { box.classList.add("shake"); setTimeout(()=>box.classList.remove("shake"),400); return toast(`Nie znam słowa ${cur}`); }
-    st.words.push(cur); cur = cur.slice(-1); saveState(g.id, st); draw(); if (won()) toast("Wszystkie litery!"); };
+    st.words.push(cur); cur = cur.slice(-1); saveState(g.id, st); draw();
+    if (!calm()) { const past = box.querySelector(".past"); if (past) past.classList.add("rise"); }
+    if (won()) { toast("Wszystkie litery!"); stagger(box.querySelectorAll(".bl"), "landed", 40); buzz([20, 40, 20, 40, 60]); } else buzz([12, 30, 12]); };
   give.onclick = () => { st.gave = true; saveState(g.id, st); draw(); };
   draw();
 }
@@ -912,6 +969,8 @@ function dyktando(g){
     const item = set[st.r.length], ok = o === item.ok;
     b.style.background = ok ? "var(--ok-bg)" : "var(--bad-bg)";
     const gap = body.querySelector(".gap"); gap.textContent = item.ok; gap.style.color = ok ? "var(--ok)" : "var(--bad)";
+    if (!calm()) gap.classList.add("inked");
+    if (ok) buzz(12); else { shakeEl(body.querySelector(".dword")); buzz(45); }
     st.r.push(ok); st.ch.push(o); if (st.r.length === set.length) st.t1 = Date.now();
     saveState(g.id, st);
     setTimeout(() => { lock = false; draw(); }, ok ? 450 : 1100);
@@ -955,7 +1014,8 @@ function czesciej(g){
     const btns = vs.querySelectorAll(".vsbtn");
     const mx = Math.max(...counts);
     btn.classList.add("picked");
-    btns.forEach((x,k) => { x.querySelector(".cnt").textContent = `${counts[k].toLocaleString("pl-PL")}×`; if (counts[k] === mx) x.classList.add("ok"); else if (x === btn) x.classList.add("no"); requestAnimationFrame(() => { x.querySelector(".bar i").style.width = `${counts[k] / mx * 100}%`; }); });
+    btns.forEach((x,k) => { countUp(x.querySelector(".cnt"), counts[k], 750, "×"); if (counts[k] === mx) x.classList.add("ok"); else if (x === btn) x.classList.add("no"); requestAnimationFrame(() => { x.querySelector(".bar i").style.width = `${counts[k] / mx * 100}%`; }); });
+    if (ok) buzz(12); else { shakeEl(btn); buzz(45); }
     const ratio = Math.max(...counts) / Math.min(...counts);
     toast(ok ? `Tak, ${ratio.toFixed(1).replace(".",",")}× częściej` : "Pudło!");
     setTimeout(() => { if (ok) st.i++; else st.lost = true; saveState(g.id, st); lock = false; draw(); }, ok ? 1400 : 2000);
@@ -1003,8 +1063,10 @@ function przyslowie(g){
   form.onsubmit = ev => { ev.preventDefault(); const v = up(inp.value).replace(/[.,!?]/g,""); if (!v) return;
     const parts = v.split(/\s+/); fresh = [];
     parts.forEach(x => { if (!st.g.some(y => strip(y) === strip(x))) { st.g.push(x); words.filter(w => strip(w) === strip(x)).forEach(w => fresh.push(w)); } });
-    if (!fresh.length) toast(parts.length > 1 ? "Nic nowego" : `${v}: nie ma w przysłowiu`);
-    inp.value = ""; saveState(g.id, st); draw(); };
+    if (!fresh.length) { toast(parts.length > 1 ? "Nic nowego" : `${v}: nie ma w przysłowiu`); shakeEl(form); buzz(40); } else buzz(12);
+    inp.value = ""; saveState(g.id, st); draw();
+    stagger(prov.querySelectorAll(".pw.new i"), "flip", 40);
+    if (won()) { stagger(prov.querySelectorAll(".pw i"), "wave", 25); buzz([20, 40, 20, 40, 60]); } };
   hint.onclick = () => { st.hint = true; saveState(g.id, st); draw(); };
   give.onclick = () => { st.gave = true; saveState(g.id, st); draw(); };
   draw();
@@ -1107,6 +1169,7 @@ function hub(){
     b.append(el("span","lnum",`${i + 1}`), body, gr ? stamp(gr, "lgrade") : el("span","lgo", isNext ? "teraz ›" : "›"));
     b.setAttribute("aria-label", `${g.name}${gr ? `, ocena ${gr}` : ""}`);
     b.onclick = () => go(g.id);
+    li.style.animationDelay = `${i * 28}ms`;
     li.append(b); list.append(li);
   });
   root.append(list);
